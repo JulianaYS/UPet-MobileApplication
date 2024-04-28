@@ -1,6 +1,8 @@
 package pe.edu.upc.upet.feature_recovery.shared.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -14,9 +16,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun PasswordTextField(input: MutableState<String>, placeholder: String){
@@ -24,9 +28,11 @@ fun PasswordTextField(input: MutableState<String>, placeholder: String){
         mutableStateOf(false)
     }
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        placeholder = {
-            Text(text = placeholder)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, shape = RoundedCornerShape(12.dp)), // Rounded corners
+    placeholder = {
+            Text(text = placeholder,  color = Color(0xFFB3B3B3))
         },
         visualTransformation = if (isPasswordVisible.value) {
             VisualTransformation.None
@@ -46,7 +52,8 @@ fun PasswordTextField(input: MutableState<String>, placeholder: String){
                         Icons.Filled.VisibilityOff
                     } else {
                         Icons.Filled.Visibility
-                    }, "Password"
+                    }, "Password",
+                    tint = Color(0xFFFF6262)
                 )
             }
         })

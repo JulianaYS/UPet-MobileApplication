@@ -16,12 +16,11 @@ fun CustomButton(text: String, onClick: () -> Unit) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFFF6262), shape = RoundedCornerShape(12.dp)),
+            .background(Color(0xFFFF6262), shape = RoundedCornerShape(10.dp)),
         onClick = onClick
     ) {
         Text(
             text = text,
-            fontSize = 14.sp,
         )
     }
 }
