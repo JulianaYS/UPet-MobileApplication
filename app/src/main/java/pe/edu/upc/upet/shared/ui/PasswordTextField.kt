@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import pe.edu.upc.upet.ui.theme.UpetGray1
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Gray1
+import pe.edu.upc.upet.ui.theme.Orange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -50,7 +50,7 @@ fun InputTextField( input: MutableState<String>, placeholder: String, label: Str
             Text(
                 text = placeholder,
                 style = TextStyle(
-                    color = UpetGray1,
+                    color = Gray1,
                     fontSize = 18.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Normal
@@ -64,10 +64,10 @@ fun InputTextField( input: MutableState<String>, placeholder: String, label: Str
                 start = commonPadding,
                 end = commonPadding,
             )
-            .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(cornerSize))
+            .border(BorderStroke(2.dp, Orange1), shape = RoundedCornerShape(cornerSize))
             .background(Color.White, shape = RoundedCornerShape(cornerSize)),
         textStyle = TextStyle(
-            color = if (input.value.isNotEmpty()) Color.Black else UpetGray1,
+            color = if (input.value.isNotEmpty()) Color.Black else Gray1,
             fontSize = 18.sp,
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Normal
