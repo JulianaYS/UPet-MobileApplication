@@ -2,15 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="AuthButtonPreview">
-        <State />
-      </entry>
-      <entry key="AuthTextButtonPreview">
-        <State />
-      </entry>
-      <entry key="SignInScrenPreview">
-        <State />
-      </entry>
       <entry key="SignUpPreview">
         <State />
       </entry>

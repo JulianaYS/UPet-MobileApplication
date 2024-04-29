@@ -12,7 +12,9 @@ retrofit = "2.11.0"
 landscapistGlide = "2.3.3"
 navigationCompose = "2.7.7"
 materialIconsExtended = "1.6.6"
+
 playServicesTagmanagerV4Impl = "18.0.4"
+room = "2.6.1"
 
 
 [libraries]
@@ -36,6 +38,8 @@ landscapist-glide = { group = "com.github.skydoves", name = "landscapist-glide",
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
 play-services-tagmanager-v4-impl = { group = "com.google.android.gms", name = "play-services-tagmanager-v4-impl", version.ref = "playServicesTagmanagerV4Impl" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
