@@ -16,7 +16,7 @@ val poppinsFamily = FontFamily(
     Font(R.font.poppins_bold, FontWeight.Bold),
     Font(R.font.poppins_black, FontWeight.Black),
     Font(R.font.poppins_light, FontWeight.Light),
-    Font(R.font.poppins_thin, FontWeight.Thin)
+    Font(R.font.poppins_thin, FontWeight.Thin),
 )
 
 val Typography = Typography(

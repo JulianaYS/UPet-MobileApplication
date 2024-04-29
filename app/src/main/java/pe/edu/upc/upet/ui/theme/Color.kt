@@ -23,3 +23,7 @@ val Orange3 = Color(0xFFF8B683)
 val Green1 = Color(0xFF52D375)
 val Yellow1 = Color(0xFFFFB800)
 val Yellow2 = Color(0xFFFFEB32)
+
+val UpetOrange1= Color(0xFFFF8F86)
+val UpetGray1= Color(0xFFB3B3B3)
+val UpetBackGroundPrimary = Color(0xFF0A1B3E)
