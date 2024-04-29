@@ -11,8 +11,10 @@ data class Pet(
 
 
 val pets = listOf(
-    Pet(1, "Fido", 5,"Bulldog",  "https://estaticos-cdn.prensaiberica.es/clip/823f515c-8143-4044-8f13-85ea1ef58f3a_16-9-discover-aspect-ratio_default_0.jpg"),
+    Pet(1, "Fido", 5,"Bulldog",  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQymJQQtLOL5I7deClYWZfp7txWwo1zxoLnQxaDsQ26fw&s"),
     Pet(2, "Rex", 3, "Labrador",  "https://humanidades.com/wp-content/uploads/2017/02/perro-3-e1561679226953.jpg"),
+    Pet(3, "Rex", 3, "Labrador",  "https://humanidades.com/wp-content/uploads/2017/02/perro-3-e1561679226953.jpg"),
+    Pet(4, "Rex", 3, "Labrador",  "https://humanidades.com/wp-content/uploads/2017/02/perro-3-e1561679226953.jpg"),
 
     )
 
