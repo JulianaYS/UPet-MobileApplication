@@ -77,7 +77,7 @@ fun PetCard(pet: Pet, onPetSelected: (Int) -> Unit ) {
 
                 Row(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(1.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {

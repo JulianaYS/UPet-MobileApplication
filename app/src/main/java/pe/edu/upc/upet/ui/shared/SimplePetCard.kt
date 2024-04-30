@@ -44,7 +44,7 @@ fun SimplePetCard( pet: Pet, navController: NavHostController, onPetSelected: (I
             )
             Text(
                 text = pet.name,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)
             )

@@ -1,31 +1,78 @@
 package pe.edu.upc.upet.ui.screens.vets
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import pe.edu.upc.upet.feature_pet.domain.pets
 import pe.edu.upc.upet.feature_vet.domain.VeterinaryClinics
+import pe.edu.upc.upet.feature_vet.domain.veterinaryClinics
+import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.PetSwipeToDelete
+import pe.edu.upc.upet.ui.shared.SimplePetCard
+import pe.edu.upc.upet.ui.theme.Blue1
 
-class VetList {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VetList(navController: NavController) {
+
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Blue1,
+                    titleContentColor = Color.White,
+                ),
+                title = {
+                    Text("Veterinary Clinics")
+                },
+                navigationIcon = {
+                    CustomReturnButton(navController = navController)
+                }
+            )
+        }
+    ) {paddingValues->
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            items(veterinaryClinics) { vet ->
+                    VetCard(vet, onVetSelected = {
+                        navController.navigate("vetProfile/${vet.id}")
+                    })
+                }
+
+        }
+    }
 }
 
+
 @Composable
-fun VetCard(veterinaryClinics: VeterinaryClinics) {
+fun VetCard(veterinaryClinics: VeterinaryClinics, onVetSelected: ()->Unit) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Balance
+import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Schedule
@@ -67,10 +68,12 @@ fun PetProfile(petId: Int?, navController: NavHostController) {
                 IconButton(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     onClick = {  }) {
-                    Icon(
-                        Icons.Filled.Male,
-                        "Male",
-                    )
+                    if (pet != null) {
+                        Icon(
+                            imageVector = if(pet.gender == "Male") Icons.Filled.Male else Icons.Filled.Female,
+                            contentDescription = pet.gender
+                        )
+                    }
                 }
             }
 

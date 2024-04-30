@@ -1,7 +1,10 @@
 package pe.edu.upc.upet.navigation
 
-object Screen {
+object Routes {
+    const val RegisterPet = "registerPet"
     const val Home = "home"
-    const val PetScreen = "petScreen"
+    const val PetList = "petList"
+    const val VetList = "vetList"
+
 
 }
