@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import pe.edu.upc.upet.feature_profile.ui.PetOwnerProfile
+import pe.edu.upc.upet.feature_vet.ui.VeterinaryProfile
 import pe.edu.upc.upet.ui.theme.UPetTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PetOwnerProfile()
+                    VeterinaryProfile()
                 }
             }
         }
