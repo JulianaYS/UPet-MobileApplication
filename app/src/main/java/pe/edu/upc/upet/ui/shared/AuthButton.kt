@@ -23,11 +23,9 @@ import pe.edu.upc.upet.ui.theme.UpetOrange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
-fun AuthButton(text: String){
+fun AuthButton(text: String, onClick: () -> Unit = {}) {
     Button(
-        onClick = {
-
-        },
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = UpetOrange1, contentColor = Color.White
       ),

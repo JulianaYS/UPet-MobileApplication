@@ -3,6 +3,7 @@ package pe.edu.upc.upet.ui.screens.auth.signup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -23,9 +29,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pe.edu.upc.upet.feature_auth.data.remote.UserRequest
+import pe.edu.upc.upet.feature_auth.data.remote.UserType
+import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.ui.shared.AuthButton
 import pe.edu.upc.upet.ui.shared.AuthCheckBox
 import pe.edu.upc.upet.ui.shared.AuthHeader
+import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.AuthTextButton
 import pe.edu.upc.upet.ui.shared.InputTextField
 import pe.edu.upc.upet.ui.theme.BorderPadding
@@ -36,7 +46,7 @@ import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 
 @Composable
-fun SignUpScreen(){
+fun SignUpScreen( navigateTo:() -> Unit = {}){
     Scaffold {paddingValues->
         val fullName = remember {
             mutableStateOf("")
@@ -50,6 +60,13 @@ fun SignUpScreen(){
         val checkedState = remember {
             mutableStateOf(false)
         }
+        val selectedOption = remember {
+            mutableIntStateOf(1)
+        }
+
+        val showErrorSnackbar = remember { mutableStateOf(false) }
+        val snackbarMessage = remember { mutableStateOf("") }
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -57,21 +74,64 @@ fun SignUpScreen(){
                 .background(UpetBackGroundPrimary)
         ){
 
-            AuthHeader(texto = "Register")
-            InputTextField(input = fullName, placeholder = "Enter your full name", label ="Full Name" )
-            InputTextField(input = email, placeholder = "Enter your email", label ="Email" )
-            InputTextField(input = password, placeholder = "Enter your password", label ="Password" )
-            AuthUserRolCheckBox()
-            AuthCheckBox(checkedState = checkedState)
-            AuthButton(text = "Register")
-            AuthTextButton(text= "Already member?", clickableText ="Login")
+            Box {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                        .background(UpetBackGroundPrimary)
+                ) {
+                    AuthHeader(texto = "Register")
+                    AuthInputTextField(input = fullName, placeholder = "Enter your full name", label ="Full Name" )
+                    AuthInputTextField(input = email, placeholder = "Enter your email", label ="Email" )
+                    AuthInputTextField(input = password, placeholder = "Enter your password", label ="Password", true )
+                    AuthUserRolCheckBox(selectedOption = selectedOption)
+                    AuthCheckBox(checkedState = checkedState)
+                    AuthButton(text = "Register", onClick = {
+                        if (checkedState.value){
+                            registerLogicButton(userRequest = UserRequest(
+                                name = fullName.value,
+                                email = email.value,
+                                password = password.value,
+                                userType = if (selectedOption.value == 1) UserType.Vet else UserType.Owner
+                            ))
+                        }else {
+                            snackbarMessage.value = "You must accept the Terms and Conditions."
+                            showErrorSnackbar.value = true
+
+                        }
+                    }
+                    )
+
+                    AuthTextButton(text= "Already member?", clickableText ="Login")
+                }
+
+                if (showErrorSnackbar.value) {
+                    Snackbar(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .background(Color.Red)
+                            .align(Alignment.Center),
+                        action = {
+                            TextButton(onClick = { showErrorSnackbar.value = false })
+                                {
+                                Text(text = "Dismiss")
+
+                            }
+                        }
+                    ) {
+                        Text(text = snackbarMessage.value)
+                    }
+                }
+            }
+
 
         }
     }
 }
 
 @Composable
-fun AuthUserRolCheckBox(){
+fun AuthUserRolCheckBox( selectedOption: MutableState<Int> = mutableIntStateOf(1)){
     Column (
         modifier = Modifier.padding(
             start = BorderPadding,
@@ -86,7 +146,11 @@ fun AuthUserRolCheckBox(){
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Medium
         ))
-        RadioButtons()
+        RadioButtons(
+            option1 = "Veterinarian",
+            option2 = "Pet Owner",
+            selectedOption = selectedOption
+        )
     }
 }
 data class ToggleableInfo(
@@ -95,25 +159,29 @@ data class ToggleableInfo(
 )
 
 @Composable
-private fun RadioButtons() {
+private fun RadioButtons(
+    option1: String = "Veterinarian",
+    option2: String = "Pet Owner",
+    selectedOption: MutableState<Int>
+) {
     val radioButtons = remember {
         mutableStateListOf(
             ToggleableInfo(
                 isChecked = true,
-                text = "Veterinarian"
+                text = option1
             ),
             ToggleableInfo(
                 isChecked = false,
-                text = "Pet Owner"
+                text = option2
             )
         )
     }
 
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
-    ){
+    ) {
         radioButtons.forEachIndexed { index, info ->
             Row(
                 modifier = Modifier
@@ -123,6 +191,7 @@ private fun RadioButtons() {
                                 isChecked = it.text == info.text
                             )
                         }
+                        selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
                     }
                     .padding(end = 10.dp)
             ) {
@@ -134,22 +203,31 @@ private fun RadioButtons() {
                                 isChecked = it.text == info.text
                             )
                         }
+                        selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = UpetOrange1,
                         unselectedColor = UpetOrange1
                     ),
                 )
-                Text(text = info.text, style = TextStyle(
-                    color = Color.White,
-                    fontSize = 12.sp,
-                    fontFamily = poppinsFamily,
-                    fontWeight = FontWeight.Medium
-                ),
-                    modifier = Modifier.padding(top=15.dp))
+                Text(
+                    text = info.text,
+                    style = TextStyle(
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontFamily = poppinsFamily,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier.padding(top = 15.dp)
+                )
             }
         }
     }
+}
+
+
+fun registerLogicButton(authRepository: AuthRepository= AuthRepository(), userRequest: UserRequest){
+    authRepository.signUp(userRequest, {})
 }
 
 @Preview
