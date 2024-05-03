@@ -1,4 +1,4 @@
-package pe.edu.upc.upet.feature_vet.ui
+package pe.edu.upc.upet.ui.screens.vets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
