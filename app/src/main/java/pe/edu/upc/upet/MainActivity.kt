@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import pe.edu.upc.upet.feature_profile.ui.PetOwnerProfile
-import pe.edu.upc.upet.feature_vet.ui.VeterinaryProfile
 import pe.edu.upc.upet.ui.screens.home.Home
 import pe.edu.upc.upet.ui.theme.UPetTheme
 
