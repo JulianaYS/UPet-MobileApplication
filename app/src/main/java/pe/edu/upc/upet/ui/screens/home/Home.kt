@@ -30,6 +30,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,8 +48,11 @@ import pe.edu.upc.upet.feature_pet.domain.pets
 import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.feature_vet.domain.veterinaryClinics
 import pe.edu.upc.upet.navigation.Routes
+import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
+import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.pets.PetList
 import pe.edu.upc.upet.ui.screens.pets.RegisterPet
+import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.vets.VetCard
 import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.shared.SearchField
@@ -59,20 +64,22 @@ import pe.edu.upc.upet.ui.theme.PinkStrong
 fun Home() {
     val navController = rememberNavController()
     val backgroundColor = Color(0xFF0B1C3F)
-    Scaffold(modifier = Modifier.background(backgroundColor),
+    val shouldShowBottomBar = remember { mutableStateOf(true) }
+    Scaffold(
+        modifier = Modifier.background(backgroundColor),
         bottomBar = {
+            if (shouldShowBottomBar.value) {
+                BottomAppBar(
+                    modifier = Modifier
+                        .height(65.dp)
+                        .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
+                    containerColor = Color.White,
 
-            BottomAppBar(
-                modifier = Modifier
-                    .height(65.dp)
-                    .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
-                containerColor = Color.White,
-
-            ) {
-                 BottomNavigation( backgroundColor = Color.White) {
-                     BottomNavigationItem(
+                    ) {
+                    BottomNavigation(backgroundColor = Color.White) {
+                        BottomNavigationItem(
                             icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                            label = { Text("Home")},
+                            label = { Text("Home") },
                             selectedContentColor = Pink,
                             unselectedContentColor = Color.Gray,
                             selected = true,
@@ -92,7 +99,7 @@ fun Home() {
                             selectedContentColor = Pink,
                             unselectedContentColor = Color.Gray,
                             selected = false,
-                            onClick = { navController.navigate(Routes.VetList)}
+                            onClick = { navController.navigate(Routes.VetList) }
                         )
                         BottomNavigationItem(
                             icon = { Icon(Icons.Default.Event, contentDescription = null) },
@@ -111,13 +118,11 @@ fun Home() {
                             onClick = { /* Navigate to Profile screen */ }
                         )
                     }
-
-
-
+                }
             }
         }
         ) { paddingValues ->
-        NavHost(navController, startDestination = Routes.Home) {
+        NavHost(navController, startDestination = Routes.UserLogin) {
             composable(Routes.Home) {
                 Column(modifier = Modifier
                     .fillMaxSize()
@@ -130,19 +135,39 @@ fun Home() {
                 }
             }
             composable(Routes.PetList) {
+                shouldShowBottomBar.value = true
                 PetList(navController)
             }
             composable("PetProfile/{petId}") { backStackEntry ->
+                shouldShowBottomBar.value = true
                 val petId = backStackEntry.arguments?.getString("petId")?.toInt()
-
                 PetProfile(petId, navController)
             }
             composable(Routes.RegisterPet) {
+                shouldShowBottomBar.value = true
                 RegisterPet(navController)
             }
             composable(Routes.VetList) {
+                shouldShowBottomBar.value = true
                 VetList(navController)
             }
+            composable(Routes.UserRegister){
+                shouldShowBottomBar.value = false
+                SignUpScreen(){ destination ->
+                    navController.navigate(destination)
+                }
+            }
+            composable(Routes.UserLogin){
+                shouldShowBottomBar.value = false
+                SignInScreen{ destination ->
+                    navController.navigate(destination)
+                }
+            }
+            composable (Routes.PasswordRecovery){
+                shouldShowBottomBar.value = false
+                SendEmailScreen(navController)
+            }
+
         }
     }
 }

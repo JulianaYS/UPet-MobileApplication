@@ -5,6 +5,8 @@ object Routes {
     const val Home = "home"
     const val PetList = "petList"
     const val VetList = "vetList"
-
+    const val UserRegister = "signUpScreen"
+    const val UserLogin = "signInScreen"
+    const val PasswordRecovery = "sendEmailScreen"
 
 }
