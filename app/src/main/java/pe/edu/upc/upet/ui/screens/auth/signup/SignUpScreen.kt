@@ -26,27 +26,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.feature_auth.data.remote.UserRequest
 import pe.edu.upc.upet.feature_auth.data.remote.UserType
 import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.AuthButton
 import pe.edu.upc.upet.ui.shared.AuthCheckBox
 import pe.edu.upc.upet.ui.shared.AuthHeader
 import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.AuthTextButton
-import pe.edu.upc.upet.ui.shared.InputTextField
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UPetTheme
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 
 @Composable
-fun SignUpScreen( navigateTo:() -> Unit = {}){
+fun SignUpScreen( navigateTo: (String) -> Unit ){
     Scaffold {paddingValues->
         val fullName = remember {
             mutableStateOf("")
@@ -95,15 +93,19 @@ fun SignUpScreen( navigateTo:() -> Unit = {}){
                                 password = password.value,
                                 userType = if (selectedOption.value == 1) UserType.Vet else UserType.Owner
                             ))
+                            navigateTo(Routes.Home)
                         }else {
                             snackbarMessage.value = "You must accept the Terms and Conditions."
                             showErrorSnackbar.value = true
-
                         }
                     }
                     )
 
-                    AuthTextButton(text= "Already member?", clickableText ="Login")
+                    AuthTextButton(text= "Already member?",
+                        clickableText ="Login",
+                        onClickClickableText = {
+                            navigateTo(Routes.UserLogin)
+                        } )
                 }
 
                 if (showErrorSnackbar.value) {
@@ -230,10 +232,3 @@ fun registerLogicButton(authRepository: AuthRepository= AuthRepository(), userRe
     authRepository.signUp(userRequest, {})
 }
 
-@Preview
-@Composable
-fun SignUpPreview(){
-    UPetTheme {
-        SignUpScreen()
-    }
-}
