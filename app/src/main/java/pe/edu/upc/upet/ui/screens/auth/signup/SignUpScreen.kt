@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.screens.auth.signup
 
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +38,7 @@ import pe.edu.upc.upet.ui.shared.AuthCheckBox
 import pe.edu.upc.upet.ui.shared.AuthHeader
 import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.AuthTextButton
+import pe.edu.upc.upet.ui.shared.Dialog
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
@@ -87,7 +89,22 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                     AuthUserRolCheckBox(selectedOption = selectedOption)
                     AuthCheckBox(checkedState = checkedState)
                     AuthButton(text = "Register", onClick = {
-                        if (checkedState.value){
+                        if (fullName.value.isEmpty()) {
+                            snackbarMessage.value = "You must enter your full name."
+                            showErrorSnackbar.value = true
+                        } else if (email.value.isEmpty()) {
+                            snackbarMessage.value = "You must enter your email."
+                            showErrorSnackbar.value = true
+                        } else if(!Patterns.EMAIL_ADDRESS.matcher(email.value).matches()){
+                            snackbarMessage.value = "You must enter a valid email."
+                            showErrorSnackbar.value = true
+                        } else if (password.value.isEmpty()) {
+                            snackbarMessage.value = "You must enter your password."
+                            showErrorSnackbar.value = true
+                        } else if (!checkedState.value) {
+                            snackbarMessage.value = "You must accept the Terms and Conditions."
+                            showErrorSnackbar.value = true
+                        } else {
                             registerLogicButton(userRequest = UserRequest(
                                 name = fullName.value,
                                 email = email.value,
@@ -95,12 +112,8 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                                 userType = if (selectedOption.value == 1) UserType.Vet else UserType.Owner
                             ))
                             navigateTo(Routes.Home)
-                        }else {
-                            snackbarMessage.value = "You must accept the Terms and Conditions."
-                            showErrorSnackbar.value = true
                         }
-                    }
-                    )
+                    })
 
                     AuthTextButton(text= "Already member?",
                         clickableText ="Login",
@@ -109,23 +122,8 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                         } )
                 }
 
-                if (showErrorSnackbar.value) {
-                    Snackbar(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .background(Color.Red)
-                            .align(Alignment.Center),
-                        action = {
-                            TextButton(onClick = { showErrorSnackbar.value = false })
-                                {
-                                Text(text = "Dismiss")
+                Dialog(message = (snackbarMessage.value), showError = showErrorSnackbar )
 
-                            }
-                        }
-                    ) {
-                        Text(text = snackbarMessage.value)
-                    }
-                }
             }
 
         }
@@ -193,7 +191,8 @@ private fun RadioButtons(
                                 isChecked = it.text == info.text
                             )
                         }
-                        selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
+                        selectedOption.value =
+                            if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
                     }
                     .padding(end = 10.dp)
             ) {
