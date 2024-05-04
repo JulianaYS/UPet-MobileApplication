@@ -8,5 +8,6 @@ object Routes {
     const val UserRegister = "signUpScreen"
     const val UserLogin = "signInScreen"
     const val PasswordRecovery = "sendEmailScreen"
-
+    const val ConfirmCode = "ConfirmCodeScreen"
+    const val NewPassword = "NewPasswordScreen"
 }

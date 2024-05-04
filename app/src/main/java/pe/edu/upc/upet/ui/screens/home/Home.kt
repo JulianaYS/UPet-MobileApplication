@@ -58,6 +58,8 @@ import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.pets.PetList
 import pe.edu.upc.upet.ui.screens.pets.RegisterPet
+import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
+import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
 import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.vets.VetCard
 import pe.edu.upc.upet.ui.screens.vets.VetList
@@ -174,7 +176,14 @@ fun Home() {
                 shouldShowBottomBar.value = false
                 SendEmailScreen(navController)
             }
-
+            composable (Routes.ConfirmCode){
+                shouldShowBottomBar.value = false
+                ConfirmCodeScreen(navController)
+            }
+            composable (Routes.NewPassword){
+                shouldShowBottomBar.value = false
+                NewPasswordScreen(navController)
+            }
         }
     }
 }
