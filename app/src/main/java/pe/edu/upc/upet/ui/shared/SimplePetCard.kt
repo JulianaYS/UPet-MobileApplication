@@ -19,11 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import pe.edu.upc.upet.feature_pet.domain.Pet
+import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.ui.theme.Blue1
 
 @Composable
-fun SimplePetCard( pet: Pet, navController: NavHostController, onPetSelected: (Int) -> Unit) {
+fun SimplePetCard(pet: PetResponse, navController: NavHostController, onPetSelected: (Int) -> Unit) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -35,7 +35,7 @@ fun SimplePetCard( pet: Pet, navController: NavHostController, onPetSelected: (I
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
-                painter = rememberImagePainter(pet.imageUrl),
+                painter = rememberImagePainter(pet.image_url),
                 contentDescription = "Pet Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

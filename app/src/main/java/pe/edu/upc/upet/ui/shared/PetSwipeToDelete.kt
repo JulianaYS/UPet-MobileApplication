@@ -13,11 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.domain.Pet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PetSwipeToDelete(pet: Pet, deletePet:() ->Unit, onPetSelected: (Int) -> Unit) {
+fun PetSwipeToDelete(pet: PetResponse, deletePet:() ->Unit, onPetSelected: (Int) -> Unit) {
     val dismissState = rememberSwipeToDismissBoxState()
 
     LaunchedEffect(key1 = dismissState.currentValue) {

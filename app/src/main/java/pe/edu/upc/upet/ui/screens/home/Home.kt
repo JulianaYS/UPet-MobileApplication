@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.screens.home
 import PetProfile
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,8 +31,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +49,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
-import pe.edu.upc.upet.feature_pet.domain.pets
+import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
+import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.feature_vet.domain.veterinaryClinics
 import pe.edu.upc.upet.navigation.Routes
@@ -59,6 +64,7 @@ import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.shared.SearchField
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.PinkStrong
+import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
 fun Home() {
@@ -215,6 +221,39 @@ fun UserSection(){
 
 @Composable
 fun PetsSection(navController: NavHostController) {
+
+    val petRepository = remember { PetRepository() }
+    var pets: List<PetResponse> by remember { mutableStateOf(emptyList()) }
+
+    val ownerId = 1
+
+    // Llamar a getPetsByOwnerId para obtener la lista de mascotas del propietario
+    LaunchedEffect(ownerId) {
+        petRepository.getPetsByOwnerId(ownerId.toInt(),
+            onSuccess = { petsList ->
+                Log.d("PetsSection", "Pets list received: $petsList") // Agrega un tag "PetsSection"
+
+                pets = petsList.map { petResponse ->
+                    PetResponse(
+                        id = petResponse.id,
+                        name = petResponse.name,
+                        petOwnerId = petResponse.petOwnerId,
+                        breed = petResponse.breed,
+                        species = petResponse.species,
+                        weight = petResponse.weight,
+                        age = petResponse.age,
+                        image_url = petResponse.image_url,
+                        gender = petResponse.gender
+                    )
+                }
+            },
+            onError = { error ->
+                // Manejar el error, por ejemplo, mostrar un mensaje de error
+                //Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
     Column {
         Row(
             modifier = Modifier
@@ -223,7 +262,7 @@ fun PetsSection(navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "My Pets",
+                text = "My Pets (${pets.size})",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.White
             )
@@ -237,14 +276,16 @@ fun PetsSection(navController: NavHostController) {
         }
         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
             items(pets.take(4)) { pet ->
-                SimplePetCard(pet, navController, onPetSelected = {
+                SimplePetCard(pet, navController) {
                     navController.navigate("PetProfile/${pet.id}")
-                })
+                }
             }
         }
 
     }
 }
+
+
 
     @Composable
     fun RecommendedVetsSection(navController: NavController ) {
