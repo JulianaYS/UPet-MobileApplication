@@ -11,10 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.InputTextField
@@ -48,13 +48,9 @@ fun SendEmailScreen(navController: NavController) {
                 fontSize = 12.sp
             )
             InputTextField(input = email, placeholder = "Enter your email")
-            CustomButton(text = "Send Email") {}
+            CustomButton(text = "Send Email", onClick = {
+                navController.navigate(Routes.ConfirmCode)
+            })
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewSendEmailScreen() {
-
 }
