@@ -23,10 +23,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.domain.Pet
 
 @Composable
-fun PetCard(pet: Pet, onPetSelected: (Int) -> Unit ) {
+fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -41,7 +42,7 @@ fun PetCard(pet: Pet, onPetSelected: (Int) -> Unit ) {
                 .padding(6.dp)
         ) {
             Image(
-                painter = rememberImagePainter(pet.imageUrl),
+                painter = rememberImagePainter(pet.image_url),
                 contentDescription = "Pet Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

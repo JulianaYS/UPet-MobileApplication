@@ -40,12 +40,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.ui.theme.UpetOrange1
 
 
 @Composable
 fun VeterinaryProfile(){
 
-    val UpetOrange =Color(0xFFFF8F86)
     Scaffold {
             paddingValues ->
         Column(modifier = Modifier
@@ -183,7 +183,7 @@ fun VeterinaryProfile(){
 
                         Button(onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = UpetOrange,
+                                containerColor = UpetOrange1,
                                 contentColor = Color.White
                             ),
                             modifier = Modifier
@@ -194,7 +194,7 @@ fun VeterinaryProfile(){
                         }
                         Button(onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = UpetOrange,
+                                containerColor = UpetOrange1,
                                 contentColor = Color.White
                             ),
                             modifier = Modifier

@@ -41,6 +41,7 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         val signInCall = authService.signIn(SignInRequest(username, password))
         signInCall.enqueue(object : Callback<SignInResponse> {
             override fun onResponse(call: Call<SignInResponse>, response: Response<SignInResponse>) {
+                TokenManager.clearToken(context)
                 if (response.isSuccessful) {
                     val userResponse = response.body() as SignInResponse
                     TokenManager.saveToken(context, userResponse.access_token)

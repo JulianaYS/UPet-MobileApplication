@@ -78,7 +78,7 @@ fun PetProfile(petId: Int?, navController: NavHostController) {
             }
 
             if (pet != null) {
-                PetImage(pet.imageUrl)
+                PetImage(pet.image_url)
             }
 
             Box(

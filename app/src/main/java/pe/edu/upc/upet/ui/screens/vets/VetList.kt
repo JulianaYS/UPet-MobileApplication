@@ -42,7 +42,6 @@ import pe.edu.upc.upet.ui.theme.Blue1
 @Composable
 fun VetList(navController: NavController) {
 
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
