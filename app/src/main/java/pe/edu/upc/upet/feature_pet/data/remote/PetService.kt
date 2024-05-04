@@ -6,4 +6,6 @@ import retrofit2.http.GET
 interface PetService {
     @GET("pets")
     fun getAll(): Call<PetsResponse>
+
+
 }

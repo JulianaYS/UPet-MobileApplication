@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -58,7 +59,6 @@ import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.shared.SearchField
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.PinkStrong
-
 
 @Composable
 fun Home() {
@@ -124,6 +124,7 @@ fun Home() {
         ) { paddingValues ->
         NavHost(navController, startDestination = Routes.UserLogin) {
             composable(Routes.Home) {
+                shouldShowBottomBar.value = true
                 Column(modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
