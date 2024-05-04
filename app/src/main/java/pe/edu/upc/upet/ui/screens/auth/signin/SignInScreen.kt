@@ -1,8 +1,11 @@
 package pe.edu.upc.upet.ui.screens.auth.signin
 
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.navigation.Routes
@@ -23,10 +27,13 @@ import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.utils.TokenManager
 
 
 @Composable
 fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: (String) -> Unit){
+
+    val context = LocalContext.current
     Scaffold {paddingValues->
         val email = remember{
             mutableStateOf("")
@@ -54,7 +61,13 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                     navigateTo(Routes.PasswordRecovery)
                 })
             AuthButton(text = "Log In", onClick = {
-                navigateTo(Routes.Home)
+                val emailText = email.value
+                val passwordText = password.value
+                if (emailText.isNotEmpty() && passwordText.isNotEmpty()) {
+                    authRepository.signIn(context, emailText, passwordText)
+                    signInUser(navigateTo, context)
+                }
+
             })
             HorizontalDivider(
                 modifier = Modifier.padding(BorderPadding),
@@ -72,3 +85,10 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
 }
 
 
+fun signInUser(navigateTo: (String) -> Unit, context : Context){
+    if (TokenManager.isUserAuthenticated(context)) {
+        navigateTo(Routes.Home)
+    } else {
+        Log.d("tag", "User not authenticated")
+    }
+}

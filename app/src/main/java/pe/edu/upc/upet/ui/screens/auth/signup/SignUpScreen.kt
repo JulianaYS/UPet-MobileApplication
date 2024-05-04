@@ -45,6 +45,7 @@ import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
 fun SignUpScreen( navigateTo: (String) -> Unit ){
+
     Scaffold {paddingValues->
         val fullName = remember {
             mutableStateOf("")
@@ -126,7 +127,6 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                     }
                 }
             }
-
 
         }
     }
