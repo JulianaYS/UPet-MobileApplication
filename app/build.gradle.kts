@@ -50,7 +50,8 @@ android {
 }
 
 dependencies {
-
+    implementation("io.coil-kt:coil-compose:1.4.0")
+    implementation("androidx.compose.material:material:1.6.6")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,6 +65,11 @@ dependencies {
     implementation(libs.landscapist.glide)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.play.services.tagmanager.v4.impl)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
