@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.PasswordTextField
@@ -54,7 +55,9 @@ fun NewPasswordScreen( navController: NavController) {
                 fontSize = 12.sp
             )
             PasswordTextField(input = confirmPassword, placeholder = "Confirm Password")
-            CustomButton(text = "Reset Password") {}
+            CustomButton(text = "Reset Password", onClick = {
+                navController.navigate(Routes.UserLogin)
+            })
         }
     }
 }
