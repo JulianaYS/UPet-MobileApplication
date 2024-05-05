@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.feature_auth.data.remote.UserRequest
+import pe.edu.upc.upet.feature_auth.data.remote.UserResponse
 import pe.edu.upc.upet.feature_auth.data.remote.UserType
 import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.navigation.Routes
@@ -62,7 +63,7 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
             mutableStateOf(false)
         }
         val selectedOption = remember {
-            mutableIntStateOf(1)
+            mutableIntStateOf(0)
         }
 
         val showErrorSnackbar = remember { mutableStateOf(false) }
@@ -111,7 +112,7 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                                 password = password.value,
                                 userType = if (selectedOption.value == 1) UserType.Vet else UserType.Owner
                             ))
-                            navigateTo(Routes.Home)
+                            navigateTo(Routes.UserLogin)
                         }
                     })
 
@@ -228,6 +229,17 @@ private fun RadioButtons(
 
 
 fun registerLogicButton(authRepository: AuthRepository= AuthRepository(), userRequest: UserRequest){
-    authRepository.signUp(userRequest, {})
-}
+    authRepository.signUp(userRequest) { userResponse ->
 
+        if (userRequest.userType == UserType.Owner) {
+            println(userResponse)
+            authRepository.createPetOwner(userResponse.id, userRequest) { success ->
+                if (success) {
+
+                } else {
+
+                }
+            }
+        }
+    }
+}

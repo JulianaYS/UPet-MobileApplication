@@ -92,7 +92,15 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                             snackbarMessage.value = "You must enter your password."
                             showErrorSnackbar.value = true
                         } else {
-                            navigateTo(Routes.Home)
+                            authRepository.signIn(context, email.value, password.value) { success ->
+                                if (success) {
+                                    navigateTo(Routes.Home)
+                                } else {
+                                    snackbarMessage.value = "Invalid credentials."
+                                    showErrorSnackbar.value = true
+                                }
+                            }
+
                         }
 
                     })
