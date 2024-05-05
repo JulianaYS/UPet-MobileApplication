@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import pe.edu.upc.upet.navigation.Navigation
 import pe.edu.upc.upet.ui.screens.home.Home
 import pe.edu.upc.upet.ui.theme.UPetTheme
 
@@ -20,8 +21,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   
-                    Home()
+
+                    Navigation()
                 }
             }
         }
