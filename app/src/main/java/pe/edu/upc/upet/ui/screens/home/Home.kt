@@ -45,7 +45,6 @@ import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.ui.theme.PinkStrong
 
 @Composable
-
 fun Home( navController: NavController){
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
