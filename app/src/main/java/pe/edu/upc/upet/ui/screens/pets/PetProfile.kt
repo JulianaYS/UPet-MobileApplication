@@ -32,7 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.feature_pet.domain.pets
@@ -40,7 +40,7 @@ import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 
 @Composable
-fun PetProfile(petId: Int?, navController: NavHostController) {
+fun PetProfile(petId: Int?, navController: NavController) {
     val pet = getPetById(petId)
 
     Scaffold {paddingValues ->

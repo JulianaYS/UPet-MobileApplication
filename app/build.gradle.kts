@@ -67,7 +67,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.play.services.tagmanager.v4.impl)
     implementation(libs.androidx.room.runtime)
-    implementation(libs.jjwt)
+    implementation(libs.androidx.room.common)
     annotationProcessor(libs.androidx.room.compiler)
 
 

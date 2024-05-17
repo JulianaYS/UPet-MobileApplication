@@ -14,7 +14,7 @@ navigationCompose = "2.7.7"
 materialIconsExtended = "1.6.6"
 playServicesTagmanagerV4Impl = "18.0.4"
 room = "2.6.1"
-jjwt = "0.12.5"
+roomCommon = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,7 +39,7 @@ androidx-material-icons-extended = { group = "androidx.compose.material", name =
 play-services-tagmanager-v4-impl = { group = "com.google.android.gms", name = "play-services-tagmanager-v4-impl", version.ref = "playServicesTagmanagerV4Impl" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-jjwt = { group = "io.jsonwebtoken", name = "jjwt", version.ref = "jjwt" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -2,8 +2,6 @@ package pe.edu.upc.upet.utils
 
 import android.content.Context
 
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jwts
 
 object TokenManager {
     private const val PREF_NAME = "my_app_prefs"

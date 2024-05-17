@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.InputDigit
@@ -59,7 +60,9 @@ fun ConfirmCodeScreen(navController: NavController) {
                 InputDigit(digitFive)
             }
 
-            CustomButton(text = "Verify Code") {}
+            CustomButton(text = "Verify Code", onClick = {
+                navController.navigate(Routes.NewPassword)
+            })
         }
 
     }
