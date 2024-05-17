@@ -38,7 +38,8 @@ fun AuthInputTextField(
     input: MutableState<String>,
     placeholder: String,
     label: String,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val commonPadding = BorderPadding
     val cornerSize = 10.dp
@@ -53,7 +54,8 @@ fun AuthInputTextField(
         placeholder = placeholder,
         isPassword = isPassword,
         isPasswordVisible = isPasswordVisible,
-        cornerSize = cornerSize
+        cornerSize = cornerSize,
+        keyboardType = keyboardType
     )
 }
 
@@ -96,7 +98,8 @@ private fun CustomOutlinedTextField(
     placeholder: String,
     isPassword: Boolean,
     isPasswordVisible: MutableState<Boolean>,
-    cornerSize: Dp
+    cornerSize: Dp,
+    keyboardType: KeyboardType
 ) {
     OutlinedTextField(
         value = input.value,
@@ -117,7 +120,7 @@ private fun CustomOutlinedTextField(
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Normal
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         visualTransformation = if (isPassword) {
             if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation()
         } else VisualTransformation.None,

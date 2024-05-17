@@ -152,7 +152,7 @@ fun Home() {
             }
             composable(Routes.RegisterPet) {
                 shouldShowBottomBar.value = true
-                RegisterPet(navController)
+                RegisterPet(){destination -> navController.navigate(destination)}
             }
             composable(Routes.VetList) {
                 shouldShowBottomBar.value = true
