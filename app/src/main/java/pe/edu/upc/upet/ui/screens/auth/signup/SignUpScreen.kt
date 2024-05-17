@@ -160,7 +160,7 @@ data class ToggleableInfo(
 )
 
 @Composable
-private fun RadioButtons(
+fun RadioButtons(
     option1: String = "Veterinarian",
     option2: String = "Pet Owner",
     selectedOption: MutableState<Int>
