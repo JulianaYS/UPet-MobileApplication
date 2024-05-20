@@ -42,7 +42,7 @@ fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
                 .padding(6.dp)
         ) {
             Image(
-                painter = rememberImagePainter(pet.image_url),
+                painter = rememberImagePainter(pet.imageUrl),
                 contentDescription = "Pet Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -71,7 +71,7 @@ fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
                         color = Color.Gray
                     )
                     Text(
-                        text = "Age: ${pet.age}",
+                        text = "Age: ${pet.birthdate}",
                         color = Color.Gray
                     )
                 }

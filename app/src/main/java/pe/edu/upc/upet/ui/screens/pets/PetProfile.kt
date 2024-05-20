@@ -35,12 +35,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import pe.edu.upc.upet.feature_pet.domain.Pet
-import pe.edu.upc.upet.feature_pet.domain.pets
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 
 @Composable
 fun PetProfile(petId: Int?, navController: NavController) {
+    /*
     val pet = getPetById(petId)
 
     Scaffold {paddingValues ->
@@ -78,7 +78,7 @@ fun PetProfile(petId: Int?, navController: NavController) {
             }
 
             if (pet != null) {
-                PetImage(pet.image_url)
+                PetImage(pet.imageUrl)
             }
 
             Box(
@@ -150,7 +150,7 @@ fun PetProfile(petId: Int?, navController: NavController) {
 
         }
 
-    }
+    }*/
 }
 
 @Composable
@@ -204,7 +204,7 @@ fun PetImage(imageUrl: String) {
         )
     }
 }
-
+/*
 fun getPetById(id: Int?): Pet? {
         return pets.find { it.id == id}
-}
+}*/

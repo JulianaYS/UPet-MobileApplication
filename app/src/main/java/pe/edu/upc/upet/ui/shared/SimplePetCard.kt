@@ -35,7 +35,7 @@ fun SimplePetCard(pet: PetResponse, navController: NavController, onPetSelected:
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
-                painter = rememberImagePainter(pet.image_url),
+                painter = rememberImagePainter(pet.imageUrl),
                 contentDescription = "Pet Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

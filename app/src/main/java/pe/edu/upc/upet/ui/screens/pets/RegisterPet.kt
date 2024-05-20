@@ -41,6 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
+import pe.edu.upc.upet.feature_pet.data.remote.PetRequest
+import pe.edu.upc.upet.feature_pet.data.remote.SpeciesEnum
+import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.auth.signup.RadioButtons
 import pe.edu.upc.upet.ui.shared.AuthButton
@@ -55,9 +59,11 @@ import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
-fun RegisterPet( navigateTo: (String) -> Unit) {
+fun RegisterPet(id : Int, navigateTo: (String) -> Unit) {
     Scaffold { paddingValues ->
         val name = remember { mutableStateOf("") }
         val type = remember { mutableStateOf("") }
@@ -152,22 +158,27 @@ fun RegisterPet( navigateTo: (String) -> Unit) {
                             snackbarMessage.value = "You must enter your pet's breed."
                             showErrorSnackbar.value = true
                         } else {
-                            /*petRepository.registerPet(PetRequest(
-                            name = name.value,
-                            type = type.value,
-                            breed = breed.value,
-                            weight = weight.value.toDouble(),
-                            gender = if (selectedGender.value == 1) GenderEnum.Male else GenderEnum.Female
-                        )) { success ->
-                            if (success) {
-                                snackbarMessage.value = "Pet registered successfully."
-                                showErrorSnackbar.value = false
-                                navigateTo(Routes.Home)
-                               } else {
-                                   snackbarMessage.value = "Failed to register pet."
-                                   showErrorSnackbar.value = true
-                               }
-                           }*/
+                            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            val date = format.parse(selectedDate.value)
+                            val petRequest = PetRequest(
+                                name = name.value,
+                                petOwnerId = id,
+                                breed = breed.value,
+                                species = if (selectedType.value == "Dogs") SpeciesEnum.Dog else if (selectedType.value == "Cats") SpeciesEnum.Cat else SpeciesEnum.Bird,
+                                weight = weight.value.toDouble(),
+                                birthdate = date,
+                                imageUrl = "https://www.google.com",
+                                gender = if (selectedGender.value == 1) GenderEnum.Male else GenderEnum.Female
+                            )
+                            PetRepository().createPet(petRequest, onSuccess = { petResponse ->
+
+                                println("Pet created successfully: $petResponse")
+                            }, onError = { error ->
+
+                                println("Failed to create pet: $error")
+                            })
+
+                            navigateTo(Routes.Home)
                         }
                     })
                     //Divider(modifier = Modifier.height(10.dp))

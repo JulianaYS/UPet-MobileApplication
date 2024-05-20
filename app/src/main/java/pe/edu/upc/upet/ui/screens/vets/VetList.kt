@@ -30,7 +30,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import pe.edu.upc.upet.feature_pet.domain.pets
 import pe.edu.upc.upet.feature_vet.domain.VeterinaryClinics
 import pe.edu.upc.upet.feature_vet.domain.veterinaryClinics
 import pe.edu.upc.upet.ui.shared.CustomReturnButton

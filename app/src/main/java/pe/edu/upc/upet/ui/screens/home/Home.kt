@@ -124,8 +124,8 @@ fun PetsSection(navController: NavController) {
                         breed = petResponse.breed,
                         species = petResponse.species,
                         weight = petResponse.weight,
-                        age = petResponse.age,
-                        image_url = petResponse.image_url,
+                        birthdate = petResponse.birthdate,
+                        imageUrl = petResponse.imageUrl,
                         gender = petResponse.gender
                     )
                 }

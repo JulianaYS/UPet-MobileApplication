@@ -51,9 +51,13 @@ fun Navigation() {
                 val petId = backStackEntry.arguments?.getString("petId")?.toInt()
                 PetProfile(petId, navController)
             }
-            composable(Routes.RegisterPet) {
+            composable(Routes.RegisterPet) {backStackEntry ->
                 shouldShowBottomBar.value = true
-                RegisterPet(navController)
+                val petOwnerId = backStackEntry.arguments?.getString("petOwner")?.toInt()
+                if(petOwnerId != null) {
+                    val navigateTo = { destination: String -> navController.navigate(destination)}
+                    RegisterPet(petOwnerId, navigateTo)
+                }
             }
             composable(Routes.VetList) {
                 shouldShowBottomBar.value = true
