@@ -9,10 +9,11 @@ data class UserResponse(
     val name: String,
     @SerializedName("email")
     val email: String,
-    @SerializedName("password")
-    val password: String,
     @SerializedName("userType")
-    val userType: String,
+    val userType: UserType,
+    @SerializedName("image_url")
+    val imageUrl: String,
     @SerializedName("registered")
     val registered: Boolean
 )
+

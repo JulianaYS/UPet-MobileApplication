@@ -1,4 +1,4 @@
-package pe.edu.upc.upet.feature_vet.domain
+package pe.edu.upc.upet.feature_vetClinics.domain
 
 
 data class VeterinaryClinics(

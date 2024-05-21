@@ -2,6 +2,7 @@ package pe.edu.upc.upet.feature_auth.data.repository
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import pe.edu.upc.upet.feature_auth.data.remote.AuthService
 import pe.edu.upc.upet.feature_auth.data.remote.AuthServiceFactory
@@ -37,19 +38,17 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         })
     }
 
-    fun signIn(context: Context, username: String, password: String, callback: (Boolean) -> Unit) {
+    fun signIn( username: String, password: String, callback: (Boolean) -> Unit) {
         val signInCall = authService.signIn(SignInRequest(username, password))
         signInCall.enqueue(object : Callback<SignInResponse> {
-            override fun onResponse(call: Call<SignInResponse>, response: Response<SignInResponse>) {
-                TokenManager.clearToken(context)
+            override fun onResponse(
+                call: Call<SignInResponse>,
+                response: Response<SignInResponse>) {
+                TokenManager.clearToken()
                 if (response.isSuccessful) {
                     val userResponse = response.body() as SignInResponse
-                    TokenManager.saveToken(context, userResponse.access_token)
-                    val sharedPref = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-                    with(sharedPref.edit()) {
-                        putString("username", username)
-                        apply()
-                    }
+                    TokenManager.saveToken( userResponse.access_token)
+
                     callback(true)
                 } else {
                     callback(false)
@@ -85,21 +84,24 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         })
     }
 
-    fun createPetOwner(userId: Int, userRequest: UserRequest, callback: (Boolean) -> Unit) {
-        val call = authService.createPetOwner(userId, userRequest)
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                callback(response.isSuccessful)
+    fun getUserById(userId: Int, callback: (UserResponse) -> Unit) {
+        val getUserById = authService.getUserById(userId)
+        getUserById.enqueue(object : Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful) {
+                    val userResponse = response.body() as UserResponse
+                    callback(userResponse)
+                }
             }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 t.message?.let {
                     Log.d("AuthRepository", it)
                 }
-                callback(false)
             }
         })
     }
+
 
 }
 

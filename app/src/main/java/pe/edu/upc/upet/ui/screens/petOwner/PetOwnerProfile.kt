@@ -43,16 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
-import pe.edu.upc.upet.feature_profile.domain.PetOwner
 
 
 @Composable
 fun PetOwnerProfile(navController: NavHostController) {
 
     val UpetOrange =Color(0xFFFF8F86)
-    val petOwner = remember {
-        mutableSetOf((PetOwner("FREE")))
-    }
+
 //0A1B3E
     Scaffold {
             paddingValues ->

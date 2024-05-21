@@ -1,6 +1,6 @@
 package pe.edu.upc.upet.feature_appointment.domain
 
-import pe.edu.upc.upet.feature_vet.domain.VeterinaryClinics
+import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinics
 
 data class Appointment(
     val date: String,
