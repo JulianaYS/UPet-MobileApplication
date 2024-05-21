@@ -4,24 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,33 +25,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.skydoves.landscapist.glide.GlideImage
+import androidx.navigation.NavHostController
 import pe.edu.upc.upet.navigation.Routes
-import pe.edu.upc.upet.ui.screens.auth.signup.RadioButtons
 import pe.edu.upc.upet.ui.shared.AuthButton
 import pe.edu.upc.upet.ui.shared.AuthInputTextField
-import pe.edu.upc.upet.ui.shared.CustomButton
-import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.InputDate
 import pe.edu.upc.upet.ui.shared.InputDropdownField
-import pe.edu.upc.upet.ui.shared.InputTextField
 import pe.edu.upc.upet.ui.shared.LabelTextField
+import pe.edu.upc.upet.ui.shared.RadioButtonsOptions
+import pe.edu.upc.upet.ui.shared.TextFieldType
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
-fun RegisterPet( navigateTo: (String) -> Unit) {
+fun RegisterPet(navigateTo: NavHostController) {
     Scaffold { paddingValues ->
         val name = remember { mutableStateOf("") }
         val type = remember { mutableStateOf("") }
@@ -93,7 +82,7 @@ fun RegisterPet( navigateTo: (String) -> Unit) {
                             .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CustomReturnButton1(onClick = { navigateTo(Routes.Home) })
+                        CustomReturnButton1(onClick = {  })
                         Text(
                             text = "Pet Form",
                             modifier = Modifier
@@ -135,7 +124,7 @@ fun RegisterPet( navigateTo: (String) -> Unit) {
                         input = weight,
                         placeholder = "Enter your pet's weight in Kg",
                         label = "Weight (Kg)",
-                        keyboardType = KeyboardType.Number
+                        type = TextFieldType.Phone
                     )
                     GenderOption(selectedGender)
                     AuthButton(text = "Save", onClick = {
@@ -195,7 +184,7 @@ fun GenderOption( selectedOption: MutableState<Int> = mutableIntStateOf(1)){
             fontWeight = FontWeight.Medium
         )
         )
-        RadioButtons(
+        RadioButtonsOptions(
             option1 = "Male",
             option2 = "Female",
             selectedOption = selectedOption

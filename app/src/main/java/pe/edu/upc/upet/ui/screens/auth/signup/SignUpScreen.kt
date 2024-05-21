@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.screens.auth.signup
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +41,8 @@ import pe.edu.upc.upet.ui.shared.AuthHeader
 import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.AuthTextButton
 import pe.edu.upc.upet.ui.shared.Dialog
+import pe.edu.upc.upet.ui.shared.RadioButtonsOptions
+import pe.edu.upc.upet.ui.shared.TextFieldType
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
@@ -63,7 +66,7 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
             mutableStateOf(false)
         }
         val selectedOption = remember {
-            mutableIntStateOf(0)
+            mutableIntStateOf(1)
         }
 
         val showErrorSnackbar = remember { mutableStateOf(false) }
@@ -86,8 +89,9 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                     AuthHeader(texto = "Register")
                     AuthInputTextField(input = fullName, placeholder = "Enter your full name", label ="Full Name" )
                     AuthInputTextField(input = email, placeholder = "Enter your email", label ="Email" )
-                    AuthInputTextField(input = password, placeholder = "Enter your password", label ="Password", true )
+                    AuthInputTextField(input = password, placeholder = "Enter your password", label ="Password", type = TextFieldType.Password)
                     AuthUserRolCheckBox(selectedOption = selectedOption)
+                    Log.d("selectedoption", selectedOption.value.toString())
                     AuthCheckBox(checkedState = checkedState)
                     AuthButton(text = "Register", onClick = {
                         if (fullName.value.isEmpty()) {
@@ -110,7 +114,7 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                                 name = fullName.value,
                                 email = email.value,
                                 password = password.value,
-                                userType = if (selectedOption.value == 1) UserType.Vet else UserType.Owner
+                                userType = if (selectedOption.intValue == 1) UserType.Vet else UserType.Owner
                             ))
                             navigateTo(Routes.UserLogin)
                         }
@@ -147,7 +151,7 @@ fun AuthUserRolCheckBox( selectedOption: MutableState<Int> = mutableIntStateOf(1
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Medium
         ))
-        RadioButtons(
+        RadioButtonsOptions(
             option1 = "Veterinarian",
             option2 = "Pet Owner",
             selectedOption = selectedOption
@@ -159,87 +163,9 @@ data class ToggleableInfo(
     val text: String
 )
 
-@Composable
-fun RadioButtons(
-    option1: String = "Veterinarian",
-    option2: String = "Pet Owner",
-    selectedOption: MutableState<Int>
-) {
-    val radioButtons = remember {
-        mutableStateListOf(
-            ToggleableInfo(
-                isChecked = true,
-                text = option1
-            ),
-            ToggleableInfo(
-                isChecked = false,
-                text = option2
-            )
-        )
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        radioButtons.forEachIndexed { index, info ->
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        radioButtons.replaceAll {
-                            it.copy(
-                                isChecked = it.text == info.text
-                            )
-                        }
-                        selectedOption.value =
-                            if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
-                    }
-                    .padding(end = 10.dp)
-            ) {
-                RadioButton(
-                    selected = info.isChecked,
-                    onClick = {
-                        radioButtons.replaceAll {
-                            it.copy(
-                                isChecked = it.text == info.text
-                            )
-                        }
-                        selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
-                    },
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = UpetOrange1,
-                        unselectedColor = UpetOrange1
-                    ),
-                )
-                Text(
-                    text = info.text,
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontFamily = poppinsFamily,
-                        fontWeight = FontWeight.Medium
-                    ),
-                    modifier = Modifier.padding(top = 15.dp)
-                )
-            }
-        }
-    }
-}
-
 
 fun registerLogicButton(authRepository: AuthRepository= AuthRepository(), userRequest: UserRequest){
     authRepository.signUp(userRequest) { userResponse ->
 
-        if (userRequest.userType == UserType.Owner) {
-            println(userResponse)
-            authRepository.createPetOwner(userResponse.id, userRequest) { success ->
-                if (success) {
-
-                } else {
-
-                }
-            }
-        }
     }
 }

@@ -10,4 +10,5 @@ object Routes {
     const val PasswordRecovery = "sendEmailScreen"
     const val ConfirmCode = "ConfirmCodeScreen"
     const val NewPassword = "NewPasswordScreen"
+    const val PostRegister = "postRegister"
 }

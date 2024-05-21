@@ -25,6 +25,9 @@ interface AuthService {
         @Body user: UserRequest
     ): Call<UserResponse>
 
-    @POST("users/petowner/{user_id}")
-    fun createPetOwner(@Path("user_id") userId: Int, @Body userRequest: UserRequest): Call<Void>
+
+    @GET("users/{user_id}")
+    fun getUserById(
+        @Path("user_id") userId: Int
+    ): Call<UserResponse>
 }

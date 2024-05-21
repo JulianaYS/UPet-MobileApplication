@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upc.upet.ui.screens.auth.aditionalInformation.PostRegisterScreen
 import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.home.Home
@@ -82,6 +83,13 @@ fun Navigation() {
             composable(Routes.NewPassword) {
                 shouldShowBottomBar.value = false
                 NewPasswordScreen(navController)
+            }
+            composable(Routes.PostRegister){
+                shouldShowBottomBar.value = false
+                PostRegisterScreen{
+                    destination->
+                    navController.navigate(destination)
+                }
             }
         }
     }
