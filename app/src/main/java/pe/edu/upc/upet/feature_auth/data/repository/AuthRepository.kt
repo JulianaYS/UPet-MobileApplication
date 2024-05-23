@@ -66,17 +66,21 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
 
 
 
-    fun signUp(userRequest: UserRequest, callback: (UserResponse) -> Unit) {
+    fun signUp(userRequest: UserRequest, callback: (Boolean) -> Unit) {
         val signUp = authService.signUp(userRequest)
-        signUp.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+        signUp.enqueue(object : Callback<SignInResponse> {
+            override fun onResponse(call: Call<SignInResponse>, response: Response<SignInResponse>) {
                 if (response.isSuccessful) {
-                    val userResponse = response.body() as UserResponse
-                    callback(userResponse)
+                    val token = response.body()?.access_token
+                    if (token != null) {
+                        TokenManager.clearToken()
+                        TokenManager.saveToken(token)
+                    }
+                    callback(true)
                 }
             }
 
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+            override fun onFailure(call: Call<SignInResponse>, t: Throwable) {
                 t.message?.let {
                     Log.d("AuthRepository", it)
                 }

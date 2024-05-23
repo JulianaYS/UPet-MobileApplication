@@ -51,7 +51,7 @@ object TokenManager {
     }
 
     fun getUserIdAndRoleFromToken(): Triple<Int, String, Boolean>? {
-        val token = TokenManager.getToken()
+        val token = getToken()
         Log.d("TokenManager", "Token: $token")
         return if (token != null) {
             try {

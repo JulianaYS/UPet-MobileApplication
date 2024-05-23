@@ -32,6 +32,7 @@ fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId : Int){
 
     ){
         val numberPhone = remember { mutableStateOf("") }
+        val location = remember { mutableStateOf("") }
         AuthInputTextField(
             input = numberPhone,
             placeholder = "Enter your phone number",
@@ -40,7 +41,7 @@ fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId : Int){
         )
         Spacer(modifier = Modifier.height(22.dp))
         AuthInputTextField(
-            input = remember { mutableStateOf("") },
+            input = location,
             placeholder = "r. Lima 104, Santiago de Surco, Lima",
             label = "Location",
             type = TextFieldType.Text
@@ -50,8 +51,10 @@ fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId : Int){
             onClick = {
                 createNewPetOwner(userId, PetOwnerRequest(
                     numberPhone = numberPhone.value,
-                ))
-                navigateTo(Routes.Home)
+                    location = location.value
+                ), navigateTo= { navigateTo(Routes.Home)}
+                )
+
         })
     }
 
@@ -59,9 +62,11 @@ fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId : Int){
 
 fun createNewPetOwner(userId: Int,
                       petOwnerData: PetOwnerRequest,
-                      petOwnerRepository: PetOwnerRepository= PetOwnerRepository()
+                      petOwnerRepository: PetOwnerRepository= PetOwnerRepository(),
+                      navigateTo: () -> Unit
 ){
     petOwnerRepository.createPetOwner(userId, petOwnerData) {
+        navigateTo()
         println("Pet Owner created")
     }
 }

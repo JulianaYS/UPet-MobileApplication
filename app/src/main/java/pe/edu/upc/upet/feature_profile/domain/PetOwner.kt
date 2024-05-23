@@ -9,6 +9,7 @@ data class PetOwner(
     val id: Int,
     val name: String,
     val numberPhone: String,
+    val location: String,
     val imageUrl: String,
     val subscriptionType: SubscriptionType
 )
