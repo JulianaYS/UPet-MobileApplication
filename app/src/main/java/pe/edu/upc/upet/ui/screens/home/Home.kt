@@ -37,7 +37,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
-import pe.edu.upc.upet.feature_vet.domain.veterinaryClinics
+import pe.edu.upc.upet.feature_vetClinics.domain.veterinaryClinics
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.vets.VetCard
 import pe.edu.upc.upet.ui.shared.SearchField

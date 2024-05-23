@@ -1,4 +1,4 @@
-package pe.edu.upc.upet.feature_vet.data.local
+package pe.edu.upc.upet.feature_vetClinics.data.local
 
 import androidx.room.Entity
 

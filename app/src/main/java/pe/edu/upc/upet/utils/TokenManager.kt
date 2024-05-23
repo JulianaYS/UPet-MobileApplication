@@ -1,45 +1,80 @@
 package pe.edu.upc.upet.utils
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
+import com.auth0.jwt.JWT
+import com.auth0.jwt.interfaces.DecodedJWT
+import pe.edu.upc.upet.MyApplication
 
 
 object TokenManager {
     private const val PREF_NAME = "my_app_prefs"
     private const val KEY_ACCESS_TOKEN = "access_token"
 
-    fun saveToken(context: Context, token: String): Boolean {
-        val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    private fun getSharedPreferences(): SharedPreferences {
+        return MyApplication.getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    }
+
+    fun saveToken(token: String): Boolean {
+        val sharedPreferences = getSharedPreferences()
         val editor = sharedPreferences.edit()
         editor.putString(KEY_ACCESS_TOKEN, token)
+        Log.d("TokenManager", "Token saved: $token")
         return editor.commit()
     }
 
-    fun getToken(context: Context): String? {
-        val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    fun getToken(): String? {
+        val sharedPreferences = getSharedPreferences()
         return sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
     }
 
-    fun clearToken(context: Context) {
-        val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    fun clearToken() {
+        val sharedPreferences = getSharedPreferences()
         val editor = sharedPreferences.edit()
         editor.remove(KEY_ACCESS_TOKEN)
         editor.apply()
-    }
-    fun isUserAuthenticated(context: Context): Boolean {
-        val token = getToken(context)
-        return !token.isNullOrEmpty()
-    }
+        Log.d("TokenManager", "Token eliminado de SharedPreferences")
 
-    fun getUserIdFromToken(context: Context): String? {
-        val token = getToken(context)
-        val parts = token?.split(" ")
-        return if (parts?.size == 2 && parts[0] == "Bearer") {
-            parts[1]
+        // Verificación opcional para asegurarse de que el token ha sido eliminado
+        val tokenAfterClear = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
+        if (tokenAfterClear == null) {
+            Log.d("TokenManager", "Token eliminado correctamente")
         } else {
-            null
+            Log.e("TokenManager", "Error al eliminar el token")
         }
     }
 
+    fun isUserAuthenticated(): Boolean {
+        val token = getToken()
+        return !token.isNullOrEmpty()
+    }
 
+    fun getUserIdAndRoleFromToken(): Triple<Int, String, Boolean>? {
+        val token = getToken()
+        Log.d("TokenManager", "Token: $token")
+        return if (token != null) {
+            try {
+                // Decodifica el token
+                val decodedJWT: DecodedJWT = JWT.decode(token)
+
+                // Ahora puedes acceder a los datos del usuario
+                val userId = decodedJWT.getClaim("user_id").asInt()
+                val userRoleString = decodedJWT.getClaim("user_role").asString()
+                val registered = decodedJWT.getClaim("registered").asBoolean()
+                Log.d("TokenManager", "user_id: ${decodedJWT.getClaim("user_id").asInt()}")
+                Log.d("TokenManager", "user_role: ${decodedJWT.getClaim("user_role").asString()}")
+                Log.d("TokenManager", "registered: ${decodedJWT.getClaim("registered").asBoolean()}")
+
+                Triple(userId, userRoleString, registered)
+            } catch (error: Exception) {
+                println("Error decodificando el token: $error")
+                null
+            }
+        } else {
+            println("No hay token disponible")
+            null
+        }
+    }
 
 }

@@ -1,7 +1,6 @@
 package pe.edu.upc.upet.ui.screens.auth.signin
 
 
-import android.content.Context
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.background
@@ -26,6 +25,7 @@ import pe.edu.upc.upet.ui.shared.AuthHeader
 import pe.edu.upc.upet.ui.shared.AuthTextButton
 import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.Dialog
+import pe.edu.upc.upet.ui.shared.TextFieldType
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.UpetOrange1
@@ -75,7 +75,7 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                         input = password,
                         placeholder = "Enter your password",
                         label = "Password",
-                        true
+                        type=TextFieldType.Password
                     )
                     AuthTextButton("Forgot Password?", arrangement = Arrangement.End,
                         onClickClickableText = {
@@ -92,9 +92,10 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                             snackbarMessage.value = "You must enter your password."
                             showErrorSnackbar.value = true
                         } else {
-                            authRepository.signIn(context, email.value, password.value) { success ->
+                            authRepository.signIn( email.value, password.value) { success ->
                                 if (success) {
-                                    navigateTo(Routes.Home)
+                                    Log.d("SuccesSignIn", "User authenticated")
+                                    navigateTo(Routes.PostRegister)
                                 } else {
                                     snackbarMessage.value = "Invalid credentials."
                                     showErrorSnackbar.value = true
@@ -126,8 +127,8 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
 }
 
 
-fun signInUser(navigateTo: (String) -> Unit, context : Context){
-    if (TokenManager.isUserAuthenticated(context)) {
+fun signInUser(navigateTo: (String) -> Unit){
+    if (TokenManager.isUserAuthenticated()) {
         navigateTo(Routes.Home)
     } else {
         Log.d("tag", "User not authenticated")

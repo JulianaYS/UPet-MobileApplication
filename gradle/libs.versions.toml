@@ -1,20 +1,22 @@
 [versions]
 agp = "8.3.2"
 kotlin = "1.9.0"
-coreKtx = "1.12.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2023.08.00"
+lifecycleRuntimeKtx = "2.8.0"
+activityCompose = "1.9.0"
+composeBom = "2024.05.00"
 retrofit = "2.11.0"
 landscapistGlide = "2.3.3"
 navigationCompose = "2.7.7"
-materialIconsExtended = "1.6.6"
+materialIconsExtended = "1.6.7"
 playServicesTagmanagerV4Impl = "18.0.4"
 room = "2.6.1"
 roomCommon = "2.6.1"
+playServicesFido = "21.0.0"
+javaJwt = "4.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +42,8 @@ play-services-tagmanager-v4-impl = { group = "com.google.android.gms", name = "p
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+play-services-fido = { group = "com.google.android.gms", name = "play-services-fido", version.ref = "playServicesFido" }
+java-jwt = { group = "com.auth0", name = "java-jwt", version.ref = "javaJwt" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
