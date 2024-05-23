@@ -110,13 +110,18 @@ fun SignUpScreen( navigateTo: (String) -> Unit ){
                             snackbarMessage.value = "You must accept the Terms and Conditions."
                             showErrorSnackbar.value = true
                         } else {
-                            registerLogicButton(userRequest = UserRequest(
-                                name = fullName.value,
-                                email = email.value,
-                                password = password.value,
-                                userType = if (selectedOption.intValue == 1) UserType.Vet else UserType.Owner
-                            ))
-                            navigateTo(Routes.UserLogin)
+                            registerLogicButton(
+                                userRequest = UserRequest(
+                                    name = fullName.value,
+                                    email = email.value,
+                                    password = password.value,
+                                    userType = if (selectedOption.intValue == 1) UserType.Vet else UserType.Owner
+                                ),
+                                navigateTo = {
+                                    Log.d("SuccesSignUp", "User registered")
+                                    navigateTo(Routes.PostRegister)
+                                }
+                            )
                         }
                     })
 
@@ -157,6 +162,7 @@ fun AuthUserRolCheckBox( selectedOption: MutableState<Int> = mutableIntStateOf(1
             selectedOption = selectedOption
         )
     }
+
 }
 data class ToggleableInfo(
     val isChecked: Boolean,
@@ -164,8 +170,10 @@ data class ToggleableInfo(
 )
 
 
-fun registerLogicButton(authRepository: AuthRepository= AuthRepository(), userRequest: UserRequest){
-    authRepository.signUp(userRequest) { userResponse ->
-
+fun registerLogicButton(authRepository: AuthRepository= AuthRepository(), userRequest: UserRequest,
+                        navigateTo: () -> Unit){
+    authRepository.signUp(userRequest) {userResponse->
+        Log.d("Register", "User registered")
+        navigateTo()
     }
 }

@@ -21,6 +21,8 @@ data class PetOwnerResponse (
     val numberPhone: String,
     @SerializedName("image_url")
     val image_url: String,
+    @SerializedName("location")
+    val location: String,
     @SerializedName("subscriptionType")
     val subscriptionType: SubscriptionType
 )

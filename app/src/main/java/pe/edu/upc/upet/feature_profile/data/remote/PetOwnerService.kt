@@ -13,16 +13,16 @@ interface PetOwnerService {
         const val BASE_ENDPOINT = "petOwners/"
     }
 
-    @GET("petOwners/")
+    @GET("petowners/")
     fun getAll(): Call<PetOwnerResponseList>
 
-    @GET("petOwners/users/{user_id}")
+    @GET("petowners/users/{user_id}")
     fun getByUserId(@Path("user_id") userId: Int): Call<PetOwnerResponse>
 
-    @GET("petOwners/{id}")
+    @GET("petowners/{id}")
     fun getById(@Path("id") id: Int): Call<PetOwnerResponse>
 
-    @POST("petOwners/{user_id}")
+    @POST("petowners/{user_id}")
     fun createPetOwner(
         @Path("user_id") userId: Int,
         @Body petOwnerData: PetOwnerRequest

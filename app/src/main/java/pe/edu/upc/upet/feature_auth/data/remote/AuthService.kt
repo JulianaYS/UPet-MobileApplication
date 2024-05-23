@@ -23,7 +23,7 @@ interface AuthService {
     @POST("auth/sign-up")
     fun signUp(
         @Body user: UserRequest
-    ): Call<UserResponse>
+    ): Call<SignInResponse>
 
 
     @GET("users/{user_id}")

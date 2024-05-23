@@ -67,9 +67,12 @@ class VetRepository (
                 call: Call<SignInResponse>,
                 response: Response<SignInResponse>
             ) {
-                TokenManager.clearToken()
                 if (response.isSuccessful){
                     val access  = response.body()?.access_token
+                    if (access != null){
+                        TokenManager.clearToken()
+                        TokenManager.saveToken(access)
+                    }
                     callback(true)
                 }else{
                     Log.e("CreateVet", "Unsuccessful response: ${response.code()}")

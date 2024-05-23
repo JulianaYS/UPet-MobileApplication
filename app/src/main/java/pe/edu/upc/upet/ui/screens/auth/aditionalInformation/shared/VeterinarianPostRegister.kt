@@ -95,9 +95,9 @@ fun ExistingClinicForm(navigateTo : (String) -> Unit,
             VetRequest(
                 selectedClinics.value,
                 password.value
-            )
+            ),
+            navigateTo = { navigateTo(Routes.Home)}
         )
-        navigateTo(Routes.Home)
 
     })
 
@@ -157,23 +157,27 @@ fun NewClinicForm(navigateTo : (String) -> Unit,
                 location = clinicLocation.value,
                 office_hours = officeHours.value,
                 phoneNumber = phoneNumber.value
-            )
+            ), navigateTo = { navigateTo(Routes.Home)}
         )
         navigateTo(Routes.Home)
     })
 }
+
+
 fun createVeterinary(
     userId: Int,
     vetRequest: VetRequest,
-    vetRepository: VetRepository = VetRepository()
+    vetRepository: VetRepository = VetRepository(),
+    navigateTo: () -> Unit = {}
 ){
-    vetRepository.createVet(userId, vetRequest){vet->
-        Log.d("Vet", " Vet created: ${vet.toString()}")
+    vetRepository.createVet(userId, vetRequest){
+        navigateTo()
     }
 }
 fun createNewClinic(userId: Int,
                     clinicRequest: VeterinaryClinicRequest,
-                    clinicRepository : VeterinaryClinicRepository = VeterinaryClinicRepository()
+                    clinicRepository : VeterinaryClinicRepository = VeterinaryClinicRepository(),
+                    navigateTo: () -> Unit
 ){
     Log.d("ClinicRequest", userId.toString())
     Log.d("ClinicRequest", clinicRequest.name)
@@ -194,7 +198,8 @@ fun createNewClinic(userId: Int,
                 VetRequest(
                     clinicName,
                     password.toString()
-                )
+                ),
+                navigateTo = navigateTo
             )
         }
     }

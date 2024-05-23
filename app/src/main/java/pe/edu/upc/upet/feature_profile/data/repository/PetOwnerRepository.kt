@@ -88,9 +88,9 @@ class PetOwnerRepository(private val petOwnerService: PetOwnerService = PetOwner
                 call: Call<SignInResponse>,
                 response: Response<SignInResponse>
             ) {
+                TokenManager.clearToken()
                 if (response.isSuccessful) {
                     val token = response.body()?.access_token
-                    TokenManager.clearToken()
                     if (token != null) {
                         TokenManager.saveToken(token)
                     }

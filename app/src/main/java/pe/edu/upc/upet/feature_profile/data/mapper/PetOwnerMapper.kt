@@ -11,6 +11,7 @@ fun PetOwnerResponse.toDomainModel(): PetOwner {
         id = this.id,
         name = this.name,
         numberPhone = this.numberPhone,
+        location = this.location,
         imageUrl = this.image_url,
         subscriptionType = this.subscriptionType
     )
