@@ -30,8 +30,7 @@ fun DropdownTextField(
     selectedItem: MutableState<String>,
     cornerSize: Dp,
     dropdownItems: List<String>,
-    placeholder: String,
-    label: String
+    placeholder: String
 ) {
     var expanded by remember { mutableStateOf(false) }
     var filteredItems by remember { mutableStateOf(dropdownItems) }
@@ -48,7 +47,7 @@ fun DropdownTextField(
             textStyle= commonTextStyle(selectedItem.value),
 
 
-            modifier= commonModifier(cornerSize, start = 0.dp, end= 0.dp),
+            modifier= Modifier.commonModifier(cornerSize, start = 0.dp, end= 0.dp),
             onValueChange = {
                 selectedItem.value = it
                 filteredItems = dropdownItems.filter { item -> item.contains(

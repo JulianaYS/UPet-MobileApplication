@@ -1,7 +1,7 @@
 package pe.edu.upc.upet.navigation
 
-object Routes {
-    const val RegisterPet = "registerPet"
+data object Routes {
+    const val registerPet = "registerPet"
     const val Home = "home"
     const val PetList = "petList"
     const val VetList = "vetList"
@@ -11,4 +11,6 @@ object Routes {
     const val ConfirmCode = "ConfirmCodeScreen"
     const val NewPassword = "NewPasswordScreen"
     const val PostRegister = "postRegister"
+    const val Profile = "profile"
+    const val AppointmentList = "appointmentList"
 }

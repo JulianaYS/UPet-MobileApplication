@@ -36,7 +36,7 @@ fun Navigation() {
 
     Scaffold(
         modifier = Modifier.background(backgroundColor),
-        bottomBar = { BottomBar(shouldShowBottomBar, navController) }
+        bottomBar = { BottomBar(navController, shouldShowBottomBar) }
     ) { paddingValues ->
         NavHost(navController, startDestination = Routes.UserLogin, modifier = Modifier.padding(paddingValues   )) {
             composable(Routes.Home) {
@@ -52,7 +52,7 @@ fun Navigation() {
                 val petId = backStackEntry.arguments?.getString("petId")?.toInt()
                 PetProfile(petId, navController)
             }
-            composable(Routes.RegisterPet) {
+            composable(Routes.registerPet) {
                 shouldShowBottomBar.value = true
                 RegisterPet(navController)
             }

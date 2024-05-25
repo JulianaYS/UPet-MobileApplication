@@ -22,34 +22,27 @@ fun PostRegisterScreen(
 
     val role = UserType.valueOf(userRole)
     Log.d("PostRegisterScreen", "ROLE ${role}")
-    if (userId == null) {
-
-        Log.d("PostRegisterScreen", "User not authenticated" )
-        navigateTo(Routes.UserLogin)
-    }
-    else{
-        if (isRegistered) {
-            when (role) {
-                UserType.Vet -> {
-                    Log.d("PostRegister", "VetHome")
-                    navigateTo(Routes.Home)
-                }
-                UserType.Owner -> {
-                    Log.d("PostRegister", "PetHome")
-                    navigateTo(Routes.Home)
-                }
-
+    if (isRegistered) {
+        when (role) {
+            UserType.Vet -> {
+                Log.d("PostRegister", "VetHome")
+                navigateTo(Routes.Home)
             }
-        } else {
-            when (role) {
-                UserType.Vet-> {
-                    Log.d("PostRegister", "VeterinarianPostRegister")
-                    VeterinarianPostRegister(navigateTo, userId)
-                }
-                UserType.Owner -> {
-                    Log.d("PostRegister", "PetOwnerRegister")
-                    PetOwnerPostRegister(navigateTo, userId)
-                }
+            UserType.Owner -> {
+                Log.d("PostRegister", "PetHome")
+                navigateTo(Routes.Home)
+            }
+
+        }
+    } else {
+        when (role) {
+            UserType.Vet-> {
+                Log.d("PostRegister", "VeterinarianPostRegister")
+                VeterinarianPostRegister(navigateTo, userId)
+            }
+            UserType.Owner -> {
+                Log.d("PostRegister", "PetOwnerRegister")
+                PetOwnerPostRegister(navigateTo, userId)
             }
         }
     }
