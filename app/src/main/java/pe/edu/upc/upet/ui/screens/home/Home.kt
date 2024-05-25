@@ -34,7 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.veterinaryClinics
@@ -71,7 +71,7 @@ fun UserSection(username: String?) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-                painter = rememberImagePainter("https://cdn-icons-png.freepik.com/512/8742/8742495.png"),
+                painter = rememberAsyncImagePainter("https://cdn-icons-png.freepik.com/512/8742/8742495.png"),
                 contentDescription = "User Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -109,7 +109,7 @@ fun PetsSection(navController: NavController) {
     val petRepository = remember { PetRepository() }
     var pets: List<PetResponse> by remember { mutableStateOf(emptyList()) }
 
-    val ownerId = 1
+    val ownerId = "1"
 
      LaunchedEffect(ownerId) {
         petRepository.getPetsByOwnerId(ownerId.toInt(),
@@ -152,7 +152,7 @@ fun PetsSection(navController: NavController) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = PinkStrong,
                 modifier = Modifier
-                    .clickable {  navController.navigate(Routes.RegisterPet) }
+                    .clickable {  navController.navigate(Routes.registerPet) }
             )
         }
         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
