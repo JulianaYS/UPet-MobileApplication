@@ -52,7 +52,7 @@ fun PetProfile(petId: Int?, navController: NavController) {
 
    val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
 
-    PetRepository().getPetsByOwnerId(ownerId, onSuccess = {
+    PetRepository().getPetsByOwnerId(ownerId ?: 0, onSuccess = {
             if(petId != null) {
                 pet.value = it.find { pet -> pet.id == petId }
             }

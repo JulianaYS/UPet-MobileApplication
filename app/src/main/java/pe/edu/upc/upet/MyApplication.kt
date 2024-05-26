@@ -2,6 +2,8 @@ package pe.edu.upc.upet
 
 import android.app.Application
 import android.content.Context
+import com.cloudinary.android.MediaManager
+
 
 class MyApplication : Application() {
     override fun onCreate() {

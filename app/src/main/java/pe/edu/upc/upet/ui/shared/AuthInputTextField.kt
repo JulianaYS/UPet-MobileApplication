@@ -125,6 +125,7 @@ fun TextPlaceHolder(placeholder: String){
 enum class TextFieldType {
     Password,
     Phone,
+    Weight,
     Dropdown,
     Text
 }
