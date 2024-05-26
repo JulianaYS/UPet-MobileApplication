@@ -16,12 +16,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,25 +37,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import pe.edu.upc.upet.MyApplication
+import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.veterinaryClinics
+import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.vets.VetCard
 import pe.edu.upc.upet.ui.shared.SearchField
 import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.ui.theme.PinkStrong
+import pe.edu.upc.upet.utils.TokenManager
+import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 
 @Composable
 fun Home( navController: NavController){
-    val context = LocalContext.current
-    val sharedPref = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-    val username = sharedPref.getString("username", "User")
-
     Column(modifier = Modifier
         .fillMaxSize()
         .size(100.dp)) {
-        UserSection(username)
+        UserSection()
         SearchField()
         PetsSection(navController)
         RecommendedVetsSection(navController)
@@ -61,7 +65,25 @@ fun Home( navController: NavController){
 }
 
 @Composable
-fun UserSection(username: String?) {
+fun UserSection() {
+
+    val name = remember { mutableStateOf("") }
+    val icon = remember { mutableStateOf("") }
+
+     val (id, userRol, _) = getUserIdAndRoleFromToken() ?: error("Error obteniendo el userId y userRole desde el token")
+
+    if(userRol == "Vet"){
+        VetRepository().getVetById(id) { vetResponse ->
+            name.value = vetResponse?.name?:""
+            icon.value = vetResponse?.image_url?:""
+        }
+    }else{
+        PetOwnerRepository().getPetOwnerById(id) { petOwnerResponse ->
+            name.value = petOwnerResponse?.name?:""
+            icon.value = petOwnerResponse?.imageUrl?:""
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,7 +93,7 @@ fun UserSection(username: String?) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-                painter = rememberAsyncImagePainter("https://cdn-icons-png.freepik.com/512/8742/8742495.png"),
+                painter = rememberAsyncImagePainter(icon.value?:"https://cdn-icons-png.freepik.com/512/8742/8742495.png"),
                 contentDescription = "User Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -79,9 +101,7 @@ fun UserSection(username: String?) {
                     .clip(RoundedCornerShape(50.dp))
             )
             Column(modifier = Modifier.padding(start = 20.dp)) {
-
-                val usernameWithoutAt = username?.substringBefore("@") ?: "User"
-                val greeting = "Hello, $usernameWithoutAt"
+                val greeting = "Hello, ${name.value}"
                 Text(
                     text = greeting,
                     style = MaterialTheme.typography.bodyLarge,
@@ -109,10 +129,10 @@ fun PetsSection(navController: NavController) {
     val petRepository = remember { PetRepository() }
     var pets: List<PetResponse> by remember { mutableStateOf(emptyList()) }
 
-    val ownerId = "1"
+    val ownerId = getUserIdAndRoleFromToken()?.first
 
-     LaunchedEffect(ownerId) {
-        petRepository.getPetsByOwnerId(ownerId.toInt(),
+    if (ownerId != null) {
+        petRepository.getPetsByOwnerId(ownerId,
             onSuccess = { petsList ->
                 Log.d("PetsSection", "Pets list received: $petsList")
 
@@ -124,7 +144,7 @@ fun PetsSection(navController: NavController) {
                         breed = petResponse.breed,
                         species = petResponse.species,
                         weight = petResponse.weight,
-                        age = petResponse.age,
+                        birthdate = petResponse.birthdate,
                         image_url = petResponse.image_url,
                         gender = petResponse.gender
                     )
@@ -134,6 +154,7 @@ fun PetsSection(navController: NavController) {
             }
         )
     }
+
 
     Column {
         Row(
@@ -154,6 +175,7 @@ fun PetsSection(navController: NavController) {
                 modifier = Modifier
                     .clickable {  navController.navigate(Routes.registerPet) }
             )
+
         }
         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
             items(pets.take(4)) { pet ->

@@ -1,4 +1,5 @@
 package pe.edu.upc.upet.ui.shared
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Event
@@ -53,14 +54,19 @@ fun BottomBar(navController: NavHostController, shouldShowBottomBar: MutableStat
                 label = { Text(item.title ?: "Unknown")},
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    try {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    } catch (e: Exception) {
+                        Log.d("NavigationError", "Failed to navigate to ${item.route}: ${e.message}")
                     }
-                },colors = NavigationBarItemDefaults.colors(
+                }
+                ,colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Pink,
                     unselectedTextColor = Color.Gray, selectedTextColor = Pink,
 

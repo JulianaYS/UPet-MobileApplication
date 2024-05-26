@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -65,17 +64,13 @@ fun DropdownTextField(
                     .border(BorderStroke(1.dp, UpetOrange1))) {
                 items(filteredItems.size) { index ->
                     DropdownMenuItem(
+                        text = { Text(text = filteredItems[index], modifier = Modifier.padding(8.dp)) },
                         onClick = {
                             selectedItem.value = filteredItems[index]
                             expanded = false
                         },
                         modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = filteredItems[index],
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
+                    )
                 }
             }
         }

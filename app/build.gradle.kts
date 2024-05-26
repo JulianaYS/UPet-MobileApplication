@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.play.services.fido)
     implementation(libs.java.jwt)
     annotationProcessor(libs.androidx.room.compiler)
+    implementation("com.cloudinary:cloudinary-android:2.7.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

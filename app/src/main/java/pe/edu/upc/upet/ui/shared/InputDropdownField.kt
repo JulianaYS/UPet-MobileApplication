@@ -5,16 +5,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -69,7 +77,7 @@ fun InputDropdownField(
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
-                    .size(height = 56.dp, width = 300.dp)
+                    .width(width = 380.dp)
                     .padding(bottom = 10.dp, end = BorderPadding)
                     .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(10.dp))
                     .background(Color.White, shape = RoundedCornerShape(10.dp)),
@@ -81,16 +89,13 @@ fun InputDropdownField(
                     fontWeight = FontWeight.Normal
                 )
             )
-            ExposedDropdownMenu(
+            DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(0.dp))
-
-                ,)
-            {
+                modifier = Modifier.width(width=380.dp)
+                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .exposedDropdownSize().border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(10.dp))
+            ) {
                 options.forEach {
                     DropdownMenuItem(
                         text = { Text(it,
@@ -102,11 +107,9 @@ fun InputDropdownField(
                         onClick = {
                             selectedOption.value = it
                             expanded.value = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
                     )
                     if (it != options.last()) {
-                        Divider(color = UpetOrange1, thickness = 0.dp)
+                        HorizontalDivider(thickness = 0.dp, color = UpetOrange1)
                     }
                 }
             }

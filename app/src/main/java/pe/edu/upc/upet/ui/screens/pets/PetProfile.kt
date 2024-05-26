@@ -1,3 +1,6 @@
+package pe.edu.upc.upet.ui.screens.pets
+
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +26,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,17 +38,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
-import pe.edu.upc.upet.feature_pet.domain.Pet
-import pe.edu.upc.upet.feature_pet.domain.pets
+import coil.compose.rememberAsyncImagePainter
+import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
+import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
+import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
 fun PetProfile(petId: Int?, navController: NavController) {
-    val pet = getPetById(petId)
+    val pet = remember { mutableStateOf<PetResponse?>(null) }
 
-    Scaffold {paddingValues ->
+   val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
+
+    PetRepository().getPetsByOwnerId(ownerId ?: 0, onSuccess = {
+            if(petId != null) {
+                pet.value = it.find { pet -> pet.id == petId }
+            }
+            Log.d("g", "PetProfile: $it") }, onError = {Log.d("orrorregister", "") })
+
+
+    val petValue = pet.value ?: PetResponse(0, "", 0, "", "", 0.0f, "",  "", GenderEnum.Male)
+
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -55,31 +73,25 @@ fun PetProfile(petId: Int?, navController: NavController) {
             Row (modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween){
                 CustomReturnButton(navController = navController)
-                if (pet != null) {
-                    Text(
-                        text = pet.name,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 24.sp,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                    )
-                }
+                Text(
+                    text = petValue.name,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 24.sp,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                )
 
                 IconButton(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     onClick = {  }) {
-                    if (pet != null) {
-                        Icon(
-                            imageVector = if(pet.gender == "Male") Icons.Filled.Male else Icons.Filled.Female,
-                            contentDescription = pet.gender
-                        )
-                    }
+                    Icon(
+                        imageVector = if(petValue.gender == GenderEnum.Male) Icons.Filled.Male else Icons.Filled.Female,
+                        contentDescription = petValue.gender.toString()
+                    )
                 }
             }
 
-            if (pet != null) {
-                PetImage(pet.image_url)
-            }
+            PetImage(petValue.image_url)
 
             Box(
                 modifier = Modifier
@@ -111,23 +123,14 @@ fun PetProfile(petId: Int?, navController: NavController) {
                     Row (modifier = Modifier.fillMaxWidth()
                         .padding(start = 20.dp,end = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween){
-                        if (pet != null) {
-                            PetProfileInformation("Breed", pet.breed, Icons.Filled.Pets)
-                        }
-                        //Species
-                        if (pet != null) {
-                            PetProfileInformation("Specie", pet.specie, Icons.Filled.WbSunny)
-                        }
+                        PetProfileInformation("Breed", petValue.breed, Icons.Filled.Pets)
+                        PetProfileInformation("Specie", petValue.species, Icons.Filled.WbSunny)
                     }
                     Row (modifier = Modifier.fillMaxWidth()
                         .padding(start= 20.dp,end= 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween){
-                        if (pet != null) {
-                            PetProfileInformation("Weight", pet.weight.toString(), Icons.Filled.Balance)
-                        }
-                        if (pet != null) {
-                            PetProfileInformation("Age", pet.age.toString(), Icons.Filled.Schedule)
-                        }
+                        PetProfileInformation("Weight", petValue.weight.toString(), Icons.Filled.Balance)
+                        PetProfileInformation("Age", petValue.birthdate, Icons.Filled.Schedule)
                     }
 
                     Text(
@@ -140,16 +143,9 @@ fun PetProfile(petId: Int?, navController: NavController) {
                     )
 
                     CustomButton(text = "Add Information") {}
-
-
                 }
-
-
             }
-
-
         }
-
     }
 }
 
@@ -195,7 +191,7 @@ fun PetImage(imageUrl: String) {
             .padding(10.dp)
     ) {
         Image(
-            painter = rememberImagePainter(imageUrl),
+            painter = rememberAsyncImagePainter(imageUrl),
             contentDescription = "Pet Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -203,8 +199,4 @@ fun PetImage(imageUrl: String) {
                 .clip(shape = RoundedCornerShape(20.dp))
         )
     }
-}
-
-fun getPetById(id: Int?): Pet? {
-        return pets.find { it.id == id}
 }

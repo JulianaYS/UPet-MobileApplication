@@ -1,9 +1,6 @@
 package pe.edu.upc.upet.feature_auth.data.repository
 
-import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import pe.edu.upc.upet.feature_auth.data.remote.AuthService
 import pe.edu.upc.upet.feature_auth.data.remote.AuthServiceFactory
 import pe.edu.upc.upet.feature_auth.data.remote.SignInRequest
@@ -20,8 +17,8 @@ import retrofit2.Response
 
 class AuthRepository(private val authService: AuthService = AuthServiceFactory.getAuthService()) {
 
-    fun get_users(username: String, password: String) {
-        val signIn = authService.get_users(username, password)
+    fun getUsers(username: String, password: String) {
+        val signIn = authService.getUsers()
         signIn.enqueue(object : Callback<List<UserResponse>> {
             override fun onResponse(
                 call: Call<List<UserResponse>>,

@@ -125,6 +125,7 @@ fun TextPlaceHolder(placeholder: String){
 enum class TextFieldType {
     Password,
     Phone,
+    Weight,
     Dropdown,
     Text
 }
@@ -157,7 +158,7 @@ fun CustomOutlinedTextFieldWithCountryCode(
     cornerSize: Dp
 ) {
     val countryCode = remember { mutableStateOf("+1") }
-
+    val focusManager = LocalFocusManager.current
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -172,7 +173,8 @@ fun CustomOutlinedTextFieldWithCountryCode(
             shape = RoundedCornerShape(cornerSize),
             modifier = Modifier.commonModifier(cornerSize),
             textStyle = commonTextStyle(phoneNumber.value),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             visualTransformation = VisualTransformation.None
         )
     }

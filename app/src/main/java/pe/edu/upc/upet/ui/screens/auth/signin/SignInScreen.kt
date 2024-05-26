@@ -77,6 +77,8 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                         label = "Password",
                         type=TextFieldType.Password
                     )
+                    email.value = "juan@gmail.com"
+                    password.value = "juan"
                     AuthTextButton("Forgot Password?", arrangement = Arrangement.End,
                         onClickClickableText = {
                             navigateTo(Routes.PasswordRecovery)
