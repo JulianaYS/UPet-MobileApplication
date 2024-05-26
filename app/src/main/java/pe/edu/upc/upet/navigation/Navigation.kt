@@ -1,6 +1,7 @@
 package pe.edu.upc.upet.navigation
 
-import PetProfile
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,6 +19,7 @@ import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.home.Home
 import pe.edu.upc.upet.ui.screens.pets.PetList
+import pe.edu.upc.upet.ui.screens.pets.PetProfile
 import pe.edu.upc.upet.ui.screens.pets.RegisterPet
 import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
@@ -26,6 +28,7 @@ import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.shared.BottomBar
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation() {
 

@@ -1,6 +1,6 @@
 package pe.edu.upc.upet.ui.shared
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,15 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import androidx.navigation.NavHostController
+import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
-import pe.edu.upc.upet.feature_pet.domain.Pet
 
 @Composable
-fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
+fun PetCard( navController: NavHostController, pet: PetResponse) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -41,14 +40,14 @@ fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
-            Image(
-                painter = rememberImagePainter(pet.image_url),
-                contentDescription = "Pet Image",
-                contentScale = ContentScale.Crop,
+            Log.d("PetCard", "Pet Image URL: ${pet.image_url}")
+
+
+            GlideImage(imageModel = { pet.image_url },
                 modifier = Modifier
                     .padding(10.dp)
                     .size(100.dp)
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(8.dp))
             )
             Column(
                 modifier = Modifier
@@ -71,7 +70,7 @@ fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
                         color = Color.Gray
                     )
                     Text(
-                        text = "Age: ${pet.age}",
+                        text = "Age: ${pet.birthdate}",
                         color = Color.Gray
                     )
                 }
@@ -83,7 +82,7 @@ fun PetCard(pet: PetResponse, onPetSelected: (Int) -> Unit ) {
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        onClick = { onPetSelected(pet.id)},
+                        onClick = { navController.navigate("PetProfile/${pet.id}")},
                         colors = ButtonDefaults.buttonColors(Color(0xFFEB5569)),
                         shape = RoundedCornerShape(6.dp)
                     ) {

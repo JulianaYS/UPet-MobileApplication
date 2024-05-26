@@ -12,13 +12,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
-import pe.edu.upc.upet.feature_pet.domain.Pet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PetSwipeToDelete(pet: PetResponse, deletePet:() ->Unit, onPetSelected: (Int) -> Unit) {
+fun PetSwipeToDelete(navController:NavHostController, pet: PetResponse, deletePet:() ->Unit) {
     val dismissState = rememberSwipeToDismissBoxState()
 
     LaunchedEffect(key1 = dismissState.currentValue) {
@@ -32,11 +31,11 @@ fun PetSwipeToDelete(pet: PetResponse, deletePet:() ->Unit, onPetSelected: (Int)
     SwipeToDismissBox(
     state = dismissState,
     backgroundContent = { SwipeToDismissBackground() },
-    content = { PetCard(pet = pet, onPetSelected) },
+    content = { PetCard(navController = navController , pet = pet) },
     modifier = Modifier
-    .fillMaxWidth()
-    .padding(15.dp)
-    .clip(RoundedCornerShape(20.dp)),
+        .fillMaxWidth()
+        .padding(15.dp)
+        .clip(RoundedCornerShape(20.dp)),
     enableDismissFromEndToStart = false,
     enableDismissFromStartToEnd = true,
     )

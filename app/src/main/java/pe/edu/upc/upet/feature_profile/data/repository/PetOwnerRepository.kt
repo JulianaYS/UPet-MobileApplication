@@ -1,7 +1,6 @@
 package pe.edu.upc.upet.feature_profile.data.repository
 
 import android.util.Log
-import pe.edu.upc.upet.MyApplication
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
 import pe.edu.upc.upet.feature_profile.data.mapper.toDomainModel
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerRequest

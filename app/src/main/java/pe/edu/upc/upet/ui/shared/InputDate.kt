@@ -2,6 +2,8 @@ package pe.edu.upc.upet.ui.shared
 
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,46 +28,44 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetGray1
 import pe.edu.upc.upet.ui.theme.UpetOrange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InputDate(text: String, onDateSelected: (String) -> Unit) {
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val selectedDate = remember { mutableStateOf("") }
     val commonPadding = BorderPadding
 
     LabelTextField(text, commonPadding)
 
-    InputTextField(
+    InputTextFieldForDate(
         input = selectedDate,
-        placeholder = "Select date",
-        onIconClick = {
-            scope.launch {
-                val dateSetListener =
-                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                        val date = "$dayOfMonth/${month + 1}/$year"
-                        onDateSelected(date)
-                        selectedDate.value = date
-                    }
-                val calendar = Calendar.getInstance()
-                DatePickerDialog(
-                    context,
-                    dateSetListener,
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-        })
+        placeholder = "Select date"
+    ) {
+            val dateSetListener =
+                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    val date = "$dayOfMonth/${month + 1}/$year"
+                    onDateSelected(date)
+                    selectedDate.value = date
+                }
+            val calendar = Calendar.getInstance()
+            DatePickerDialog(
+                context,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+
+    }
 }
 
 @Composable
-fun InputTextField(input: MutableState<String>, placeholder: String, onIconClick: () -> Unit) {
+fun InputTextFieldForDate(input: MutableState<String>, placeholder: String, onIconClick: () -> Unit) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,13 +84,16 @@ fun InputTextField(input: MutableState<String>, placeholder: String, onIconClick
             fontWeight = FontWeight.Normal
         ),
         value = input.value,
-        onValueChange = {
-            input.value = it
+        onValueChange = { newValue ->
+            if (newValue.matches(Regex("\\d{2}/\\d{2}/\\d{4}"))) {
+                input.value = newValue
+            }
         },
         trailingIcon = {
             IconButton(onClick = onIconClick) {
                 Icon(Icons.Default.DateRange, contentDescription = "Select date", tint = Color(0xFFFF6262))
             }
-        }
+        },
+        readOnly = true
     )
 }

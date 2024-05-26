@@ -5,15 +5,11 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface AuthService {
 
     @GET("users")
-    fun get_users(
-        @Query("email") email: String,
-        @Query("password") password: String
-    ): Call<List<UserResponse>>
+    fun getUsers(): Call<List<UserResponse>>
 
     @POST("auth/sign-in")
     fun signIn(

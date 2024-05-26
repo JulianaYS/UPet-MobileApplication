@@ -7,7 +7,7 @@ data class PetResponse(
     val breed: String,
     val species: String,
     val weight: Float,
-    val age: Int,
+    val birthdate: String,
     val image_url: String,
     val gender: GenderEnum
 )
