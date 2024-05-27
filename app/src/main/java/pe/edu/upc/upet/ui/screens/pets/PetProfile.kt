@@ -196,6 +196,7 @@ fun PetImage(imageUrl: String) {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
+                .size(200.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
         )
     }
