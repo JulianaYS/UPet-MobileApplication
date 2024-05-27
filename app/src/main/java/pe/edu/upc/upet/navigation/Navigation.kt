@@ -25,6 +25,7 @@ import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
 import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.vets.VetList
+import pe.edu.upc.upet.ui.screens.vets.VetProfile
 import pe.edu.upc.upet.ui.shared.BottomBar
 
 
@@ -78,6 +79,10 @@ fun Navigation() {
             composable(Routes.PasswordRecovery) {
                 shouldShowBottomBar.value = false
                 SendEmailScreen(navController)
+            }
+            composable(Routes.VetProfile) {
+                shouldShowBottomBar.value = true
+                VetProfile(navController)
             }
             composable(Routes.ConfirmCode) {
                 shouldShowBottomBar.value = false

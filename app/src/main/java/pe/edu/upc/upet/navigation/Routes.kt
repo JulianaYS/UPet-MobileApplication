@@ -13,4 +13,5 @@ data object Routes {
     const val PostRegister = "postRegister"
     const val Profile = "profile"
     const val AppointmentList = "appointmentList"
+    const val VetProfile= "vetProfile"
 }
