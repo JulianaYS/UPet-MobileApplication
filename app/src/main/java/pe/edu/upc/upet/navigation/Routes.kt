@@ -17,4 +17,5 @@ data object Routes {
     const val SubscriptionAdvancedScreen = "subscriptionAdvancedScreen"
     const val PetOwnerEditProfile = "petOwnerEditProfile"
     const val VetProfile= "vetProfile"
+    const val BookAppointmentScreen = "bookAppointmentScreen"
 }
