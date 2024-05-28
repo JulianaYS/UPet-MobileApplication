@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upc.upet.ui.screens.appointment.AppointmentDetail
+import pe.edu.upc.upet.ui.screens.appointment.AppointmentList
 import pe.edu.upc.upet.ui.screens.appointment.BookAppointmentScreen
 import pe.edu.upc.upet.ui.screens.appointment.PetDetailsAppointmentScreen
 import pe.edu.upc.upet.ui.screens.auth.aditionalInformation.PostRegisterScreen
@@ -108,6 +110,7 @@ fun Navigation() {
                     navController.navigate(destination)
                 }
             }
+            //Appointment
             composable(Routes.BookAppointmentScreen){
                 shouldShowBottomBar.value = true
                 BookAppointmentScreen()
@@ -116,6 +119,15 @@ fun Navigation() {
                 shouldShowBottomBar.value = true
                 PetDetailsAppointmentScreen()
             }
+            composable(Routes.AppointmentList){
+                shouldShowBottomBar.value=true
+                AppointmentList()
+            }
+            composable(Routes.AppointmentDetail){
+                shouldShowBottomBar.value=true
+                AppointmentDetail()
+            }
+            //Subscription
             composable(Routes.SubscriptionBasicScreen){
                 shouldShowBottomBar.value = true
                 SubscriptionBasicScreen(navController)

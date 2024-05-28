@@ -181,11 +181,11 @@ fun TextSemiBold(text: String) {
     )
 }
 @Composable
-fun TextNormal(text: String) {
+fun TextNormal(text: String, color: Color = Color.Gray) {
     Text(
         text = text,
         style = TextStyle(
-            color = Color.Gray,
+            color = color,
             fontSize = 15.sp,
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Normal
