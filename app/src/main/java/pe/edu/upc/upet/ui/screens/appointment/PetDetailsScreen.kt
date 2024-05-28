@@ -46,7 +46,9 @@ fun PetDetailsAppointmentScreen() {
 
         CustomButton(text = "Book now") {}
 
+        Spacer(modifier = Modifier.height(20.dp))
+
     }
-    Spacer(modifier = Modifier.height(20.dp))
+
 }
 

@@ -160,8 +160,8 @@ fun MonthPicker(currentYearMonth: YearMonth, onYearMonthChange: (YearMonth) -> U
 
         Text(
             text = currentYearMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy")),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold
         )
 
         IconButton(onClick = {
