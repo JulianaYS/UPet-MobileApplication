@@ -77,4 +77,17 @@ object TokenManager {
         }
     }
 
+    fun saveEmail(email: String): Boolean {
+        val sharedPreferences = getSharedPreferences()
+        val editor = sharedPreferences.edit()
+        editor.putString("user_email", email)
+        Log.d("TokenManager", "Email saved: $email")
+        return editor.commit()
+    }
+
+    fun getEmail(): String? {
+        val sharedPreferences = getSharedPreferences()
+        return sharedPreferences.getString("user_email", null)
+    }
+
 }

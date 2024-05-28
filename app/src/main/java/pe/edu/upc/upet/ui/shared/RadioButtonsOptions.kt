@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.screens.auth.signup.ToggleableInfo
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -71,8 +71,8 @@ fun RadioButtonsOptions(
                         selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
                     },
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = UpetOrange1,
-                        unselectedColor = UpetOrange1
+                        selectedColor = Pink,
+                        unselectedColor = Pink
                     ),
                 )
                 Text(

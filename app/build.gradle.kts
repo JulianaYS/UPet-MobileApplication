@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.compose.material:material:1.6.7")
     implementation(libs.androidx.core.ktx)

@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetGray1
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Gray1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -111,7 +111,7 @@ fun TextPlaceHolder(placeholder: String){
     Text(
         text = placeholder,
         style = TextStyle(
-            color = UpetGray1,
+            color = Gray1,
             fontSize = 12.sp,
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Normal
@@ -209,7 +209,7 @@ fun CustomOutlinedTextFieldPassword(
                 Icon(
                     imageVector = if (isPasswordVisible.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                     contentDescription = if (isPasswordVisible.value) "Hide password" else "Show password",
-                    tint = UpetOrange1
+                    tint = Pink
                 )
             }
         }
@@ -223,11 +223,11 @@ fun Modifier.commonModifier(cornerSize: Dp, start: Dp = BorderPadding, end: Dp =
         .fillMaxWidth()
         .size(height = 56.dp, width = 300.dp)
         .padding(bottom = 10.dp, start = start, end = end)
-        .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(cornerSize))
+        .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(cornerSize))
         .background(Color.White, shape = RoundedCornerShape(cornerSize))
 
 fun commonTextStyle( input: String) = TextStyle(
-    color = if (input.isNotEmpty()) Color.Black else UpetGray1,
+    color = if (input.isNotEmpty()) Color.Black else Gray1,
     fontSize = 12.sp,
     fontFamily = poppinsFamily,
     fontWeight = FontWeight.Normal

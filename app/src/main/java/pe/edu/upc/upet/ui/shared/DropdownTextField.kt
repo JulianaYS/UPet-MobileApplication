@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 
 @Composable
 fun DropdownTextField(
@@ -61,7 +61,7 @@ fun DropdownTextField(
             LazyColumn(
                 modifier = Modifier
                     .background(Color.White)
-                    .border(BorderStroke(1.dp, UpetOrange1))) {
+                    .border(BorderStroke(1.dp, Pink))) {
                 items(filteredItems.size) { index ->
                     DropdownMenuItem(
                         text = { Text(text = filteredItems[index], modifier = Modifier.padding(8.dp)) },

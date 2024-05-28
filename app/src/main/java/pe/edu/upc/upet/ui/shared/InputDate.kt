@@ -32,8 +32,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetGray1
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Gray1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -74,14 +74,14 @@ fun InputTextFieldForDate(input: MutableState<String>, placeholder: String, onIc
             .fillMaxWidth()
             .size(height = 56.dp, width = 300.dp)
             .padding(bottom = 10.dp, start = BorderPadding, end = BorderPadding)
-            .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(10.dp))
+            .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
             .background(Color.White, shape = RoundedCornerShape(10.dp)), // Rounded corners
         placeholder = {
             TextPlaceHolder(placeholder = placeholder)
         },
         shape = RoundedCornerShape(10.dp),
         textStyle = TextStyle(
-            color = if (input.value.isNotEmpty()) Color.Black else UpetGray1,
+            color = if (input.value.isNotEmpty()) Color.Black else Gray1,
             fontSize = 12.sp,
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.Normal

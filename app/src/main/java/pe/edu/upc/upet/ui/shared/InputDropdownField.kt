@@ -37,8 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetGray1
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Gray1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +71,7 @@ fun InputDropdownField(
                 readOnly = true,
                 trailingIcon = {
                     Icon(imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = null, tint = UpetOrange1
+                        contentDescription = null, tint = Pink
                     )
                 },
                 modifier = Modifier
@@ -79,11 +79,11 @@ fun InputDropdownField(
                     .fillMaxWidth()
                     .width(width = 380.dp)
                     .padding(bottom = 10.dp, end = BorderPadding)
-                    .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(10.dp))
+                    .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
                     .background(Color.White, shape = RoundedCornerShape(10.dp)),
                 shape = RoundedCornerShape(10.dp),
                 textStyle = TextStyle(
-                    color = if (selectedOption.value.isNotEmpty()) Color.Black else UpetGray1,
+                    color = if (selectedOption.value.isNotEmpty()) Color.Black else Gray1,
                     fontSize = 12.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Normal
@@ -94,12 +94,12 @@ fun InputDropdownField(
                 onDismissRequest = { expanded.value = false },
                 modifier = Modifier.width(width=380.dp)
                     .background(Color.White, shape = RoundedCornerShape(10.dp))
-                    .exposedDropdownSize().border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(10.dp))
+                    .exposedDropdownSize().border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
             ) {
                 options.forEach {
                     DropdownMenuItem(
                         text = { Text(it,
-                            color = if (selectedOption.value.isNotEmpty()) Color.Black else UpetGray1,
+                            color = if (selectedOption.value.isNotEmpty()) Color.Black else Gray1,
                             fontSize = 12.sp,
                             fontFamily = poppinsFamily,
                             fontWeight = FontWeight.Normal
@@ -109,7 +109,7 @@ fun InputDropdownField(
                             expanded.value = false },
                     )
                     if (it != options.last()) {
-                        HorizontalDivider(thickness = 0.dp, color = UpetOrange1)
+                        HorizontalDivider(thickness = 0.dp, color = Pink)
                     }
                 }
             }

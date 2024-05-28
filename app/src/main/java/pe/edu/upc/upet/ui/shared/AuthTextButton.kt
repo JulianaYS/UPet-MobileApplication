@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -44,7 +44,7 @@ fun AuthTextButton(
                 onClick = {
                     onClickClickableText()
                 },
-                style = textStyle(UpetOrange1)
+                style = textStyle(Pink)
             )
         }
     }

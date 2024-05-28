@@ -27,10 +27,8 @@ import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.Dialog
 import pe.edu.upc.upet.ui.shared.TextFieldType
 import pe.edu.upc.upet.ui.theme.BorderPadding
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
-import pe.edu.upc.upet.ui.theme.UpetOrange1
-import pe.edu.upc.upet.utils.TokenManager
-
 
 @Composable
 fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: (String) -> Unit){
@@ -77,8 +75,12 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                         label = "Password",
                         type=TextFieldType.Password
                     )
-                    email.value = "juan@gmail.com"
-                    password.value = "juan"
+                    if (email.value.isEmpty()) {
+                        email.value = "mario@gmail.com"
+                    }
+                    if (password.value.isEmpty()) {
+                        password.value = "mario"
+                    }
                     AuthTextButton("Forgot Password?", arrangement = Arrangement.End,
                         onClickClickableText = {
                             navigateTo(Routes.PasswordRecovery)
@@ -110,7 +112,7 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                     HorizontalDivider(
                         modifier = Modifier.padding(BorderPadding),
                         thickness = 1.dp,
-                        color = UpetOrange1
+                        color = Pink
                     )
                     AuthTextButton(
                         "Register Now",
