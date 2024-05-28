@@ -95,7 +95,7 @@ fun PetCard( navController: NavHostController, pet: PetResponse) {
                         Text("View")
                     }
                     Button(
-                        onClick = { },
+                        onClick = { navController.navigate("PetEdit/${pet.id}")},
                         colors = ButtonDefaults.buttonColors(Color(0xFFEB5569)),
                         shape = RoundedCornerShape(6.dp)
                     ) {

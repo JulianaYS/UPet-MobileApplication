@@ -29,7 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,7 +63,6 @@ import pe.edu.upc.upet.ui.shared.uploadImage
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
-import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 import pe.edu.upc.upet.utils.TokenManager
 import java.time.LocalDate
@@ -247,10 +245,14 @@ fun RegisterPet(navController: NavHostController) {
     }
 
     if (showSuccessDialog.value) {
+
         SuccessDialog(onDismissRequest = {
             showSuccessDialog.value = false
             navController.navigate(Routes.Home)
-        })
+        }, titleText = "Pet Registered",
+            messageText = "Your pet has been registered successfully.",
+            buttonText = "OK")
+
     }
 }
 
@@ -311,7 +313,12 @@ fun PetImageRegister(text: String, onPickImageClick: () -> Unit, imageUrl: Strin
 }
 
 @Composable
-fun SuccessDialog(onDismissRequest: () -> Unit) {
+fun SuccessDialog(
+    onDismissRequest: () -> Unit,
+    titleText: String,
+    messageText: String,
+    buttonText: String
+) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -327,14 +334,14 @@ fun SuccessDialog(onDismissRequest: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = "Success",
+                    text = titleText,
                     color = Color.Black,
                 )
             }
         },
         text = {
             Text(
-                text = "Pet registered successfully.",
+                text = messageText,
                 color = Color.Black,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
@@ -349,7 +356,7 @@ fun SuccessDialog(onDismissRequest: () -> Unit) {
                     colors = ButtonDefaults.buttonColors(contentColor = Color.Green),
                     modifier = Modifier.fillMaxWidth().height(48.dp)
                 ) {
-                    Text("OK", color = Color.White)
+                    Text(buttonText, color = Color.White)
                 }
             }
         },

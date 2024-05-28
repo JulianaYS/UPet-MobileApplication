@@ -73,4 +73,49 @@ class PetRepository(private val petService: PetService = PetServiceFactory.getPe
             }
         })
     }
+
+    fun updatePet(petId: Int, pet: PetRequest, onSuccess: (PetResponse) -> Unit, onError: (String) -> Unit) {
+        petService.updatePet(petId, pet).enqueue(object : Callback<PetResponse> {
+            override fun onResponse(call: Call<PetResponse>, response: Response<PetResponse>) {
+                if (response.isSuccessful) {
+                    val petResponse = response.body()?.let { petResponse ->
+                        PetResponse(
+                            id = petResponse.id,
+                            name = petResponse.name,
+                            petOwnerId = petResponse.petOwnerId,
+                            breed = petResponse.breed,
+                            species = petResponse.species,
+                            weight = petResponse.weight,
+                            birthdate = petResponse.birthdate,
+                            image_url = petResponse.image_url,
+                            gender = petResponse.gender
+                        )
+                    }
+                    onSuccess(petResponse!!)
+                } else {
+                    onError("Error")
+                }
+            }
+
+            override fun onFailure(call: Call<PetResponse>, t: Throwable) {
+                onError(t.message ?: "Error")
+            }
+        })
+    }
+
+    fun deletePet(petId: Int, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        petService.deletePet(petId).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onError("Error")
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                onError(t.message ?: "Error")
+            }
+        })
+    }
 }

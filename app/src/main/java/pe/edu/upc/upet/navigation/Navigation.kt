@@ -22,6 +22,7 @@ import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.home.Home
 import pe.edu.upc.upet.ui.screens.petOwner.EditPetOwnerProfile
 import pe.edu.upc.upet.ui.screens.petOwner.PetOwnerProfile
+import pe.edu.upc.upet.ui.screens.pets.EditPetProfile
 import pe.edu.upc.upet.ui.screens.pets.PetList
 import pe.edu.upc.upet.ui.screens.pets.PetProfile
 import pe.edu.upc.upet.ui.screens.pets.RegisterPet
@@ -60,11 +61,7 @@ fun Navigation() {
                 shouldShowBottomBar.value = true
                 PetList(navController)
             }
-            composable("PetProfile/{petId}") { backStackEntry ->
-                shouldShowBottomBar.value = true
-                val petId = backStackEntry.arguments?.getString("petId")?.toInt()
-                PetProfile(petId, navController)
-            }
+
             composable(Routes.registerPet) {
                 shouldShowBottomBar.value = true
                 RegisterPet(navController)
@@ -129,6 +126,16 @@ fun Navigation() {
             composable(Routes.PetOwnerEditProfile){
                 shouldShowBottomBar.value = true
                 EditPetOwnerProfile(navController)
+            }
+            composable("PetProfile/{petId}") { backStackEntry ->
+                shouldShowBottomBar.value = true
+                val petId = backStackEntry.arguments?.getString("petId")?.toInt()
+                PetProfile(petId, navController)
+            }
+            composable(Routes.PetEdit+"/{petId}") {backStackEntry ->
+                val petId = backStackEntry.arguments?.getString("petId")?.toInt()
+                shouldShowBottomBar.value = true
+                EditPetProfile( petId, navController)
             }
         }
     }

@@ -120,14 +120,16 @@ fun PetProfile(petId: Int?, navController: NavController) {
                             )
                         }
                     }
-                    Row (modifier = Modifier.fillMaxWidth()
-                        .padding(start = 20.dp,end = 20.dp),
+                    Row (modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween){
                         PetProfileInformation("Breed", petValue.breed, Icons.Filled.Pets)
                         PetProfileInformation("Specie", petValue.species, Icons.Filled.WbSunny)
                     }
-                    Row (modifier = Modifier.fillMaxWidth()
-                        .padding(start= 20.dp,end= 20.dp),
+                    Row (modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween){
                         PetProfileInformation("Weight", petValue.weight.toString(), Icons.Filled.Balance)
                         PetProfileInformation("Age", petValue.birthdate, Icons.Filled.Schedule)
@@ -142,7 +144,9 @@ fun PetProfile(petId: Int?, navController: NavController) {
                             .padding(top =10.dp, bottom = 10.dp)
                     )
 
-                    CustomButton(text = "Add Information") {}
+                    CustomButton(text = "EditProfile") {
+                        navController.navigate("PetEdit/${petValue.id}")
+                    }
                 }
             }
         }

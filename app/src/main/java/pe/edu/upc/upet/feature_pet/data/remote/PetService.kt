@@ -2,8 +2,10 @@ package pe.edu.upc.upet.feature_pet.data.remote
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface PetService {
@@ -15,4 +17,10 @@ interface PetService {
 
     @POST("pets/{petowner_id}")
     fun createPet(@Path("petowner_id") petowner_Id: Int, @Body petRequest: PetRequest): Call<PetResponse>
+
+    @PUT("pets/{pet_id}")
+    fun updatePet(@Path("pet_id") pet_Id: Int, @Body petRequest: PetRequest): Call<PetResponse>
+
+    @DELETE("pets/{pet_id}")
+    fun deletePet(@Path("pet_id") pet_Id: Int): Call<Unit>
 }
