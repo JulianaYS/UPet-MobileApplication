@@ -19,15 +19,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun PetMedicalInformationScreen() {
+fun PetMedicalInformationScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        AppBar()
+        AppBar(navController = navController)
         PetImageBanner()
         PetInformationSection()
         MedicalHistorySection()
@@ -35,7 +36,7 @@ fun PetMedicalInformationScreen() {
 }
 
 @Composable
-fun AppBar() {
+fun AppBar(navController: NavController) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(56.dp)
@@ -43,7 +44,7 @@ fun AppBar() {
 
         ) {
         Row{
-            IconButton(onClick = { }) {
+            IconButton(onClick = {navController.popBackStack()}) {
                 Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.White)
             }
             Text(
