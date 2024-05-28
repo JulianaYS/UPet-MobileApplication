@@ -55,6 +55,22 @@ fun InputDropdownField(
 
     LabelTextField(label, commonPadding)
 
+    DropdownMenuBox(options = options, selectedOption = selectedOption, paddingStart = 16, paddingEnd = 16, fontSize = 12)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownMenuBox(
+    options: List<String>,
+    selectedOption: MutableState<String>,
+    paddingStart: Int,
+    paddingEnd: Int,
+    fontSize: Int
+) {
+    val expanded = remember {
+        mutableStateOf(false)
+    }
+
     ExposedDropdownMenuBox(
         expanded = expanded.value,
         onExpandedChange = {
@@ -63,7 +79,7 @@ fun InputDropdownField(
         Box (modifier = Modifier
             .fillMaxWidth()
             .clickable { expanded.value = true }
-            .padding(start = BorderPadding)
+            .padding(start = paddingStart.dp)
         ){
             OutlinedTextField(
                 value = selectedOption.value,
@@ -77,14 +93,14 @@ fun InputDropdownField(
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
-                    .width(width = 380.dp)
-                    .padding(bottom = 10.dp, end = BorderPadding)
+                    .width(width = 400.dp)
+                    .padding(bottom = 10.dp, end = paddingEnd.dp)
                     .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
                     .background(Color.White, shape = RoundedCornerShape(10.dp)),
                 shape = RoundedCornerShape(10.dp),
                 textStyle = TextStyle(
                     color = if (selectedOption.value.isNotEmpty()) Color.Black else Gray1,
-                    fontSize = 12.sp,
+                    fontSize = fontSize.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Normal
                 )
@@ -92,15 +108,17 @@ fun InputDropdownField(
             DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
-                modifier = Modifier.width(width=380.dp)
+                modifier = Modifier
+                    .width(width = 380.dp)
                     .background(Color.White, shape = RoundedCornerShape(10.dp))
-                    .exposedDropdownSize().border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
+                    .exposedDropdownSize()
+                    .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
             ) {
                 options.forEach {
                     DropdownMenuItem(
                         text = { Text(it,
                             color = if (selectedOption.value.isNotEmpty()) Color.Black else Gray1,
-                            fontSize = 12.sp,
+                            fontSize = fontSize.sp,
                             fontFamily = poppinsFamily,
                             fontWeight = FontWeight.Normal
                         ) },

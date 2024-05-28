@@ -12,10 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
-
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import pe.edu.upc.upet.ui.screens.appointment.BookAppointmentScreen
+import pe.edu.upc.upet.ui.screens.appointment.PetDetailsAppointmentScreen
 import pe.edu.upc.upet.ui.screens.auth.aditionalInformation.PostRegisterScreen
 import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
@@ -111,6 +111,10 @@ fun Navigation() {
             composable(Routes.BookAppointmentScreen){
                 shouldShowBottomBar.value = true
                 BookAppointmentScreen()
+            }
+            composable(Routes.PetDetailsAppointment){
+                shouldShowBottomBar.value = true
+                PetDetailsAppointmentScreen()
             }
             composable(Routes.SubscriptionBasicScreen){
                 shouldShowBottomBar.value = true
