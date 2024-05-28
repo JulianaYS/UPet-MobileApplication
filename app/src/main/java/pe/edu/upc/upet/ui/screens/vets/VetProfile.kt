@@ -1,6 +1,5 @@
 package pe.edu.upc.upet.ui.screens.vets
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.theme.Blue1
@@ -102,13 +99,11 @@ fun VetProfile(navController: NavHostController) {
 
 
                         }
-                        Image(
-                            painter = rememberAsyncImagePainter("https://cdn-icons-png.freepik.com/512/8742/8742495.png"),
-                            contentDescription = "User Profile Picture",
-                            contentScale = ContentScale.Crop,
+                        GlideImage(
                             modifier = Modifier
                                 .size(120.dp)
-                                .clip(RoundedCornerShape(50.dp))
+                                .clip(RoundedCornerShape(50.dp)),
+                            imageModel= {"https://cdn-icons-png.freepik.com/512/8742/8742495.png"}
                         )
                         Column (
                             modifier = Modifier.padding(top = 9.dp, bottom = 10.dp),
@@ -169,11 +164,11 @@ fun VetProfile(navController: NavHostController) {
 
 @Composable
 fun TextSemiBold(text: String) {
-    val UpetOrange = Color(0xFFFF8F86)
+    val upetOrange = Color(0xFFFF8F86)
     Text(
         text = text,
         style = TextStyle(
-            color = UpetOrange,
+            color = upetOrange,
             fontSize = 20.sp,
             fontFamily = poppinsFamily,
             fontWeight = FontWeight.SemiBold
