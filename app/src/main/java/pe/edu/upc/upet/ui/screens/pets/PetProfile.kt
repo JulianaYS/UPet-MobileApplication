@@ -1,7 +1,6 @@
 package pe.edu.upc.upet.ui.screens.pets
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,15 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.utils.TokenManager
@@ -144,8 +143,24 @@ fun PetProfile(petId: Int?, navController: NavController) {
                             .padding(top =10.dp, bottom = 10.dp)
                     )
 
-                    CustomButton(text = "EditProfile") {
-                        navController.navigate("PetEdit/${petValue.id}")
+                    Column(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                            .padding(10.dp, 10.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        CustomButton(text = "Add Medical Information") {
+                            navController.navigate(Routes.NewMedicalRegisterScreen)
+                        }
+
+                        CustomButton(text = "Edit Profile") {
+                            navController.navigate("PetEdit/${petValue.id}")
+                        }
+
+                        CustomButton(text = "Medical History") {
+                            navController.navigate(Routes.PetMedicalInformationScreen)
+                        }
                     }
                 }
             }
@@ -194,14 +209,12 @@ fun PetImage(imageUrl: String) {
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(imageUrl),
-            contentDescription = "Pet Image",
-            contentScale = ContentScale.Crop,
+        GlideImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(200.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
-        )
+        ,
+            imageModel = { imageUrl })
     }
 }
