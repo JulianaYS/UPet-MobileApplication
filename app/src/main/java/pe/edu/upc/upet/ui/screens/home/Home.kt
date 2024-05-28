@@ -16,11 +16,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,12 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import pe.edu.upc.upet.MyApplication
-import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
@@ -54,13 +48,11 @@ import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 
 @Composable
 fun Home( navController: NavController){
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .size(100.dp)) {
-        UserSection()
-        SearchField()
-        PetsSection(navController)
-        RecommendedVetsSection(navController)
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        item { UserSection() }
+        item { SearchField() }
+        item { PetsSection(navController) }
+        item { RecommendedVetsSection(navController) }
     }
 }
 
@@ -199,11 +191,10 @@ fun RecommendedVetsSection(navController: NavController ) {
             color = Color.White,
             modifier = Modifier.padding(16.dp)
         )
-        LazyColumn {
-            items(veterinaryClinics) { vet ->
-                VetCard(vet, onVetSelected = {navController.navigate("VetProfile/${vet.id}")})
+        Column {
+            veterinaryClinics.forEach { vet ->
+                VetCard(vet, onVetSelected = { navController.navigate("VetProfile/${vet.id}") })
             }
-
         }
     }
 }

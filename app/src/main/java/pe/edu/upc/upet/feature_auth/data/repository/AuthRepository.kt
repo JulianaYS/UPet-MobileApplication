@@ -17,7 +17,7 @@ import retrofit2.Response
 
 class AuthRepository(private val authService: AuthService = AuthServiceFactory.getAuthService()) {
 
-    fun getUsers(username: String, password: String) {
+    fun getUsers(email: String, password: String) {
         val signIn = authService.getUsers()
         signIn.enqueue(object : Callback<List<UserResponse>> {
             override fun onResponse(
@@ -35,20 +35,22 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         })
     }
 
-    fun signIn( username: String, password: String, callback: (Boolean) -> Unit) {
-        val signInCall = authService.signIn(SignInRequest(username, password))
+    fun signIn( email: String, password: String, callback: (Boolean) -> Unit) {
+        val signInCall = authService.signIn(SignInRequest(email, password))
         signInCall.enqueue(object : Callback<SignInResponse> {
             override fun onResponse(
                 call: Call<SignInResponse>,
                 response: Response<SignInResponse>) {
-                TokenManager.clearToken()
                 if (response.isSuccessful) {
                     val userResponse = response.body() as SignInResponse
-                    TokenManager.saveToken( userResponse.access_token)
+                    TokenManager.saveToken(userResponse.access_token)
+                    TokenManager.saveEmail(email)
+                    Log.d( "AuthRepository", "Token: ${userResponse.access_token}")
 
                     callback(true)
                 } else {
                     callback(false)
+                    Log.d("AuthRepository", "Failed to sign in: ${response.errorBody()}")
                 }
             }
 
@@ -83,6 +85,10 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
                 }
             }
         })
+    }
+
+    fun logOut() {
+        TokenManager.clearToken()
     }
 
     fun getUserById(userId: Int, callback: (UserResponse) -> Unit) {

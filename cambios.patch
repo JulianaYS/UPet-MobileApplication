@@ -379,7 +379,7 @@ index a616c7d..3079e20 100644
 +import pe.edu.upc.upet.ui.shared.TextFieldType
  import pe.edu.upc.upet.ui.theme.BorderPadding
  import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
- import pe.edu.upc.upet.ui.theme.UpetOrange1
+ import pe.edu.upc.upet.ui.theme.Pink
  import pe.edu.upc.upet.utils.TokenManager
 +import pe.edu.upc.upet.utils.validateAuth
  
@@ -487,7 +487,7 @@ index 85ed5a6..3ce7a9a 100644
 +import pe.edu.upc.upet.ui.shared.TextFieldType
  import pe.edu.upc.upet.ui.theme.BorderPadding
  import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
- import pe.edu.upc.upet.ui.theme.UpetOrange1
+ import pe.edu.upc.upet.ui.theme.Pink
  import pe.edu.upc.upet.ui.theme.poppinsFamily
 -
 +import pe.edu.upc.upet.utils.validateAuth
@@ -612,8 +612,8 @@ index 85ed5a6..3ce7a9a 100644
 -                        selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
 -                    },
 -                    colors = RadioButtonDefaults.colors(
--                        selectedColor = UpetOrange1,
--                        unselectedColor = UpetOrange1
+-                        selectedColor = Pink,
+-                        unselectedColor = Pink
 -                    ),
 -                )
 -                Text(
@@ -682,7 +682,7 @@ index d732064..89115fd 100644
  import androidx.compose.ui.text.TextStyle
 @@ -33,28 +40,54 @@ import pe.edu.upc.upet.ui.theme.BorderPadding
  import pe.edu.upc.upet.ui.theme.UpetGray1
- import pe.edu.upc.upet.ui.theme.UpetOrange1
+ import pe.edu.upc.upet.ui.theme.Pink
  import pe.edu.upc.upet.ui.theme.poppinsFamily
 +
  @Composable
@@ -777,7 +777,7 @@ index d732064..89115fd 100644
 -            .fillMaxWidth()
 -            .size(height = 56.dp, width = 300.dp)
 -            .padding(bottom = 10.dp, start= BorderPadding, end= BorderPadding)
--            .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(cornerSize))
+-            .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(cornerSize))
 -            .background(Color.White, shape = RoundedCornerShape(cornerSize)),
 -        textStyle = TextStyle(
 -            color = if (input.value.isNotEmpty()) Color.Black else UpetGray1,
@@ -850,14 +850,14 @@ index d732064..89115fd 100644
 -                    Icon(
 -                        imageVector = if (isPasswordVisible.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
 -                        contentDescription = if (isPasswordVisible.value) "Hide password" else "Show password",
--                        tint = UpetOrange1
+-                        tint = Pink
 -                    )
 -                }
 +            IconButton(onClick = { isPasswordVisible.value = !isPasswordVisible.value }) {
 +                Icon(
 +                    imageVector = if (isPasswordVisible.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
 +                    contentDescription = if (isPasswordVisible.value) "Hide password" else "Show password",
-+                    tint = UpetOrange1
++                    tint = Pink
 +                )
              }
          }
@@ -872,7 +872,7 @@ index d732064..89115fd 100644
 +    .fillMaxWidth()
 +    .size(height = 56.dp, width = 300.dp)
 +    .padding(bottom = 10.dp, start = start, end = end)
-+    .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(cornerSize))
++    .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(cornerSize))
 +    .background(Color.White, shape = RoundedCornerShape(cornerSize))
 +
 +fun commonTextStyle( input: String) = TextStyle(
@@ -912,7 +912,7 @@ index 0000000..1c8b815
 +import androidx.compose.ui.unit.Dp
 +import androidx.compose.ui.unit.dp
 +import pe.edu.upc.upet.ui.theme.BorderPadding
-+import pe.edu.upc.upet.ui.theme.UpetOrange1
++import pe.edu.upc.upet.ui.theme.Pink
 +
 +@Composable
 +fun DropdownTextField(
@@ -952,7 +952,7 @@ index 0000000..1c8b815
 +            LazyColumn(
 +                modifier = Modifier
 +                    .background(Color.White)
-+                    .border(BorderStroke(1.dp, UpetOrange1))) {
++                    .border(BorderStroke(1.dp, Pink))) {
 +                items(filteredItems.size) { index ->
 +                    DropdownMenuItem(
 +                        onClick = {
@@ -998,7 +998,7 @@ index 0000000..b8be03e
 +import androidx.compose.ui.unit.dp
 +import androidx.compose.ui.unit.sp
 +import pe.edu.upc.upet.ui.screens.auth.signup.ToggleableInfo
-+import pe.edu.upc.upet.ui.theme.UpetOrange1
++import pe.edu.upc.upet.ui.theme.Pink
 +import pe.edu.upc.upet.ui.theme.poppinsFamily
 +
 +@Composable
@@ -1050,8 +1050,8 @@ index 0000000..b8be03e
 +                        selectedOption.value = if (index == 0) 1 else 2 // Asigna 1 si es la opción 1, 2 si es la opción 2
 +                    },
 +                    colors = RadioButtonDefaults.colors(
-+                        selectedColor = UpetOrange1,
-+                        unselectedColor = UpetOrange1
++                        selectedColor = Pink,
++                        unselectedColor = Pink
 +                    ),
 +                )
 +                Text(

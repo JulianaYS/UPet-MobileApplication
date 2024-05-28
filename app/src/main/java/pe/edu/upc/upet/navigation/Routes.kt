@@ -13,6 +13,9 @@ data object Routes {
     const val PostRegister = "postRegister"
     const val Profile = "profile"
     const val AppointmentList = "appointmentList"
-    const val VetProfile = "vetProfile"
+    const val SubscriptionBasicScreen = "subscriptionBasicScreen"
+    const val SubscriptionAdvancedScreen = "subscriptionAdvancedScreen"
+    const val PetOwnerEditProfile = "petOwnerEditProfile"
+    const val VetProfile= "vetProfile"
     const val BookAppointmentScreen = "bookAppointmentScreen"
 }

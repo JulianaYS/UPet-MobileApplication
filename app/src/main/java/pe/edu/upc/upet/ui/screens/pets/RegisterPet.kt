@@ -64,7 +64,7 @@ import pe.edu.upc.upet.ui.shared.uploadImage
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 import pe.edu.upc.upet.utils.TokenManager
 import java.time.LocalDate
@@ -299,7 +299,7 @@ fun PetImageRegister(text: String, onPickImageClick: () -> Unit, imageUrl: Strin
         ) {
 
                 IconButton(onClick = onPickImageClick) {
-                    Icon(Icons.Filled.Upload, contentDescription = "Upload Icon", tint = UpetOrange1)
+                    Icon(Icons.Filled.Upload, contentDescription = "Upload Icon", tint = Pink)
                 }
 
             GlideImage(

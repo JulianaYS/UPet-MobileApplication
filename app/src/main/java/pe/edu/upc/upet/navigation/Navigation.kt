@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.navigation
 
+import SubscriptionBasicScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -19,12 +20,15 @@ import pe.edu.upc.upet.ui.screens.auth.aditionalInformation.PostRegisterScreen
 import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.home.Home
+import pe.edu.upc.upet.ui.screens.petOwner.EditPetOwnerProfile
+import pe.edu.upc.upet.ui.screens.petOwner.PetOwnerProfile
 import pe.edu.upc.upet.ui.screens.pets.PetList
 import pe.edu.upc.upet.ui.screens.pets.PetProfile
 import pe.edu.upc.upet.ui.screens.pets.RegisterPet
 import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
 import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
+import pe.edu.upc.upet.ui.screens.subscription.SubscriptionAdvancedScreen
 import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.screens.vets.VetProfile
 import pe.edu.upc.upet.ui.shared.BottomBar
@@ -47,6 +51,10 @@ fun Navigation() {
             composable(Routes.Home) {
                 shouldShowBottomBar.value = true
                 Home(navController)
+            }
+            composable(Routes.Profile) {
+                shouldShowBottomBar.value = true
+                PetOwnerProfile(navController)
             }
             composable(Routes.PetList) {
                 shouldShowBottomBar.value = true
@@ -103,6 +111,20 @@ fun Navigation() {
             composable(Routes.BookAppointmentScreen){
                 shouldShowBottomBar.value = true
                 BookAppointmentScreen()
+            }
+            composable(Routes.SubscriptionBasicScreen){
+                shouldShowBottomBar.value = true
+                SubscriptionBasicScreen(navController)
+
+            }
+            composable(Routes.SubscriptionAdvancedScreen){
+                shouldShowBottomBar.value = true
+                SubscriptionAdvancedScreen(navController)
+
+            }
+            composable(Routes.PetOwnerEditProfile){
+                shouldShowBottomBar.value = true
+                EditPetOwnerProfile(navController)
             }
         }
     }

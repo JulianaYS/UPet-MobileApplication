@@ -45,7 +45,6 @@ import pe.edu.upc.upet.ui.shared.RadioButtonsOptions
 import pe.edu.upc.upet.ui.shared.TextFieldType
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
-import pe.edu.upc.upet.ui.theme.UpetOrange1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 

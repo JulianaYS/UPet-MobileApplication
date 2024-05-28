@@ -18,7 +18,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -51,13 +51,13 @@ fun AuthCheckBox(checkedState: MutableState<Boolean>){
             withStyle(style = SpanStyle(color = Color.White)) {
                 append("I agree to the ")
             }
-            withStyle(style = SpanStyle(color = UpetOrange1)) { // Color azul para los enlaces
+            withStyle(style = SpanStyle(color = Pink)) { // Color azul para los enlaces
                 append(termsAndConditions)
             }
             withStyle(style = SpanStyle(color = Color.White)) {
                 append(" and ")
             }
-            withStyle(style = SpanStyle(color = UpetOrange1)) { // Color azul para los enlaces
+            withStyle(style = SpanStyle(color = Pink)) { // Color azul para los enlaces
                 append(privacyPolicy)
             }
         }
