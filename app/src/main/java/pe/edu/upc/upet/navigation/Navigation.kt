@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upc.upet.ui.screens.appointment.BookAppointmentScreen
 import pe.edu.upc.upet.ui.screens.auth.aditionalInformation.PostRegisterScreen
 import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
@@ -98,6 +99,10 @@ fun Navigation() {
                     destination->
                     navController.navigate(destination)
                 }
+            }
+            composable(Routes.BookAppointmentScreen){
+                shouldShowBottomBar.value = true
+                BookAppointmentScreen()
             }
         }
     }
