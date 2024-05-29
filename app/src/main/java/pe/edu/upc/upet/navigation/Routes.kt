@@ -21,5 +21,13 @@ data object Routes {
     const val BookAppointmentScreen = "bookAppointmentScreen"
     const val AppointmentDetail = "appointmentDetail"
     const val PetDetailsAppointment = "petDetailsAppointment"
+    const val PetMedicalInformationScreen = "petMedicalInformationScreen"
+    const val NewMedicalRegisterScreen = "newMedicalRegisterScreen"
+    const val NewVaccineRegister = "newVaccineRegister"
+    const val NewSurgeryRegister = "newSurgeryRegister"
+    const val NewTestResultRegister = "newTestResultRegister"
+    const val NewDiagnosisRegister = "newDiagnosisRegister"
+    const val EditVeterinaryProfile = "editVeterinaryProfile"
+    const val EditVeterinaryPassword = "editVeterinaryPassword"
 
 }
