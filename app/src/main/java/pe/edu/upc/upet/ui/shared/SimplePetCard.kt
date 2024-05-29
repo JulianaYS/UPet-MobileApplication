@@ -1,6 +1,6 @@
 package pe.edu.upc.upet.ui.shared
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -18,7 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.ui.theme.Blue1
 
@@ -33,14 +34,15 @@ fun SimplePetCard(pet: PetResponse, navController: NavController, onPetSelected:
             .padding(8.dp)
             .clickable { onPetSelected(pet.id) }
     ) {
+        Log.d("SimplePetCard", "SimplePetCard: ${pet.image_url}")
+
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = rememberImagePainter(pet.imageUrl),
-                contentDescription = "Pet Image",
-                contentScale = ContentScale.Crop,
+            GlideImage(
+                imageModel = { pet.image_url },
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(20.dp)),
+                imageOptions = ImageOptions(contentScale = ContentScale.Crop)
             )
             Text(
                 text = pet.name,

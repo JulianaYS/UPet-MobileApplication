@@ -1,6 +1,7 @@
 package pe.edu.upc.upet.ui.screens.pets
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,18 +62,18 @@ import pe.edu.upc.upet.utils.TokenManager
 fun PetProfile(petId: Int?, navController: NavController) {
     val pet = remember { mutableStateOf<PetResponse?>(null) }
 
-   val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
+    val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
 
     PetRepository().getPetsByOwnerId(ownerId ?: 0, onSuccess = {
-            if(petId != null) {
-                pet.value = it.find { pet -> pet.id == petId }
-            }
-            Log.d("g", "PetProfile: $it") }, onError = {Log.d("orrorregister", "") })
+        if(petId != null) {
+            pet.value = it.find { pet -> pet.id == petId }
+        }
+        Log.d("g", "PetProfile: $it") }, onError = {Log.d("orrorregister", "") })
 
 
     val petValue = pet.value ?: PetResponse(0, "", 0, "", "", 0.0f, "",  "", GenderEnum.Male)
 
-    //cambiar esto
+
     data class PetInfo(val title: String, val icon: ImageVector, val content: String)
     fun petResponseToPetInfoList(petResponse: PetResponse): List<PetInfo> {
         return listOf(
@@ -84,7 +85,6 @@ fun PetProfile(petId: Int?, navController: NavController) {
     }
     val petInfoList = petResponseToPetInfoList(petValue)
 
-    //esto tbm
     data class MedicalHistory(
         val type: String,
         val date: String,
@@ -181,7 +181,7 @@ fun PetProfile(petId: Int?, navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         CustomButton(text = "Add Medical Information") {
-                            navController.navigate(Routes.NewMedicalRegisterScreen)
+                            //navController.navigate(Routes.NewMedicalRegisterScreen)
                         }
 
                         CustomButton(text = "Edit Profile") {
@@ -189,10 +189,10 @@ fun PetProfile(petId: Int?, navController: NavController) {
                         }
 
                         CustomButton(text = "Medical History") {
-                            navController.navigate(Routes.PetMedicalInformationScreen)
+                         //   navController.navigate(Routes.PetMedicalInformationScreen)
                         }
                     }
-                   
+
                 }
             }
         }
@@ -211,7 +211,7 @@ fun PetImage(imageUrl: String) {
                 .fillMaxWidth()
                 .size(200.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
-        ,
+            ,
             imageModel = { imageUrl })
     }
 }

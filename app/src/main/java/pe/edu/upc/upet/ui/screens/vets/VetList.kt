@@ -1,6 +1,5 @@
 package pe.edu.upc.upet.ui.screens.vets
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinics
 import pe.edu.upc.upet.feature_vetClinics.domain.veterinaryClinics
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
@@ -76,13 +76,12 @@ fun VetCard(veterinaryClinics: VeterinaryClinics, onVetSelected: ()->Unit) {
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = rememberImagePainter(veterinaryClinics.imageUrl),
-                contentDescription = "Veterinary Clinic Image",
-                contentScale = ContentScale.Crop,
+            GlideImage(
+                imageModel = { veterinaryClinics.imageUrl },
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(20.dp)),
+                imageOptions = ImageOptions(contentScale = ContentScale.Crop)
             )
             Column(modifier = Modifier.padding(start = 16.dp)) { // Añade este modificador
                 Text(
