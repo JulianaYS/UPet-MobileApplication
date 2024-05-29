@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.UPetTheme
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -27,7 +27,7 @@ fun AuthButton(text: String, onClick: () -> Unit = {}) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = UpetOrange1, contentColor = Color.White
+            containerColor = Pink, contentColor = Color.White
       ),
 
         shape = RoundedCornerShape(10.dp),

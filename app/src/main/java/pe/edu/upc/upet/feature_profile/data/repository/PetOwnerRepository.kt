@@ -1,46 +1,108 @@
 package pe.edu.upc.upet.feature_profile.data.repository
 
 import android.util.Log
-import pe.edu.upc.upet.feature_profile.data.local.PetOwnerDao
-import pe.edu.upc.upet.feature_profile.data.local.PetOwnerDaoFactory
+import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
+import pe.edu.upc.upet.feature_profile.data.mapper.toDomainModel
+import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerRequest
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerResponse
+import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerResponseList
+
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerService
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerServiceFactory
-import pe.edu.upc.upet.feature_profile.data.remote.PetOwnersResponse
+
 import pe.edu.upc.upet.feature_profile.domain.PetOwner
-import pe.edu.upc.upet.feature_profile.domain.PetOwners
+import pe.edu.upc.upet.feature_profile.domain.PetOwnerList
+import pe.edu.upc.upet.utils.TokenManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PetOwnerRepository(
-    private val petOwnerService: PetOwnerService = PetOwnerServiceFactory.getPetOwnerService(),
-    private val petOwnerDao: PetOwnerDao = PetOwnerDaoFactory.getPetOwnerDao()
-) {
-    fun getAll(callback: (PetOwners) -> Unit){
-        val getAll = petOwnerService.getAll()
-        getAll.enqueue(object : Callback<PetOwnersResponse>{
+class PetOwnerRepository(private val petOwnerService: PetOwnerService = PetOwnerServiceFactory.getPetOwnerService()) {
+
+    fun getAllPetOwners(callback: (PetOwnerList) -> Unit) {
+        petOwnerService.getAll().enqueue(object : Callback<PetOwnerResponseList> {
             override fun onResponse(
-                call: Call<PetOwnersResponse>,
-                response: Response<PetOwnersResponse>
+                call: Call<PetOwnerResponseList>,
+                response: Response<PetOwnerResponseList>
             ) {
-                if(response.isSuccessful){
-                    val petOwnersResponse = response.body() as PetOwnersResponse
-                    var petOwners: PetOwners = arrayListOf()
-                    for(petOwnerResponse in petOwnersResponse){
-                        petOwners = petOwners + PetOwner(
-                            petOwnerResponse.subscription
-                        )
-                    }
+                if (response.isSuccessful) {
+                    val petOwners = response.body()?.map { it.toDomainModel() } ?: emptyList()
                     callback(petOwners)
+                } else {
+                    // Handle error response
+                    Log.e("PetOwnerRepository", "Failed to get pet owners: ${response.errorBody()}")
                 }
             }
-            override fun onFailure(call: Call<PetOwnersResponse>,t: Throwable){
-                t.message?.let {
-                    Log.d("PetOwnerRepository", it)
+
+            override fun onFailure(call: Call<PetOwnerResponseList>, t: Throwable) {
+                // Handle network error
+                Log.e("PetOwnerRepository", "Failed to get pet owners", t)
+            }
+
+        })
+    }
+    fun getPetOwnerByUserId(userId: Int, callback: (PetOwner?) -> Unit) {
+        petOwnerService.getByUserId(userId).enqueue(object : Callback<PetOwnerResponse> {
+            override fun onResponse(
+                call: Call<PetOwnerResponse>,
+                response: Response<PetOwnerResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val petOwner = response.body()?.toDomainModel()
+                    callback(petOwner)
+                } else {
+                    callback(null)
                 }
+            }
+
+            override fun onFailure(call: Call<PetOwnerResponse>, t: Throwable) {
+                callback(null)
             }
         })
     }
 
+    fun getPetOwnerById(id: Int, callback: (PetOwner?) -> Unit) {
+        petOwnerService.getById(id).enqueue(object : Callback<PetOwnerResponse> {
+            override fun onResponse(
+                call: Call<PetOwnerResponse>,
+                response: Response<PetOwnerResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val petOwner = response.body()?.toDomainModel()
+                    callback(petOwner)
+                } else {
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<PetOwnerResponse>, t: Throwable) {
+                callback(null)
+            }
+        })
+    }
+
+    fun createPetOwner(userId: Int, petOwnerData: PetOwnerRequest, callback: (Boolean) -> Unit) {
+        petOwnerService.createPetOwner(userId, petOwnerData).enqueue(object : Callback<SignInResponse> {
+            override fun onResponse(
+                call: Call<SignInResponse>,
+                response: Response<SignInResponse>
+            ) {
+                TokenManager.clearToken()
+                if (response.isSuccessful) {
+                    val token = response.body()?.access_token
+                    if (token != null) {
+                        TokenManager.saveToken(token)
+                    }
+                    callback(response.isSuccessful)
+                } else {
+                    callback(false)
+                }
+
+            }
+
+            override fun onFailure(call: Call<SignInResponse>, t: Throwable) {
+                callback(false)
+            }
+        })
+    }
 }

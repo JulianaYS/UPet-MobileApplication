@@ -1,8 +1,28 @@
 package pe.edu.upc.upet.feature_profile.data.remote
 
+import com.google.gson.annotations.SerializedName
 
-typealias PetOwnersResponse = List<PetOwnerResponse>
+
+typealias PetOwnerResponseList = List<PetOwnerResponse>
+
+enum class SubscriptionType {
+    @SerializedName("Basic")
+    BASIC,
+    @SerializedName("Advanced")
+    ADVANCED,
+}
+
 data class PetOwnerResponse (
+    @SerializedName("id")
     val id: Int,
-    val subscription: String
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("numberPhone")
+    val numberPhone: String,
+    @SerializedName("image_url")
+    val image_url: String,
+    @SerializedName("location")
+    val location: String,
+    @SerializedName("subscriptionType")
+    val subscriptionType: SubscriptionType
 )

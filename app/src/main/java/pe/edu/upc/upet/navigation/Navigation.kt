@@ -1,6 +1,8 @@
 package pe.edu.upc.upet.navigation
 
-import PetProfile
+import SubscriptionBasicScreen
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -10,21 +12,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
-
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upc.upet.ui.screens.appointment.BookAppointmentScreen
+import pe.edu.upc.upet.ui.screens.appointment.PetDetailsAppointmentScreen
+import pe.edu.upc.upet.ui.screens.auth.aditionalInformation.PostRegisterScreen
 import pe.edu.upc.upet.ui.screens.auth.signin.SignInScreen
 import pe.edu.upc.upet.ui.screens.auth.signup.SignUpScreen
 import pe.edu.upc.upet.ui.screens.home.Home
+import pe.edu.upc.upet.ui.screens.petOwner.EditPetOwnerProfile
+import pe.edu.upc.upet.ui.screens.petOwner.PetOwnerProfile
+import pe.edu.upc.upet.ui.screens.pets.EditPetProfile
 import pe.edu.upc.upet.ui.screens.pets.PetList
+import pe.edu.upc.upet.ui.screens.pets.PetProfile
 import pe.edu.upc.upet.ui.screens.pets.RegisterPet
 import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
 import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
+import pe.edu.upc.upet.ui.screens.subscription.SubscriptionAdvancedScreen
 import pe.edu.upc.upet.ui.screens.vets.VetList
+import pe.edu.upc.upet.ui.screens.vets.VetProfile
 import pe.edu.upc.upet.ui.shared.BottomBar
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation() {
 
@@ -35,29 +46,25 @@ fun Navigation() {
 
     Scaffold(
         modifier = Modifier.background(backgroundColor),
-        bottomBar = { BottomBar(shouldShowBottomBar, navController) }
+        bottomBar = { BottomBar(navController, shouldShowBottomBar) }
     ) { paddingValues ->
         NavHost(navController, startDestination = Routes.UserLogin, modifier = Modifier.padding(paddingValues   )) {
             composable(Routes.Home) {
                 shouldShowBottomBar.value = true
                 Home(navController)
             }
+            composable(Routes.Profile) {
+                shouldShowBottomBar.value = true
+                PetOwnerProfile(navController)
+            }
             composable(Routes.PetList) {
                 shouldShowBottomBar.value = true
                 PetList(navController)
             }
-            composable("PetProfile/{petId}") { backStackEntry ->
+
+            composable(Routes.registerPet) {
                 shouldShowBottomBar.value = true
-                val petId = backStackEntry.arguments?.getString("petId")?.toInt()
-                PetProfile(petId, navController)
-            }
-            composable(Routes.RegisterPet) {backStackEntry ->
-                shouldShowBottomBar.value = true
-                val petOwnerId = backStackEntry.arguments?.getString("petOwner")?.toInt()
-                if(petOwnerId != null) {
-                    val navigateTo = { destination: String -> navController.navigate(destination)}
-                    RegisterPet(petOwnerId, navigateTo)
-                }
+                RegisterPet(navController)
             }
             composable(Routes.VetList) {
                 shouldShowBottomBar.value = true
@@ -79,6 +86,10 @@ fun Navigation() {
                 shouldShowBottomBar.value = false
                 SendEmailScreen(navController)
             }
+            composable(Routes.VetProfile) {
+                shouldShowBottomBar.value = true
+                VetProfile(navController)
+            }
             composable(Routes.ConfirmCode) {
                 shouldShowBottomBar.value = false
                 ConfirmCodeScreen(navController)
@@ -86,6 +97,45 @@ fun Navigation() {
             composable(Routes.NewPassword) {
                 shouldShowBottomBar.value = false
                 NewPasswordScreen(navController)
+            }
+            composable(Routes.PostRegister){
+                shouldShowBottomBar.value = false
+                PostRegisterScreen{
+                    destination->
+                    navController.navigate(destination)
+                }
+            }
+            composable(Routes.BookAppointmentScreen){
+                shouldShowBottomBar.value = true
+                BookAppointmentScreen()
+            }
+            composable(Routes.PetDetailsAppointment){
+                shouldShowBottomBar.value = true
+                PetDetailsAppointmentScreen()
+            }
+            composable(Routes.SubscriptionBasicScreen){
+                shouldShowBottomBar.value = true
+                SubscriptionBasicScreen(navController)
+
+            }
+            composable(Routes.SubscriptionAdvancedScreen){
+                shouldShowBottomBar.value = true
+                SubscriptionAdvancedScreen(navController)
+
+            }
+            composable(Routes.PetOwnerEditProfile){
+                shouldShowBottomBar.value = true
+                EditPetOwnerProfile(navController)
+            }
+            composable("PetProfile/{petId}") { backStackEntry ->
+                shouldShowBottomBar.value = true
+                val petId = backStackEntry.arguments?.getString("petId")?.toInt()
+                PetProfile(petId, navController)
+            }
+            composable(Routes.PetEdit+"/{petId}") {backStackEntry ->
+                val petId = backStackEntry.arguments?.getString("petId")?.toInt()
+                shouldShowBottomBar.value = true
+                EditPetProfile( petId, navController)
             }
         }
     }

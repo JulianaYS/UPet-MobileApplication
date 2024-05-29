@@ -5,15 +5,11 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface AuthService {
 
     @GET("users")
-    fun get_users(
-        @Query("email") email: String,
-        @Query("password") password: String
-    ): Call<List<UserResponse>>
+    fun getUsers(): Call<List<UserResponse>>
 
     @POST("auth/sign-in")
     fun signIn(
@@ -23,8 +19,11 @@ interface AuthService {
     @POST("auth/sign-up")
     fun signUp(
         @Body user: UserRequest
-    ): Call<UserResponse>
+    ): Call<SignInResponse>
 
-    @POST("users/petowner/{user_id}")
-    fun createPetOwner(@Path("user_id") userId: Int, @Body userRequest: UserRequest): Call<Void>
+
+    @GET("users/{user_id}")
+    fun getUserById(
+        @Path("user_id") userId: Int
+    ): Call<UserResponse>
 }

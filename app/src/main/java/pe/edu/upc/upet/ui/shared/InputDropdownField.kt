@@ -5,16 +5,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -29,8 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.upet.ui.theme.BorderPadding
-import pe.edu.upc.upet.ui.theme.UpetGray1
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Gray1
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +55,22 @@ fun InputDropdownField(
 
     LabelTextField(label, commonPadding)
 
+    DropdownMenuBox(options = options, selectedOption = selectedOption, paddingStart = 16, paddingEnd = 16, fontSize = 12)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownMenuBox(
+    options: List<String>,
+    selectedOption: MutableState<String>,
+    paddingStart: Int,
+    paddingEnd: Int,
+    fontSize: Int
+) {
+    val expanded = remember {
+        mutableStateOf(false)
+    }
+
     ExposedDropdownMenuBox(
         expanded = expanded.value,
         onExpandedChange = {
@@ -55,7 +79,7 @@ fun InputDropdownField(
         Box (modifier = Modifier
             .fillMaxWidth()
             .clickable { expanded.value = true }
-            .padding(start = BorderPadding)
+            .padding(start = paddingStart.dp)
         ){
             OutlinedTextField(
                 value = selectedOption.value,
@@ -63,50 +87,47 @@ fun InputDropdownField(
                 readOnly = true,
                 trailingIcon = {
                     Icon(imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = null, tint = UpetOrange1
+                        contentDescription = null, tint = Pink
                     )
                 },
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
-                    .size(height = 56.dp, width = 300.dp)
-                    .padding(bottom = 10.dp, end = BorderPadding)
-                    .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(10.dp))
+                    .width(width = 400.dp)
+                    .padding(bottom = 10.dp, end = paddingEnd.dp)
+                    .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
                     .background(Color.White, shape = RoundedCornerShape(10.dp)),
                 shape = RoundedCornerShape(10.dp),
                 textStyle = TextStyle(
-                    color = if (selectedOption.value.isNotEmpty()) Color.Black else UpetGray1,
-                    fontSize = 12.sp,
+                    color = if (selectedOption.value.isNotEmpty()) Color.Black else Gray1,
+                    fontSize = fontSize.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Normal
                 )
             )
-            ExposedDropdownMenu(
+            DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .border(BorderStroke(2.dp, UpetOrange1), shape = RoundedCornerShape(0.dp))
-
-                ,)
-            {
+                    .width(width = 380.dp)
+                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .exposedDropdownSize()
+                    .border(BorderStroke(2.dp, Pink), shape = RoundedCornerShape(10.dp))
+            ) {
                 options.forEach {
                     DropdownMenuItem(
                         text = { Text(it,
-                            color = if (selectedOption.value.isNotEmpty()) Color.Black else UpetGray1,
-                            fontSize = 12.sp,
+                            color = if (selectedOption.value.isNotEmpty()) Color.Black else Gray1,
+                            fontSize = fontSize.sp,
                             fontFamily = poppinsFamily,
                             fontWeight = FontWeight.Normal
                         ) },
                         onClick = {
                             selectedOption.value = it
                             expanded.value = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
                     )
                     if (it != options.last()) {
-                        Divider(color = UpetOrange1, thickness = 0.dp)
+                        HorizontalDivider(thickness = 0.dp, color = Pink)
                     }
                 }
             }

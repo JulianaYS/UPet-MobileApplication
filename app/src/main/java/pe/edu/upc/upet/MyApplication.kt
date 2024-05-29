@@ -2,6 +2,8 @@ package pe.edu.upc.upet
 
 import android.app.Application
 import android.content.Context
+import com.cloudinary.android.MediaManager
+
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -15,8 +17,8 @@ class MyApplication : Application() {
             return application as Application
         }
 
-        public fun getContext(): Context {
-            return getApplication().applicationContext
+        fun getContext(): Context {
+            return application?.applicationContext ?: throw IllegalStateException("Application is not initialized")
         }
     }
 }

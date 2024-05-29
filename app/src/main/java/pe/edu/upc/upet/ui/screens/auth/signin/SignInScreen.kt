@@ -1,7 +1,6 @@
 package pe.edu.upc.upet.ui.screens.auth.signin
 
 
-import android.content.Context
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.background
@@ -26,11 +25,10 @@ import pe.edu.upc.upet.ui.shared.AuthHeader
 import pe.edu.upc.upet.ui.shared.AuthTextButton
 import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.Dialog
+import pe.edu.upc.upet.ui.shared.TextFieldType
 import pe.edu.upc.upet.ui.theme.BorderPadding
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
-import pe.edu.upc.upet.ui.theme.UpetOrange1
-import pe.edu.upc.upet.utils.TokenManager
-
 
 @Composable
 fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: (String) -> Unit){
@@ -75,8 +73,14 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                         input = password,
                         placeholder = "Enter your password",
                         label = "Password",
-                        true
+                        type=TextFieldType.Password
                     )
+                    if (email.value.isEmpty()) {
+                        email.value = "mario@gmail.com"
+                    }
+                    if (password.value.isEmpty()) {
+                        password.value = "mario"
+                    }
                     AuthTextButton("Forgot Password?", arrangement = Arrangement.End,
                         onClickClickableText = {
                             navigateTo(Routes.PasswordRecovery)
@@ -92,9 +96,10 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                             snackbarMessage.value = "You must enter your password."
                             showErrorSnackbar.value = true
                         } else {
-                            authRepository.signIn(context, email.value, password.value) { success ->
+                            authRepository.signIn( email.value, password.value) { success ->
                                 if (success) {
-                                    navigateTo(Routes.Home)
+                                    Log.d("SuccesSignIn", "User authenticated")
+                                    navigateTo(Routes.PostRegister)
                                 } else {
                                     snackbarMessage.value = "Invalid credentials."
                                     showErrorSnackbar.value = true
@@ -107,7 +112,7 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
                     HorizontalDivider(
                         modifier = Modifier.padding(BorderPadding),
                         thickness = 1.dp,
-                        color = UpetOrange1
+                        color = Pink
                     )
                     AuthTextButton(
                         "Register Now",
@@ -122,14 +127,5 @@ fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: 
             }
 
         }
-    }
-}
-
-
-fun signInUser(navigateTo: (String) -> Unit, context : Context){
-    if (TokenManager.isUserAuthenticated(context)) {
-        navigateTo(Routes.Home)
-    } else {
-        Log.d("tag", "User not authenticated")
     }
 }

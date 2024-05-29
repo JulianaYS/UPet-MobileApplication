@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
-import pe.edu.upc.upet.ui.theme.UpetOrange1
+import pe.edu.upc.upet.ui.theme.Pink
 
 
 @Composable
@@ -183,7 +183,7 @@ fun VeterinaryProfile(){
 
                         Button(onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = UpetOrange1,
+                                containerColor = Pink,
                                 contentColor = Color.White
                             ),
                             modifier = Modifier
@@ -194,7 +194,7 @@ fun VeterinaryProfile(){
                         }
                         Button(onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = UpetOrange1,
+                                containerColor = Pink,
                                 contentColor = Color.White
                             ),
                             modifier = Modifier
