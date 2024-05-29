@@ -1,6 +1,5 @@
 package pe.edu.upc.upet.ui.screens.pets
 
-import android.icu.util.Calendar
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
@@ -24,7 +22,6 @@ import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.CustomTextField
 import pe.edu.upc.upet.ui.shared.ImageEdit
-import pe.edu.upc.upet.ui.shared.InputTextFieldForDate
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
@@ -150,8 +147,6 @@ fun EditPetProfile(petId: Int?, navController: NavController) {
                         leadingIcon = Icons.Default.Schedule,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    val context = LocalContext.current
-
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
@@ -169,7 +164,7 @@ fun EditPetProfile(petId: Int?, navController: NavController) {
                             if (petId != null) {
                                 PetRepository().updatePet(petId, updatedPet, {
                                     showSuccessDialog.value = true
-                                }, { error ->
+                                }, {
                                     Log.d("EditPetProfile", "Error updating pet")
                                 })
                             }

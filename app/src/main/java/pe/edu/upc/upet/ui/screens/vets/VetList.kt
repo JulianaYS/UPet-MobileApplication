@@ -54,9 +54,7 @@ fun VetList(navController: NavController) {
     ) {paddingValues->
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(veterinaryClinics) { vet ->
-                    VetCard(vet, onVetSelected = {
-                        navController.navigate("vetProfile/${vet.id}")
-                    })
+                    VetCard(vet)
                 }
 
         }
@@ -65,7 +63,7 @@ fun VetList(navController: NavController) {
 
 
 @Composable
-fun VetCard(veterinaryClinics: VeterinaryClinics, onVetSelected: ()->Unit) {
+fun VetCard(veterinaryClinics: VeterinaryClinics) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(

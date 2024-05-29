@@ -24,7 +24,6 @@ import pe.edu.upc.upet.ui.shared.InputDigit
 fun ConfirmCodeScreen(navController: NavController) {
     Scaffold {paddingValues ->
 
-        val code = remember { mutableStateOf("") }
         val digitOne = remember { mutableStateOf("") }
         val digitTwo = remember { mutableStateOf("") }
         val digitThree = remember { mutableStateOf("") }

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -25,9 +23,7 @@ import pe.edu.upc.upet.ui.theme.poppinsFamily
 fun PostRegister(description: @Composable ()->Unit,
                        form : @Composable ()->Unit ){
     Scaffold {paddingValues->
-        val fullName = remember{
-            mutableStateOf("")
-        }
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)

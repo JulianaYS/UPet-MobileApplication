@@ -163,14 +163,24 @@ fun DividerAndButtons(){
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        NewCustomButton(text = "Cancel Booking",modifier = Modifier.weight(1f), onClick = { })
-        NewCustomButton(text = "Reschedule",modifier = Modifier.weight(1f), color = Color.White, onClick = { }, color2 = Blue1)
+        NewCustomButton(text = "Cancel Booking", modifier = Modifier.weight(1f))
+        NewCustomButton(
+            text = "Reschedule",
+            modifier = Modifier.weight(1f),
+            color = Color.White,
+            color2 = Blue1
+        )
     }
 }
 
 
 @Composable
-fun NewCustomButton(text: String,modifier: Modifier = Modifier, onClick: () -> Unit, color: Color = Color(0xFFFF6262), color2: Color= Color.White) {
+fun NewCustomButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color(0xFFFF6262),
+    color2: Color = Color.White
+) {
     var isPressed by remember { mutableStateOf(false) }
 
     Button(

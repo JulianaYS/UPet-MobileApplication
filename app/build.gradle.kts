@@ -50,9 +50,19 @@ android {
 }
 
 dependencies {
-    implementation("io.coil-kt:coil-compose:2.6.0")
-    implementation("androidx.compose.material:material:1.6.7")
-    implementation("com.cloudinary:cloudinary-android:2.7.1")
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.material)
+    implementation(libs.cloudinary.android)
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.landscapist.glide)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.play.services.tagmanager.v4.impl)
+    implementation(libs.play.services.fido)
+    implementation(libs.java.jwt)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -61,19 +71,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.landscapist.glide)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.play.services.tagmanager.v4.impl)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.common)
-    implementation(libs.play.services.fido)
-    implementation(libs.java.jwt)
-    annotationProcessor(libs.androidx.room.compiler)
-
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

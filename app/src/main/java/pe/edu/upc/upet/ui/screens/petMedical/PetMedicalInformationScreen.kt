@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.MedicalServices
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -89,8 +88,7 @@ fun PetInformationSection() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {items(3){
-            val heartIcon = Icons.Outlined.Favorite
-            //PetInformationCard("Specie", heartIcon,"Canis")
+             //PetInformationCard("Specie", heartIcon,"Canis")
         }
         }
     }

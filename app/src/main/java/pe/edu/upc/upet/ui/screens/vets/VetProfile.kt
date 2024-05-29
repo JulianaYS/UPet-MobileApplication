@@ -22,8 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +30,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.theme.Blue1
@@ -41,9 +38,7 @@ import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
-fun VetProfile(navController: NavHostController) {
-
-    val icon = remember { mutableStateOf("") }
+fun VetProfile() {
 
     Scaffold { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {

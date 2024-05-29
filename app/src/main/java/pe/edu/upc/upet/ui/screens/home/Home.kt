@@ -48,7 +48,7 @@ fun Home( navController: NavController){
         item { UserSection() }
         item { SearchField() }
         item { PetsSection(navController) }
-        item { RecommendedVetsSection(navController) }
+        item { RecommendedVetsSection() }
     }
 }
 
@@ -164,7 +164,7 @@ fun PetsSection(navController: NavController) {
         }
         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
             items(pets.take(4)) { pet ->
-                SimplePetCard(pet, navController) {
+                SimplePetCard(pet) {
                     navController.navigate("PetProfile/${pet.id}")
                 }
             }
@@ -176,7 +176,7 @@ fun PetsSection(navController: NavController) {
 
 
 @Composable
-fun RecommendedVetsSection(navController: NavController ) {
+fun RecommendedVetsSection() {
     Column {
         Text(
             text = "Recommended Veterinary Clinics",
@@ -186,7 +186,7 @@ fun RecommendedVetsSection(navController: NavController ) {
         )
         Column {
             veterinaryClinics.forEach { vet ->
-                VetCard(vet, onVetSelected = { navController.navigate("VetProfile/${vet.id}") })
+                VetCard(vet)
             }
         }
     }

@@ -22,7 +22,7 @@ import pe.edu.upc.upet.ui.theme.Blue1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditVeterinaryPassword(vetId: Int?, navController: NavController){
+fun EditVeterinaryPassword(navController: NavController){
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

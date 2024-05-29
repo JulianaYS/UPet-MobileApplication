@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,12 +23,8 @@ import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.TagFaces
 import androidx.compose.material.icons.outlined.Balance
-import androidx.compose.material.icons.outlined.Dehaze
-import androidx.compose.material.icons.outlined.MedicalInformation
-import androidx.compose.material.icons.outlined.MedicalServices
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material.icons.outlined.Timer
-import androidx.compose.material.icons.outlined.Vaccines
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,7 +48,6 @@ import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
-import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.utils.TokenManager
@@ -64,7 +58,7 @@ fun PetProfile(petId: Int?, navController: NavController) {
 
     val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
 
-    PetRepository().getPetsByOwnerId(ownerId ?: 0, onSuccess = {
+    PetRepository().getPetsByOwnerId(ownerId, onSuccess = {
         if(petId != null) {
             pet.value = it.find { pet -> pet.id == petId }
         }
@@ -85,18 +79,8 @@ fun PetProfile(petId: Int?, navController: NavController) {
     }
     val petInfoList = petResponseToPetInfoList(petValue)
 
-    data class MedicalHistory(
-        val type: String,
-        val date: String,
-        val description: String,
-        val icon: ImageVector
-    )
-    val medicalHistoryList = listOf(
-        MedicalHistory("Diagnosis", "14/04/2024", "The animal presents high corporal temperature 1 hour ago. Also manifests stomach...", Icons.Outlined.MedicalServices),
-        MedicalHistory("Results", "15/04/2024", "The animal's temperature has returned to normal. Stomach issues have been resolved.", Icons.Outlined.Dehaze),
-        MedicalHistory("Vaccines", "16/04/2024", "The animal has been vaccinated against rabies.", Icons.Outlined.Vaccines),
-        MedicalHistory("Surgery", "17/04/2024", "The animal has undergone a successful minor surgery.", Icons.Outlined.MedicalInformation)
-    )
+
+
 
     Scaffold { paddingValues ->
         Column(

@@ -5,8 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.TagFaces
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,11 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pe.edu.upc.upet.feature_vetClinics.data.remote.VetRequest
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponse
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
-import pe.edu.upc.upet.ui.shared.CustomTextField
 import pe.edu.upc.upet.ui.shared.ImageEdit
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.Pink
@@ -43,8 +39,6 @@ fun EditVeterinaryProfile(vetId:Int?, navController: NavController) {
 
     val vetValue = vet.value ?: VetResponse(0,"",0,"",0)
 
-    //var name by remember { mutableStateOf(vetValue.name) }
-    val showSuccessDialog = remember { mutableStateOf(false) }
 
 //    LaunchedEffect(vetValue) {
 //        name = vetValue.name

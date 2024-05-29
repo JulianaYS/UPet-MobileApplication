@@ -96,7 +96,7 @@ fun Navigation() {
             }
             composable(Routes.VetProfile) {
                 shouldShowBottomBar.value = true
-                VetProfile(navController)
+                VetProfile()
             }
             composable(Routes.ConfirmCode) {
                 shouldShowBottomBar.value = false

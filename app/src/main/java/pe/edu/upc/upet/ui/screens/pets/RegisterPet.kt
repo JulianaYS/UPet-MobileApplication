@@ -208,7 +208,7 @@ fun RegisterPet(navController: NavHostController) {
                                                 weight = weight.value.toFloat(),
                                                 birthdate = formattedDate,
                                                 image_url = uploadedImageUrl.value,
-                                                gender = if (selectedGender.value == 0) GenderEnum.Male.toString() else GenderEnum.Female.toString()
+                                                gender = if (selectedGender.intValue == 0) GenderEnum.Male.toString() else GenderEnum.Female.toString()
                                             ),
                                             onSuccess = { success ->
                                                 if (success.id != 0) {
@@ -222,9 +222,9 @@ fun RegisterPet(navController: NavHostController) {
                                                     showErrorSnackbar.value = true
                                                 }
                                             },
-                                            onError = { error ->
+                                            onError = { err ->
                                                 snackbarMessage.value =
-                                                    "Failed to register pet: $error"
+                                                    "Failed to register pet: $err"
                                                 showErrorSnackbar.value = true
                                             }
                                         )

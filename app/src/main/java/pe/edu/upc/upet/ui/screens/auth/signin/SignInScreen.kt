@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.navigation.Routes
@@ -33,7 +32,6 @@ import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 @Composable
 fun SignInScreen(authRepository: AuthRepository = AuthRepository(), navigateTo: (String) -> Unit){
 
-    val context = LocalContext.current
     Scaffold {paddingValues->
         val email = remember{
             mutableStateOf("")
