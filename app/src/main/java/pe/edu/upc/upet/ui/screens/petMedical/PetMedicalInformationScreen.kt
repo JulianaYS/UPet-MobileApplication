@@ -90,48 +90,13 @@ fun PetInformationSection() {
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {items(3){
             val heartIcon = Icons.Outlined.Favorite
-            PetInformationCard("Specie", heartIcon,"Canis")
+            //PetInformationCard("Specie", heartIcon,"Canis")
         }
         }
     }
 }
 
-@Composable
-fun PetInformationCard(title:String, icon:ImageVector,content:String){
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .width(180.dp)
-            .height(100.dp)
-            .padding(6.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color(0xFF0A2540)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            Icon(icon, contentDescription = "heart", tint = Color(0xFF0A2540))
-        }
-        Text(
-            text = content,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .align(Alignment.CenterHorizontally),
-        )
-    }
-}
+
 
 @Composable
 fun MedicalHistorySection() {
