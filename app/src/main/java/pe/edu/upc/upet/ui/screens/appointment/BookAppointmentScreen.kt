@@ -10,9 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -133,7 +133,7 @@ fun BookAppointmentScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(25.dp))
 
-                        CustomButton(text = "Next", onClick = {navController.navigate(Routes.PetDetailsAppointment)})
+                        CustomButton(text = "Next", onClick = { navController.navigate(Routes.PetDetailsAppointment) })
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
@@ -155,7 +155,7 @@ fun MonthPicker(currentYearMonth: YearMonth, onYearMonthChange: (YearMonth) -> U
         IconButton(onClick = {
             onYearMonthChange(currentYearMonth.minusMonths(1))
         }) {
-            Icon(imageVector = Icons.Default.ArrowBackIos, contentDescription = "Previous Month")
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBackIos, contentDescription = "Previous Month")
         }
 
         Text(
@@ -167,7 +167,7 @@ fun MonthPicker(currentYearMonth: YearMonth, onYearMonthChange: (YearMonth) -> U
         IconButton(onClick = {
             onYearMonthChange(currentYearMonth.plusMonths(1))
         }) {
-            Icon(imageVector = Icons.Default.ArrowForwardIos, contentDescription = "Next Month")
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "Next Month")
         }
     }
 }

@@ -125,7 +125,6 @@ fun TextPlaceHolder(placeholder: String){
 enum class TextFieldType {
     Password,
     Phone,
-    Weight,
     Dropdown,
     Text
 }
@@ -157,7 +156,6 @@ fun CustomOutlinedTextFieldWithCountryCode(
     placeholder: String,
     cornerSize: Dp
 ) {
-    val countryCode = remember { mutableStateOf("+1") }
     val focusManager = LocalFocusManager.current
     Row(
         verticalAlignment = Alignment.CenterVertically

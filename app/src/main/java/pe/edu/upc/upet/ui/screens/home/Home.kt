@@ -1,8 +1,6 @@
 package pe.edu.upc.upet.ui.screens.home
 
-import android.content.Context
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,10 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
@@ -43,7 +40,6 @@ import pe.edu.upc.upet.ui.screens.vets.VetCard
 import pe.edu.upc.upet.ui.shared.SearchField
 import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.ui.theme.PinkStrong
-import pe.edu.upc.upet.utils.TokenManager
 import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 
 @Composable
@@ -52,7 +48,7 @@ fun Home( navController: NavController){
         item { UserSection() }
         item { SearchField() }
         item { PetsSection(navController) }
-        item { RecommendedVetsSection(navController) }
+        item { RecommendedVetsSection() }
     }
 }
 
@@ -84,13 +80,10 @@ fun UserSection() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = rememberAsyncImagePainter(icon.value?:"https://cdn-icons-png.freepik.com/512/8742/8742495.png"),
-                contentDescription = "User Profile Picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(50.dp))
+            GlideImage(modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(50.dp)),
+                imageModel = {"https://cdn-icons-png.freepik.com/512/8742/8742495.png"}
             )
             Column(modifier = Modifier.padding(start = 20.dp)) {
                 val greeting = "Hello, ${name.value}"
@@ -171,7 +164,7 @@ fun PetsSection(navController: NavController) {
         }
         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
             items(pets.take(4)) { pet ->
-                SimplePetCard(pet, navController) {
+                SimplePetCard(pet) {
                     navController.navigate("PetProfile/${pet.id}")
                 }
             }
@@ -183,7 +176,7 @@ fun PetsSection(navController: NavController) {
 
 
 @Composable
-fun RecommendedVetsSection(navController: NavController ) {
+fun RecommendedVetsSection() {
     Column {
         Text(
             text = "Recommended Veterinary Clinics",
@@ -193,7 +186,7 @@ fun RecommendedVetsSection(navController: NavController ) {
         )
         Column {
             veterinaryClinics.forEach { vet ->
-                VetCard(vet, onVetSelected = { navController.navigate("VetProfile/${vet.id}") })
+                VetCard(vet)
             }
         }
     }

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +32,8 @@ import pe.edu.upc.upet.feature_profile.domain.PetOwner
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.CustomTextField
+import pe.edu.upc.upet.ui.shared.ImageEdit
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
@@ -100,69 +103,36 @@ fun EditPetOwnerProfile(navController: NavHostController) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    ProfileImageEdit(imageUrl = imageUrl, newImageUri = newImageUri, onImageClick = { imageLauncher.launch("image/*") })
+                    ImageEdit(imageUrl = imageUrl, newImageUri = newImageUri, onImageClick = { imageLauncher.launch("image/*") })
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    TextField(
+                    CustomTextField(
                         value = name,
                         onValueChange = { name = it },
-                        label = { Text("Name") },
-                        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Name Icon") },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.White,
-                            focusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedLeadingIconColor = Pink,
-                            unfocusedLeadingIconColor = Color.Gray,
-                            focusedLabelColor = Pink,
-                            unfocusedLabelColor = Color.Gray
-                        )
+                        label = "Name",
+                        leadingIcon = Icons.Default.Person,
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    TextField(
+                    CustomTextField(
                         value = numberPhone,
                         onValueChange = { numberPhone = it },
-                        label = { Text("Phone Number") },
-                        leadingIcon = { Icon(imageVector = Icons.Default.Call, contentDescription = "Phone Icon") },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.White,
-                            focusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedLeadingIconColor = Pink,
-                            unfocusedLeadingIconColor = Color.Gray,
-                            focusedLabelColor = Pink,
-                            unfocusedLabelColor = Color.Gray
-                        )
+                        label = "Phone Number",
+                        leadingIcon = Icons.Default.Call,
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    TextField(
+                    CustomTextField(
                         value = location,
                         onValueChange = { location = it },
-                        label = { Text("Location") },
-                        leadingIcon = { Icon(imageVector = Icons.Default.Place, contentDescription = "Location Icon") },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.White,
-                            focusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedLeadingIconColor = Pink,
-                            unfocusedLeadingIconColor = Color.Gray,
-                            focusedLabelColor = Pink,
-                            unfocusedLabelColor = Color.Gray
-                        )
+                        label = "Location",
+                        leadingIcon = Icons.Default.Place,
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -175,7 +145,6 @@ fun EditPetOwnerProfile(navController: NavHostController) {
                                 location = location,
                                 imageUrl = newImageUri?.toString() ?: imageUrl
                             )
-
                             if (updatedPetOwner != null) {
                                 // PetOwnerRepository().updatePetOwner(updatedPetOwner) {
                                 //  navController.navigateUp()
@@ -189,43 +158,6 @@ fun EditPetOwnerProfile(navController: NavHostController) {
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun ProfileImageEdit(imageUrl: String, newImageUri: Uri?, onImageClick: () -> Unit) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(150.dp)
-            .clip(RoundedCornerShape(75.dp))
-            .clickable(onClick = onImageClick)
-    ) {
-        if (newImageUri != null) {
-            GlideImage(
-                imageModel = { newImageUri },
-                imageOptions = ImageOptions(contentScale = ContentScale.Crop)
-            )
-        } else {
-            GlideImage(
-                imageModel = { imageUrl },
-                imageOptions = ImageOptions(contentScale = ContentScale.Crop)
-            )
-        }
-
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.White)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = "Edit Icon",
-                tint = Pink
-            )
         }
     }
 }

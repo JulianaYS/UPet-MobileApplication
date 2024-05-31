@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,9 +60,9 @@ fun SubscriptionAdvancedScreen(navController: NavHostController) {
                         )
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    Divider(color = Color.Gray, thickness = 1.dp)
+                    HorizontalDivider(thickness = 1.dp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(24.dp))
-                    ChangeSubscriptionOption(navController)
+                    ChangeSubscriptionOption()
                 }
             }
         }
@@ -148,7 +147,7 @@ fun BenefitItem(benefit: String) {
 }
 
 @Composable
-fun ChangeSubscriptionOption(navController: NavHostController) {
+fun ChangeSubscriptionOption() {
     Column(
         modifier = Modifier
             .fillMaxWidth()

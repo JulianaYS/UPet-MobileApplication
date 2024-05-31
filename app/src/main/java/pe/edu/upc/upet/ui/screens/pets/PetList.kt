@@ -1,4 +1,5 @@
 package pe.edu.upc.upet.ui.screens.pets
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -62,7 +63,14 @@ fun PetList(navController: NavHostController) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(petsState.value) { pet ->
                 PetSwipeToDelete(navController, pet, deletePet = {
-                    petsState.value = petsState.value.filter { it != pet }
+                    petRepository.deletePet(pet.id,
+                        onSuccess = {
+                            petsState.value = petsState.value.filter { it != pet }
+                        },
+                        onError = {
+                            Log.d("PetList", "Error al eliminar la mascota")
+                        }
+                    )
                 })
             }
         }
