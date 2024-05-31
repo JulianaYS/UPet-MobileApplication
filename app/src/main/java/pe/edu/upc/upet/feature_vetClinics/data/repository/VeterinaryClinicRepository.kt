@@ -40,6 +40,26 @@ class VeterinaryClinicRepository {
 
     }
 
+    fun getVeterinaryClinicById(clinicId: Int, callback: (VeterinaryClinic?) -> Unit) {
+        veterinaryClinicService.getById(clinicId).enqueue(object : Callback<VeterinaryClinicResponse> {
+            override fun onResponse(call: Call<VeterinaryClinicResponse>, response: Response<VeterinaryClinicResponse>) {
+                if (response.isSuccessful) {
+                    val veterinaryClinic = response.body()?.toDomainModel()
+                    callback(veterinaryClinic)
+                } else {
+                    Log.e("VeterinaryClinicRepository", "Failed to get veterinary clinic by id: ${response.errorBody()}")
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<VeterinaryClinicResponse>, t: Throwable) {
+                Log.e("VeterinaryClinicRepository", "Failed to get veterinary clinic by id", t)
+                callback(null)
+            }
+        })
+    }
+
+
     fun createVeterinaryClinic(veterinaryClinicData: VeterinaryClinicRequest, callback: (VeterinaryClinic?) -> Unit){
         veterinaryClinicService.createVeterinaryClinic(veterinaryClinicData).enqueue(object : Callback<VeterinaryClinicResponse>{
             override fun onResponse(

@@ -40,6 +40,7 @@ import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.subscription.SubscriptionAdvancedScreen
 import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.screens.vets.VetProfile
+import pe.edu.upc.upet.ui.screens.vets.VeterinaryClinicDetailsScreen
 import pe.edu.upc.upet.ui.shared.BottomBar
 
 
@@ -179,6 +180,14 @@ fun Navigation() {
                 shouldShowBottomBar.value = true
                 NewDiagnosisRegister(navController)
             }
+            composable("VetDetails/{vetClinicId}") { backStackEntry ->
+                val vetClinicId = backStackEntry.arguments?.getString("vetClinicId")?.toInt()
+                shouldShowBottomBar.value = true
+                vetClinicId?.let { id ->
+                    VeterinaryClinicDetailsScreen(navController, id)
+                }
+            }
+
         }
     }
 

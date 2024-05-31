@@ -154,7 +154,7 @@ fun AppointmentCard(name:String, navController: NavController){
     ) {
         Column {
             AppointmentCardInfo(name = name)
-            DividerAndButtons(onCancelBookingClick = { })
+            DividerAndButtons()
         }
     }
     Spacer(modifier = Modifier.height(20.dp))
@@ -163,7 +163,7 @@ fun AppointmentCard(name:String, navController: NavController){
 
 
 @Composable
-fun DividerAndButtons(onCancelBookingClick :()->Unit){
+fun DividerAndButtons() {
     HorizontalDivider(
         thickness = 1.dp, color = Color(0xFFFF6262), modifier = Modifier.padding(horizontal = 16.dp)
     )
@@ -173,8 +173,13 @@ fun DividerAndButtons(onCancelBookingClick :()->Unit){
             .padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        NewCustomButton(text = "Cancel Booking",modifier = Modifier.weight(1f), onClick = onCancelBookingClick)
-        NewCustomButton(text = "Reschedule",modifier = Modifier.weight(1f), color = Color.White, onClick = { }, color2 = Blue1)
+        NewCustomButton(text = "Cancel Booking", modifier = Modifier.weight(1f))
+        NewCustomButton(
+            text = "Reschedule",
+            modifier = Modifier.weight(1f),
+            color = Color.White,
+            color2 = Blue1
+        )
         
     }
 }
