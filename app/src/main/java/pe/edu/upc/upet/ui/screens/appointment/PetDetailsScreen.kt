@@ -12,17 +12,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
+import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.DropdownMenuBox
 import pe.edu.upc.upet.ui.shared.ExpandableTextField
 import pe.edu.upc.upet.ui.shared.IconAndTextHeader
 import pe.edu.upc.upet.ui.theme.BorderPadding
+import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
 fun PetDetailsAppointmentScreen(navController: NavController) {
-    val petOptions = listOf("Fido", "Abogato", "Figaro", "Tom", "Beily", "CarlosIII", "Poly")
-    val selectedPet = remember { mutableStateOf(petOptions[0]) }
+    val (id, _, _) = TokenManager.getUserIdAndRoleFromToken() ?: error("Error obteniendo el userId y userRole desde el token")
+
+    val petRepository = remember { PetRepository() }
+    val petsState = remember {
+        mutableStateOf<List<PetResponse>>(emptyList())
+    }
+
+    petRepository.getPetsByOwnerId(id,
+        onSuccess = { pets ->
+            petsState.value = pets
+        },
+        onError = {
+
+        }
+    )
+
+    val petOptions = petsState.value.map { it.name }
+    val selectedPet = remember { mutableStateOf(petOptions.firstOrNull()?:"") }
     val textproblem = remember { mutableStateOf("") }
 
     Column(

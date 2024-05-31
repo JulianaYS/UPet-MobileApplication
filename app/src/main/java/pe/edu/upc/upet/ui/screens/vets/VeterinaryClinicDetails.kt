@@ -33,6 +33,7 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.theme.Blue1
@@ -141,7 +142,7 @@ fun VeterinaryClinicDetailsScreen(navController: NavHostController, vetClinicId:
                         verticalArrangement = Arrangement.SpaceEvenly
                     ) {
 
-                        CustomButton(onClick = { }, text = "Make an Appointment")
+                        CustomButton(onClick = { navController.navigate(Routes.BookAppointmentScreen)}, text = "Make an Appointment")
                         CustomButton(onClick = { }, text = "Call")
                         CustomButton(onClick = { }, text = "Email")
                     }

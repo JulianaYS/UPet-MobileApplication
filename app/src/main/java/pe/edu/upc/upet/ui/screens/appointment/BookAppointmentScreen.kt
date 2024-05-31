@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.feature_appointment.data.remote.AppointmentRequest
+import pe.edu.upc.upet.feature_appointment.data.repository.AppointmentRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.theme.Blue1
@@ -133,7 +135,33 @@ fun BookAppointmentScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(25.dp))
 
-                        CustomButton(text = "Next", onClick = { navController.navigate(Routes.PetDetailsAppointment) })
+                        CustomButton(text = "Next", onClick = {
+
+                            val appointmentRequest = AppointmentRequest(
+
+                                date = selectedDate.toString(),
+                                time = selectedTime.toString(),
+                                description = "",
+                                vetName = ""
+                            )
+
+                            val appointmentRepository = AppointmentRepository()
+
+                            appointmentRepository.createAppointment(
+                                petId = 1,
+                                appointment = appointmentRequest,
+                                onSuccess = { appointmentResponse ->
+                                    println("Appointment created: $appointmentResponse")
+                                    //navController.navigate(Routes.PetDetailsAppointment)
+                                },
+                                onError = {error ->
+                                    println("Eroor: $error")
+
+                                }
+                            )
+                            navController.navigate(Routes.PetDetailsAppointment)
+
+                        })
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
