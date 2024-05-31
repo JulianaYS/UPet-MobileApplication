@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,8 +34,10 @@ import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
-import pe.edu.upc.upet.feature_vetClinics.domain.veterinaryClinics
+import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
+import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
+import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.vets.VetCard
 import pe.edu.upc.upet.ui.shared.SearchField
@@ -48,7 +51,7 @@ fun Home( navController: NavController){
         item { UserSection() }
         item { SearchField() }
         item { PetsSection(navController) }
-        item { RecommendedVetsSection() }
+        item { RecommendedVetsSection(navController) }
     }
 }
 
@@ -176,7 +179,16 @@ fun PetsSection(navController: NavController) {
 
 
 @Composable
-fun RecommendedVetsSection() {
+fun RecommendedVetsSection(navController: NavController) {
+    val vetClinicRepository = remember { VeterinaryClinicRepository() }
+    var vetClinics: List<VeterinaryClinic> by remember { mutableStateOf(emptyList()) }
+
+    LaunchedEffect(key1 = vetClinicRepository) {
+        vetClinicRepository.getAllVeterinaryClinics { vetClinicsList ->
+            vetClinics = vetClinicsList
+        }
+    }
+
     Column {
         Text(
             text = "Recommended Veterinary Clinics",
@@ -185,10 +197,9 @@ fun RecommendedVetsSection() {
             modifier = Modifier.padding(16.dp)
         )
         Column {
-            veterinaryClinics.forEach { vet ->
-                VetCard(vet)
+            vetClinics.forEach { vetClinic ->
+                VetCard(navController,vetClinic)
             }
         }
     }
 }
-
