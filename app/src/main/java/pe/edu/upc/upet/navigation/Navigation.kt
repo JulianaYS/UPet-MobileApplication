@@ -113,19 +113,19 @@ fun Navigation() {
             //Appointment
             composable(Routes.BookAppointmentScreen){
                 shouldShowBottomBar.value = true
-                BookAppointmentScreen()
+                BookAppointmentScreen(navController)
             }
             composable(Routes.PetDetailsAppointment){
                 shouldShowBottomBar.value = true
-                PetDetailsAppointmentScreen()
+                PetDetailsAppointmentScreen(navController)
             }
             composable(Routes.AppointmentList){
                 shouldShowBottomBar.value=true
-                AppointmentList()
+                AppointmentList(navController)
             }
             composable(Routes.AppointmentDetail){
                 shouldShowBottomBar.value=true
-                AppointmentDetail()
+                AppointmentDetail(navController)
             }
             //Subscription
             composable(Routes.SubscriptionBasicScreen){

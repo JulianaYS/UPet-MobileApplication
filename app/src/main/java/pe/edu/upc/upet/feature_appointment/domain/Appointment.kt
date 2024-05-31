@@ -3,12 +3,13 @@ package pe.edu.upc.upet.feature_appointment.domain
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinics
 
 data class Appointment(
+    val id: Int,
     val date: String,
     val time: String,
+    val description: String,
     val vetName: String,
-    val veterinaryClinic: VeterinaryClinics
 )
-
+/*
 val appointments = listOf(
     Appointment(
         date = "2023-05-01",
@@ -37,4 +38,4 @@ val appointments = listOf(
             operatingHours = "10:00 AM - 6:00 PM"
         )
     )
-)
+)*/
