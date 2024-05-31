@@ -11,6 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.DropdownMenuBox
 import pe.edu.upc.upet.ui.shared.ExpandableTextField
@@ -18,7 +20,7 @@ import pe.edu.upc.upet.ui.shared.IconAndTextHeader
 import pe.edu.upc.upet.ui.theme.BorderPadding
 
 @Composable
-fun PetDetailsAppointmentScreen() {
+fun PetDetailsAppointmentScreen(navController: NavController) {
     val petOptions = listOf("Fido", "Abogato", "Figaro", "Tom", "Beily", "CarlosIII", "Poly")
     val selectedPet = remember { mutableStateOf(petOptions[0]) }
     val textproblem = remember { mutableStateOf("") }
@@ -33,7 +35,7 @@ fun PetDetailsAppointmentScreen() {
         Column (
             verticalArrangement = Arrangement.Top
         ){
-            IconAndTextHeader(onBackClick = { /*TODO*/ }, text = "Pet details")
+            IconAndTextHeader(onBackClick = { navController.popBackStack() }, text = "Pet details")
 
             TextSubtitle(text = "Select my pet")
 
@@ -44,7 +46,7 @@ fun PetDetailsAppointmentScreen() {
             ExpandableTextField(input = textproblem, placeholder = "Enter your pet's problem")
         }
 
-        CustomButton(text = "Book now") {}
+        CustomButton(text = "Book now", onClick = {navController.navigate(Routes.AppointmentList)})
 
         Spacer(modifier = Modifier.height(20.dp))
 

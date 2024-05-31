@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.BorderPadding
@@ -35,7 +37,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookAppointmentScreen() {
+fun BookAppointmentScreen(navController: NavController) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedTime by remember { mutableStateOf(LocalTime.now()) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
@@ -60,7 +62,7 @@ fun BookAppointmentScreen() {
                             horizontalArrangement = Arrangement.Center
                         ) {
                             IconButton(
-                                onClick = { /*TODO*/ },
+                                onClick = { navController.popBackStack() },
                                 modifier = Modifier
                                     .weight(0.1f)
                                     .padding(top = 8.dp, start = 16.dp)
@@ -131,7 +133,7 @@ fun BookAppointmentScreen() {
                         )
                         Spacer(modifier = Modifier.height(25.dp))
 
-                        CustomButton(text = "Next") {}
+                        CustomButton(text = "Next", onClick = { navController.navigate(Routes.PetDetailsAppointment) })
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 

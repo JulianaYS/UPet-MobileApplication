@@ -22,13 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import pe.edu.upc.upet.ui.screens.vets.TextNormal
 import pe.edu.upc.upet.ui.shared.IconAndTextHeader
 import pe.edu.upc.upet.ui.theme.BorderPadding
 
 
 @Composable
-fun AppointmentDetail() {
+fun AppointmentDetail(navController: NavController) {
     Scaffold { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
 
@@ -41,7 +42,7 @@ fun AppointmentDetail() {
                             .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        IconAndTextHeader(onBackClick = { /*TODO*/ }, text = "Appointment Detail")
+                        IconAndTextHeader(onBackClick = { navController.popBackStack() }, text = "Appointment Detail")
                         Card(
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White,
