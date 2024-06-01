@@ -3,6 +3,7 @@ package pe.edu.upc.upet.feature_profile.data.repository
 import android.util.Log
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
 import pe.edu.upc.upet.feature_profile.data.mapper.toDomainModel
+import pe.edu.upc.upet.feature_profile.data.remote.EditPetOwnerRequest
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerRequest
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerResponse
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerResponseList
@@ -60,6 +61,23 @@ class PetOwnerRepository(private val petOwnerService: PetOwnerService = PetOwner
             }
         })
     }
+
+    fun updatePetOwner(petOwnerId: Int, petOwnerData: EditPetOwnerRequest, callback: (Boolean) -> Unit)
+    {
+        petOwnerService.updatePetOwner(petOwnerId, petOwnerData).enqueue(object : Callback<PetOwnerResponse> {
+            override fun onResponse(
+                call: Call<PetOwnerResponse>,
+                response: Response<PetOwnerResponse>
+            ) {
+                callback(response.isSuccessful)
+            }
+
+            override fun onFailure(call: Call<PetOwnerResponse>, t: Throwable) {
+                callback(false)
+            }
+        })
+    }
+
 
     fun getPetOwnerById(id: Int, callback: (PetOwner?) -> Unit) {
         petOwnerService.getById(id).enqueue(object : Callback<PetOwnerResponse> {

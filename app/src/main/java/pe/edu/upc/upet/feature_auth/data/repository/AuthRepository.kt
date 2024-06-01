@@ -5,8 +5,10 @@ import pe.edu.upc.upet.feature_auth.data.remote.AuthService
 import pe.edu.upc.upet.feature_auth.data.remote.AuthServiceFactory
 import pe.edu.upc.upet.feature_auth.data.remote.SignInRequest
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
+import pe.edu.upc.upet.feature_auth.data.remote.UpdateUserRequest
 import pe.edu.upc.upet.feature_auth.data.remote.UserRequest
 import pe.edu.upc.upet.feature_auth.data.remote.UserResponse
+import pe.edu.upc.upet.feature_auth.data.remote.UserType
 import pe.edu.upc.upet.utils.TokenManager
 
 import retrofit2.Call
@@ -65,6 +67,30 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
                 t.message?.let {
                     Log.d("AuthRepository", it)
                 }
+            }
+        })
+    }
+
+    fun updateUser(updateUserRequest: UpdateUserRequest, callback: (Boolean) -> Unit) {
+        val userTypeString = TokenManager.getUserIdAndRoleFromToken()?.second ?: ""
+        val userTypeInt = UserType.valueOf(userTypeString).ordinal
+
+        val updateUserCall = authService.updateUser(userTypeInt, updateUserRequest)
+        updateUserCall.enqueue(object : Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful) {
+                    callback(true)
+                } else {
+                    callback(false)
+                    Log.d("AuthRepository", "Failed to update user: ${response.errorBody()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                t.message?.let {
+                    Log.d("AuthRepository", it)
+                }
+                callback(false)
             }
         })
     }

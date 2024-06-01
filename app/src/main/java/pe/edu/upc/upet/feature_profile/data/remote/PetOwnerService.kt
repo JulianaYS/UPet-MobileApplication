@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 
@@ -27,6 +28,12 @@ interface PetOwnerService {
         @Path("user_id") userId: Int,
         @Body petOwnerData: PetOwnerRequest
     ): Call<SignInResponse>
+
+    @PUT("petowners/{petOwner_id}")
+    fun updatePetOwner(
+        @Path("petOwner_id") petOwnerId: Int,
+        @Body petOwnerData: EditPetOwnerRequest
+    ): Call<PetOwnerResponse>
 
 
 

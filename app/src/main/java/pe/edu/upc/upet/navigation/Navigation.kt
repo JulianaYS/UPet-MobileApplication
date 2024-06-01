@@ -42,6 +42,8 @@ import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.screens.vets.VetProfile
 import pe.edu.upc.upet.ui.screens.vets.VeterinaryClinicDetailsScreen
 import pe.edu.upc.upet.ui.shared.BottomBar
+import java.time.LocalDate
+import java.time.LocalTime
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -115,13 +117,23 @@ fun Navigation() {
                 }
             }
             //Appointment
-            composable(Routes.BookAppointmentScreen){
+            composable("${Routes.BookAppointmentScreen}/{id}") { backStackEntry ->
                 shouldShowBottomBar.value = true
-                BookAppointmentScreen(navController)
+                val id = backStackEntry.arguments?.getString("id")?.toInt()
+                if (id != null) {
+                    BookAppointmentScreen(navController, id)
+                }
             }
-            composable(Routes.PetDetailsAppointment){
+            composable("${Routes.PetDetailsAppointment}/{clinicId}/{selectedDate}/{selectedTime}") { backStackEntry ->
                 shouldShowBottomBar.value = true
-                PetDetailsAppointmentScreen(navController)
+                val clinicId = backStackEntry.arguments?.getString("clinicId")?.toInt()
+                val selectedDate = LocalDate.parse(backStackEntry.arguments?.getString("selectedDate"))
+                val selectedTime = LocalTime.parse(backStackEntry.arguments?.getString("selectedTime"))
+                if (clinicId != null) {
+                    PetDetailsAppointmentScreen(navController, clinicId,
+                        selectedDate.toString(), selectedTime.toString()
+                    )
+                }
             }
             composable(Routes.AppointmentList){
                 shouldShowBottomBar.value=true

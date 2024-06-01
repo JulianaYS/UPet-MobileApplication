@@ -360,6 +360,6 @@ fun SuccessDialog(
         },
         containerColor = Color.White,
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxSize(0.8f).padding(vertical = 200.dp)
+        modifier = Modifier.fillMaxSize(0.8f).padding(vertical = 150.dp)
     )
 }

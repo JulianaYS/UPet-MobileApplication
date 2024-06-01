@@ -20,12 +20,12 @@ class AppointmentRepository(
                     val appointmentResponse = response.body()?.let { appointmentResponse ->
                         AppointmentResponse(
                             id = appointmentResponse.id,
-                            date = appointmentResponse.date,
-                            time = appointmentResponse.time,
+                            datetime = appointmentResponse.datetime,
+                            diagnosis = appointmentResponse.diagnosis,
+                            treatment = appointmentResponse.treatment,
                             description = appointmentResponse.description,
-                            vetName = appointmentResponse.vetName,
                             petId = appointmentResponse.petId,
-                            vetClinics = appointmentResponse.vetClinics
+                            veterinarianId = appointmentResponse.veterinarianId
                         )
                     }
                     Log.d("AppointmentRepository", "Appointment created successfully: $appointmentResponse")

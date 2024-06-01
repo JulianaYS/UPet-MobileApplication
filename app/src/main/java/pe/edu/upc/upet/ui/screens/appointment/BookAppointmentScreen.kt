@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
+import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.poppinsFamily
@@ -35,14 +36,28 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookAppointmentScreen(navController: NavController) {
+fun BookAppointmentScreen(navController: NavController, clinicId: Int) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedTime by remember { mutableStateOf(LocalTime.now()) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
 
-    Scaffold { paddingValues ->
+    Scaffold( topBar = {
+        CenterAlignedTopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Blue1,
+                titleContentColor = Color.White,
+            ),
+            title = {
+                Text("Book Appointment")
+            },
+            navigationIcon = {
+                CustomReturnButton(navController = navController)
+            }
+        )
+    }) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn {
                 item {
@@ -53,48 +68,6 @@ fun BookAppointmentScreen(navController: NavController) {
                             .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
                         verticalArrangement = Arrangement.Top
                     ) {
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color(0xFF0B1C3F))
-                                .padding(bottom = 25.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            IconButton(
-                                onClick = { navController.popBackStack() },
-                                modifier = Modifier
-                                    .weight(0.1f)
-                                    .padding(top = 8.dp, start = 16.dp)
-                                    .clip(RoundedCornerShape(15.dp))
-                                    .background(Color.White)
-                                    .size(35.dp, 35.dp)
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                                    "Back",
-                                    modifier =  Modifier.fillMaxSize(1f),
-                                    tint = Blue1
-                                )
-                            }
-                            Text(
-                                text = "Book Appointment",
-                                modifier = Modifier
-                                    .padding(top = 13.dp, start = 60.dp)
-                                    .weight(0.5f)
-                                    .fillMaxWidth()
-                                ,
-                                style = TextStyle(
-                                    color = Color.White,
-                                    fontSize = 20.sp,
-                                    fontFamily = poppinsFamily,
-                                    fontWeight = FontWeight.SemiBold
-                                ),
-                            )
-
-
-                        }
-
                         TextSubtitle("Select Date")
 
                         Box(
@@ -133,7 +106,9 @@ fun BookAppointmentScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(25.dp))
 
-                        CustomButton(text = "Next", onClick = { navController.navigate(Routes.PetDetailsAppointment) })
+                        CustomButton(text = "Next", onClick = {
+                            navController.navigate("${Routes.PetDetailsAppointment}/$clinicId/${selectedDate}/${selectedTime}")
+                        })
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
@@ -197,7 +172,7 @@ fun CalendarView(currentYearMonth: YearMonth, selectedDate: LocalDate, onDateSel
             Row {
                 for (day in 0 until 7) {
                     val dayOfMonth = week * 7 + day - firstDayOfMonth + 1
-                    if (dayOfMonth > 0 && dayOfMonth <= daysInMonth) {
+                    if (dayOfMonth in 1..daysInMonth) {
                         val date = currentYearMonth.atDay(dayOfMonth)
                         Box(
                             contentAlignment = Alignment.Center,

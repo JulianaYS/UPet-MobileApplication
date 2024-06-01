@@ -1,6 +1,5 @@
 package pe.edu.upc.upet.ui.screens.petOwner
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -10,10 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,14 +23,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.skydoves.landscapist.ImageOptions
-import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.feature_profile.data.remote.EditPetOwnerRequest
 import pe.edu.upc.upet.feature_profile.domain.PetOwner
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
 import pe.edu.upc.upet.navigation.Routes
+import pe.edu.upc.upet.ui.screens.pets.SuccessDialog
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.CustomTextField
-import pe.edu.upc.upet.ui.shared.ImageEdit
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
@@ -54,10 +50,9 @@ fun EditPetOwnerProfile(navController: NavHostController) {
     var name by remember { mutableStateOf("") }
     var numberPhone by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
-    var imageUrl by remember { mutableStateOf("") }
-    var newImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Simula la carga del propietario de la mascota desde un repositorio.
+    val showSuccessDialog = remember { mutableStateOf(false) }
+
     LaunchedEffect(id) {
         PetOwnerRepository().getPetOwnerById(id) { it ->
             petOwner = it
@@ -65,15 +60,17 @@ fun EditPetOwnerProfile(navController: NavHostController) {
                 name = it.name
                 numberPhone = it.numberPhone
                 location = it.location
-                imageUrl = it.imageUrl
             }
         }
     }
 
-    val imageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        newImageUri = uri
+    if (showSuccessDialog.value) {
+        SuccessDialog(onDismissRequest = {
+            showSuccessDialog.value = false
+            navController.navigateUp()
+        }, titleText = "Profile Updated",
+            messageText = "Your profile has been updated successfully.",
+            buttonText = "OK")
     }
 
     Scaffold(
@@ -103,9 +100,6 @@ fun EditPetOwnerProfile(navController: NavHostController) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    ImageEdit(imageUrl = imageUrl, newImageUri = newImageUri, onImageClick = { imageLauncher.launch("image/*") })
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     CustomTextField(
                         value = name,
@@ -142,13 +136,21 @@ fun EditPetOwnerProfile(navController: NavHostController) {
                             val updatedPetOwner = petOwner?.copy(
                                 name = name,
                                 numberPhone = numberPhone,
-                                location = location,
-                                imageUrl = newImageUri?.toString() ?: imageUrl
+                                location = location
                             )
                             if (updatedPetOwner != null) {
-                                // PetOwnerRepository().updatePetOwner(updatedPetOwner) {
-                                //  navController.navigateUp()
-                                // }
+                                PetOwnerRepository().updatePetOwner(
+                                    id,
+                                    EditPetOwnerRequest(
+                                        name = updatedPetOwner.name,
+                                        numberPhone = updatedPetOwner.numberPhone,
+                                        location = updatedPetOwner.location,
+                                    ),
+                                ) {
+                                    if (it) {
+                                        showSuccessDialog.value = true
+                                    }
+                                }
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Pink),

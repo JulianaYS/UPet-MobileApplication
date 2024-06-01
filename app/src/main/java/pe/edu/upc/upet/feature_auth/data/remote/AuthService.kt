@@ -4,6 +4,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface AuthService {
@@ -25,5 +26,11 @@ interface AuthService {
     @GET("users/{user_id}")
     fun getUserById(
         @Path("user_id") userId: Int
+    ): Call<UserResponse>
+
+    @PUT("/api/v1/users/{role_id}")
+    fun updateUser(
+        @Path("role_id") roleId: Int,
+        @Body request: UpdateUserRequest
     ): Call<UserResponse>
 }
