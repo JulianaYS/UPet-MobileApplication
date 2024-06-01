@@ -27,6 +27,7 @@ data object Routes {
     const val NewSurgeryRegister = "newSurgeryRegister"
     const val NewTestResultRegister = "newTestResultRegister"
     const val NewDiagnosisRegister = "newDiagnosisRegister"
+    const val VetHome = "vetHome"
     const val EditVeterinaryProfile = "editVeterinaryProfile"
     const val EditVeterinaryPassword = "editVeterinaryPassword"
 

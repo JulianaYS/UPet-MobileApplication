@@ -38,6 +38,7 @@ import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
 import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.subscription.SubscriptionAdvancedScreen
+import pe.edu.upc.upet.ui.screens.vets.VetHome
 import pe.edu.upc.upet.ui.screens.vets.VetList
 import pe.edu.upc.upet.ui.screens.vets.VetProfile
 import pe.edu.upc.upet.ui.shared.BottomBar
@@ -56,7 +57,7 @@ fun Navigation() {
         modifier = Modifier.background(backgroundColor),
         bottomBar = { BottomBar(navController, shouldShowBottomBar) }
     ) { paddingValues ->
-        NavHost(navController, startDestination = Routes.UserLogin, modifier = Modifier.padding(paddingValues   )) {
+        NavHost(navController, startDestination = Routes.VetHome, modifier = Modifier.padding(paddingValues   )) {
             composable(Routes.Home) {
                 shouldShowBottomBar.value = true
                 Home(navController)
@@ -83,6 +84,10 @@ fun Navigation() {
                 SignUpScreen() { destination ->
                     navController.navigate(destination)
                 }
+            }
+            composable(Routes.VetHome){
+                shouldShowBottomBar.value =false
+                VetHome(navController)
             }
             composable(Routes.UserLogin) {
                 shouldShowBottomBar.value = false

@@ -23,4 +23,7 @@ interface PetService {
 
     @DELETE("pets/{pet_id}")
     fun deletePet(@Path("pet_id") pet_Id: Int): Call<Unit>
+
+    @GET("pets/pet/{pet_id}")
+    fun getPetById(@Path("pet_id") pet_Id: Int):Call<PetResponse>
 }

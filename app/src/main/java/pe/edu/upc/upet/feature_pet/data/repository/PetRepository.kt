@@ -5,10 +5,12 @@ import pe.edu.upc.upet.feature_pet.data.remote.PetRequest
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.remote.PetService
 import pe.edu.upc.upet.feature_pet.data.remote.PetServiceFactory
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 class PetRepository(private val petService: PetService = PetServiceFactory.getPetService()){
+
 
     fun getPetsByOwnerId(ownerId: Int, onSuccess: (List<PetResponse>) -> Unit, onError: (String) -> Unit){
         petService.getByOwnerId(ownerId).enqueue(object : Callback<List<PetResponse>> {
@@ -40,7 +42,35 @@ class PetRepository(private val petService: PetService = PetServiceFactory.getPe
     }
 
 
+    fun getPetById(petId: Int,callback: (PetResponse) -> Unit){
+        petService.getPetById(petId).enqueue(object :Callback<PetResponse>{
+            override fun onResponse(call: Call<PetResponse>, response: Response<PetResponse>){
 
+                if(response.isSuccessful){
+                    val petResponse = response.body()?.let {
+                        petResponse ->
+                        PetResponse(
+                            id = petResponse.id,
+                            name = petResponse.name,
+                            petOwnerId = petResponse.petOwnerId,
+                            breed = petResponse.breed,
+                            species = petResponse.species,
+                            weight = petResponse.weight,
+                            birthdate = petResponse.birthdate,
+                            image_url = petResponse.image_url,
+                            gender = petResponse.gender
+                        )
+                    }
+                    callback(petResponse!!)
+                }
+
+            }
+            override fun onFailure(p0: Call<PetResponse>, t: Throwable){
+                Log.e("PetRepository", "Error creating pet, request failed.", t)
+            }
+        })
+
+    }
     fun createPet( ownerId: Int, pet: PetRequest, onSuccess: (PetResponse) -> Unit, onError: (String) -> Unit) {
         Log.d("PetRepository", "Attempting to create pet: $pet for owner: $ownerId")
         petService.createPet(ownerId, pet).enqueue(object : Callback<PetResponse> {
@@ -118,5 +148,6 @@ class PetRepository(private val petService: PetService = PetServiceFactory.getPe
             }
         })
     }
+
 
 }
