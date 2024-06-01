@@ -17,12 +17,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-
-fun SearchField() {
+fun SearchField(searchQuery: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = searchQuery,
+        onValueChange = { newValue ->
+            onValueChange(newValue)
+        },
         placeholder = { Text("Search") },
+        singleLine = true,
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.White) },
         textStyle = LocalTextStyle.current.copy(color = Color.White),
         modifier = Modifier
@@ -30,5 +32,4 @@ fun SearchField() {
             .padding(horizontal = 16.dp).clip(RoundedCornerShape(20.dp))
             .border(2.dp, Color(0xFFE91E63), RoundedCornerShape(20.dp))
     )
-
 }

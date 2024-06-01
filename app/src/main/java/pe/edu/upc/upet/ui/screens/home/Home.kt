@@ -40,7 +40,6 @@ import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.vets.VetCard
-import pe.edu.upc.upet.ui.shared.SearchField
 import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.ui.theme.PinkStrong
 import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
@@ -49,7 +48,6 @@ import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 fun Home( navController: NavController){
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item { UserSection() }
-        item { SearchField() }
         item { PetsSection(navController) }
         item { RecommendedVetsSection(navController) }
     }
@@ -86,7 +84,7 @@ fun UserSection() {
             GlideImage(modifier = Modifier
                 .size(100.dp)
                 .clip(RoundedCornerShape(50.dp)),
-                imageModel = {"https://cdn-icons-png.freepik.com/512/8742/8742495.png"}
+                imageModel = { icon.value },
             )
             Column(modifier = Modifier.padding(start = 20.dp)) {
                 val greeting = "Hello, ${name.value}"

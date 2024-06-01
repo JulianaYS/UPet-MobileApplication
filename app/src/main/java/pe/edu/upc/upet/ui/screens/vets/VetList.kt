@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,6 +33,7 @@ import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.SearchField
 import pe.edu.upc.upet.ui.theme.Blue1
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +42,7 @@ fun VetList(navController: NavController) {
 
     val vetClinicRepository = remember { VeterinaryClinicRepository() }
     var vetClinics: List<VeterinaryClinic> by remember { mutableStateOf(emptyList()) }
+    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = vetClinicRepository) {
         vetClinicRepository.getAllVeterinaryClinics { vetClinicsList ->
@@ -66,13 +67,15 @@ fun VetList(navController: NavController) {
         }
     ) {paddingValues->
         Column(modifier = Modifier.padding(paddingValues)) {
-            vetClinics.forEach { vetClinic ->
-                VetCard(navController, vetClinic)
-            }
+            SearchField(searchQuery = searchQuery, onValueChange = {
+                searchQuery = it
+            })
+            vetClinics.filter { it.name.contains(searchQuery, ignoreCase = true) }.forEach { vetClinic ->
+               VetCard(navController, vetClinic)
+           }
         }
     }
 }
-
 
 @Composable
 fun VetCard(navController: NavController, veterinaryClinic: VeterinaryClinic) {
@@ -83,7 +86,8 @@ fun VetCard(navController: NavController, veterinaryClinic: VeterinaryClinic) {
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp) .clickable {
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp)
+            .clickable {
                 navController.navigate("VetDetails/${veterinaryClinic.id}")
             }
     ) {
