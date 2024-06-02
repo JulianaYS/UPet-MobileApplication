@@ -37,9 +37,8 @@ import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
-import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
-import pe.edu.upc.upet.ui.screens.vets.VetCard
+import pe.edu.upc.upet.ui.screens.vets.ownerview.VetCard
 import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.ui.theme.PinkStrong
 import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken

@@ -4,14 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerRequest
-import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VetRequest
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicRequest
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
@@ -103,64 +102,72 @@ fun ExistingClinicForm(navigateTo : (String) -> Unit,
 
 }
 @Composable
-fun NewClinicForm(navigateTo : (String) -> Unit,
-                  userId: Int
-){
-    val clinicName = remember{
-        mutableStateOf("")
-    }
+fun NewClinicForm(navigateTo : (String) -> Unit, userId: Int) {
 
-    val clinicLocation = remember{
-        mutableStateOf("")
-    }
-    val officeHours = remember{
-        mutableStateOf("")
-    }
-    val phoneNumber = remember{
-        mutableStateOf("")
-    }
 
-    AuthInputTextField(
-        input = clinicName,
-        placeholder = "Enter your clinic name",
-        label = "Clinic Name",
-    )
-    Spacer(modifier = Modifier.height(22.dp))
-    AuthInputTextField(
-        input = clinicLocation,
-        placeholder = "r. Lima 104, Santiago de Surco, Lima",
-        label = "Location",
-    )
-    Spacer(modifier = Modifier.height(22.dp))
-    AuthInputTextField(
-        input = officeHours,
-        placeholder = "Enter your office hours",
-        label = "Office Hours",
-    )
-    Spacer(modifier = Modifier.height(22.dp))
-    AuthInputTextField(
-        input = phoneNumber,
-        placeholder = "Enter your phone number",
-        label = "Phone",
-        type = TextFieldType.Phone
-    )
-    Spacer(modifier = Modifier.height(22.dp))
-    AuthButton(text ="Send", onClick = {
-        Log.d("NewClinicForm", clinicName.value)
-        Log.d("NewClinicForm", clinicLocation.value)
-        Log.d("NewClinicForm", officeHours.value)
-        Log.d("NewClinicForm", phoneNumber.value)
-        createNewClinic(
-            userId,
-            VeterinaryClinicRequest(
-                name = clinicName.value,
-                location = clinicLocation.value,
-                office_hours = officeHours.value,
-                phoneNumber = phoneNumber.value
-            ), navigateTo = { navigateTo(Routes.Home)}
-        )
-        navigateTo(Routes.Home)
-    })
+    val clinicName = remember { mutableStateOf("") }
+    val clinicLocation = remember { mutableStateOf("") }
+    val phoneNumber = remember { mutableStateOf("") }
+    val description = remember { mutableStateOf("") } // new field
+    val officeHoursStart = remember { mutableStateOf("") } // new field
+    val officeHoursEnd = remember { mutableStateOf("") } // new field
+
+    LazyColumn {
+        item {
+            AuthInputTextField(
+                input = clinicName,
+                placeholder = "Enter your clinic name",
+                label = "Clinic Name",
+            )
+            Spacer(modifier = Modifier.height(22.dp))
+            AuthInputTextField(
+                input = clinicLocation,
+                placeholder = "r. Lima 104, Santiago de Surco, Lima",
+                label = "Location",
+            )
+
+            Spacer(modifier = Modifier.height(22.dp))
+            AuthInputTextField(
+                input = phoneNumber,
+                placeholder = "Enter your phone number",
+                label = "Phone",
+                type = TextFieldType.Phone
+            )
+            Spacer(modifier = Modifier.height(22.dp))
+            AuthInputTextField( // new field
+                input = description,
+                placeholder = "Enter your clinic description",
+                label = "Description",
+            )
+            Spacer(modifier = Modifier.height(22.dp))
+            AuthInputTextField( // new field
+                input = officeHoursStart,
+                placeholder = "Enter your office hours start time",
+                label = "Office Hours Start",
+            )
+            Spacer(modifier = Modifier.height(22.dp))
+            AuthInputTextField( // new field
+                input = officeHoursEnd,
+                placeholder = "Enter your office hours end time",
+                label = "Office Hours End",
+            )
+            Spacer(modifier = Modifier.height(22.dp))
+            AuthButton(text ="Send", onClick = {
+                createNewClinic(
+                    userId,
+                    VeterinaryClinicRequest(
+                        name = clinicName.value,
+                        location = clinicLocation.value,
+                        phoneNumber = phoneNumber.value,
+                        description = description.value, // pass the new field
+                        officeHoursStart = officeHoursStart.value, // pass the new field
+                        officeHoursEnd = officeHoursEnd.value, // pass the new field
+                    ),
+                    navigateTo = { navigateTo(Routes.Home) }
+                )
+            })
+        }
+    }
 }
 
 
@@ -182,7 +189,6 @@ fun createNewClinic(userId: Int,
     Log.d("ClinicRequest", userId.toString())
     Log.d("ClinicRequest", clinicRequest.name)
     Log.d("ClinicRequest", clinicRequest.location)
-    Log.d("ClinicRequest", clinicRequest.office_hours)
     Log.d("ClinicRequest", clinicRequest.phoneNumber)
 
     clinicRepository.createVeterinaryClinic(clinicRequest){ clinicResponse ->

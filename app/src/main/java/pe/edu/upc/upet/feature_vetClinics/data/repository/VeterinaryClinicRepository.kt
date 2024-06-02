@@ -2,7 +2,6 @@ package pe.edu.upc.upet.feature_vetClinics.data.repository
 
 import android.util.Log
 import pe.edu.upc.upet.feature_vetClinics.data.mapper.toDomainModel
-import pe.edu.upc.upet.feature_vets.data.mapper.toDomainModel
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicRequest
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicResponse
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicResponseList
@@ -10,7 +9,6 @@ import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicService
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicServiceFactory
 import pe.edu.upc.upet.feature_vetClinics.domain.Veterinaries
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
-import pe.edu.upc.upet.feature_vets.data.remote.VetResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

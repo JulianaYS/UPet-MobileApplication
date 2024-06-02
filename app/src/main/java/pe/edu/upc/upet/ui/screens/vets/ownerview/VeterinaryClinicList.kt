@@ -1,4 +1,4 @@
-package pe.edu.upc.upet.ui.screens.vets
+package pe.edu.upc.upet.ui.screens.vets.ownerview
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ import pe.edu.upc.upet.ui.theme.Blue1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VetList(navController: NavController) {
+fun VeterinaryClinicList(navController: NavController) {
 
     val vetClinicRepository = remember { VeterinaryClinicRepository() }
     var vetClinics: List<VeterinaryClinic> by remember { mutableStateOf(emptyList()) }
@@ -111,7 +111,7 @@ fun VetCard(navController: NavController, veterinaryClinic: VeterinaryClinic) {
                     color = Color.Gray
                 )
                 Text(
-                    text = "Operating Hours: ${veterinaryClinic.office_hours}",
+                    text = "Operating Hours: ${veterinaryClinic.office_hours_start + " - " + veterinaryClinic.office_hours_end}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )

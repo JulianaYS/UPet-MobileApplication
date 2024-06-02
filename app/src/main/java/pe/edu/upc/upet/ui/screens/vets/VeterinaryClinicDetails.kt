@@ -102,7 +102,7 @@ fun VeterinaryClinicDetailsScreen(navController: NavHostController, vetClinicId:
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         InfoRow(icon = Icons.Filled.Phone, text = "987654321" ?: "Not Available")
                         InfoRow(icon = Icons.Filled.Email, text = veterinaryClinic.name.lowercase(Locale.ROOT) +"@" + "gmail.com")
-                        InfoRow(icon = Icons.Filled.WatchLater, text = "Operating Hours: ${veterinaryClinic.office_hours}")
+                        InfoRow(icon = Icons.Filled.WatchLater, text = "Operating Hours: ${veterinaryClinic.office_hours_start + " - " + veterinaryClinic.office_hours_end}")
                         InfoRow(icon = Icons.Filled.LocationOn, text = "Location: ${veterinaryClinic.location}")
                     }
 

@@ -106,4 +106,24 @@ class VetRepository (
         })
     }
 
+    fun getVetsByClinicId(clinicId: Int, callback: (VetList) -> Unit){
+        vetService.getVetsByClinicId(clinicId).enqueue(object : Callback<List<VetResponse>>{
+            override fun onResponse(
+                call: Call<List<VetResponse>>,
+                response: Response<List<VetResponse>>
+            ) {
+                if (response.isSuccessful){
+                    val vets = response.body()?.map { it.toDomainModel() }?: emptyList()
+                    callback(vets)
+                }else{
+                    Log.e("VetRepository", "Failed to get vets: ${response.errorBody()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<VetResponse>>, t: Throwable) {
+                Log.e("VetRepository", "Failed to get vets", t)
+            }
+        })
+    }
+
 }

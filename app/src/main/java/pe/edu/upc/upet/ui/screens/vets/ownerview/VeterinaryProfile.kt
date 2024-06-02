@@ -1,4 +1,4 @@
-package pe.edu.upc.upet.ui.screens.vets
+package pe.edu.upc.upet.ui.screens.vets.ownerview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,11 +1,15 @@
 package pe.edu.upc.upet.ui.screens.auth.aditionalInformation.shared
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,25 +24,20 @@ import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
-fun PostRegister(description: @Composable ()->Unit,
-                       form : @Composable ()->Unit ){
-    Scaffold {paddingValues->
-
+fun PostRegister(description: @Composable ()->Unit, form : @Composable ()->Unit) {
+    Scaffold( ){ paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
                 .background(UpetBackGroundPrimary)
                 .padding(10.dp, 10.dp)
-        ){
-
+        ) {
             description()
             Spacer(modifier = Modifier.height(22.dp))
             form()
-
         }
     }
-
 }
 @Composable
 fun PostRegisterDescription(title: String, description: String) {

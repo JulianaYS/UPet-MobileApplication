@@ -145,6 +145,7 @@ fun CustomOutlinedTextFieldNormal(
         shape = RoundedCornerShape(cornerSize),
         modifier = Modifier.commonModifier(cornerSize),
         textStyle = commonTextStyle(input.value),
+        singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         visualTransformation = VisualTransformation.None
@@ -196,6 +197,7 @@ fun CustomOutlinedTextFieldPassword(
             TextPlaceHolder(placeholder)
         },
         shape = RoundedCornerShape(cornerSize),
+        singleLine = true,
         modifier = Modifier
             .commonModifier(cornerSize),
         textStyle = commonTextStyle(input.value),
