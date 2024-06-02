@@ -38,9 +38,9 @@ import pe.edu.upc.upet.ui.screens.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.recovery.NewPasswordScreen
 import pe.edu.upc.upet.ui.screens.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.subscription.SubscriptionAdvancedScreen
-import pe.edu.upc.upet.ui.screens.vets.VetList
+import pe.edu.upc.upet.ui.screens.vets.ownerview.VeterinaryClinicList
 import pe.edu.upc.upet.ui.screens.vets.VetProfile
-import pe.edu.upc.upet.ui.screens.vets.VeterinaryClinicDetailsScreen
+import pe.edu.upc.upet.ui.screens.vets.ownerview.VeterinaryClinicDetailsScreen
 import pe.edu.upc.upet.ui.shared.BottomBar
 import java.time.LocalDate
 import java.time.LocalTime
@@ -79,7 +79,7 @@ fun Navigation() {
             }
             composable(Routes.VetList) {
                 shouldShowBottomBar.value = true
-                VetList(navController)
+                VeterinaryClinicList(navController)
             }
             composable(Routes.UserRegister) {
                 shouldShowBottomBar.value = false

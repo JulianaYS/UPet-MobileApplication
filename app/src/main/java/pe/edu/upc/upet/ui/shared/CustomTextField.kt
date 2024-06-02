@@ -31,6 +31,7 @@ fun CustomTextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
         label = { Text(label) },
         leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = "$label Icon") },
         modifier = modifier.padding(),

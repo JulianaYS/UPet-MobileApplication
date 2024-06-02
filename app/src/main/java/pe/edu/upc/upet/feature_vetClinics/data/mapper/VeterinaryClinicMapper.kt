@@ -11,7 +11,10 @@ fun VeterinaryClinicResponse.toDomainModel(): VeterinaryClinic {
         name = this.name,
         location = this.location,
         services = this.services,
-        office_hours = this.office_hours,
-        image_url = this.image_url
+        image_url = this.image_url,
+        description = this.description,
+        office_hours_start = this.office_hours_start,
+        office_hours_end = this.office_hours_end
+
     )
 }

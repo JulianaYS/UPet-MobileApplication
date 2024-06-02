@@ -24,4 +24,8 @@ interface VetService {
     @GET("veterinarians/users/{user_id}")
     fun getVetsByUserId(@Path("user_id") userId: Int): Call<VetResponse>
 
+    @GET("veterinarians/vets/{clinic_id}")
+    fun getVetsByClinicId(@Path("clinic_id") clinicId: Int): Call<List<VetResponse>>
+
+
 }

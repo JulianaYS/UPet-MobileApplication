@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.feature_vetClinics.data.remote
 
+import pe.edu.upc.upet.feature_vets.data.remote.VetResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,5 +24,6 @@ interface VeterinaryClinicService {
     fun generatePassword(
         @Path("clinic_id") clinicId: Int
     ): Call<String>
+
 
 }

@@ -6,6 +6,8 @@ data class VeterinaryClinic(
     val name: String,
     val location : String,
     val services: String,
-    val office_hours: String,
-    val image_url: String
+    val image_url: String,
+    val description: String,
+    val office_hours_start : String,
+    val office_hours_end : String,
 )
