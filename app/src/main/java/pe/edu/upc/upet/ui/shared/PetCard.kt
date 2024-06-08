@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
+import pe.edu.upc.upet.navigation.Routes
 
 @Composable
 fun PetCard( navController: NavHostController, pet: PetResponse) {
@@ -82,14 +83,14 @@ fun PetCard( navController: NavHostController, pet: PetResponse) {
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        onClick = { navController.navigate("PetProfile/${pet.id}")},
+                        onClick = { navController.navigate(Routes.PetDetails.createRoute(pet.id))},
                         colors = ButtonDefaults.buttonColors(Color(0xFFEB5569)),
                         shape = RoundedCornerShape(6.dp)
                     ) {
                         Text("View")
                     }
                     Button(
-                        onClick = { navController.navigate("PetEdit/${pet.id}")},
+                        onClick = { navController.navigate(Routes.EditPetDetail.createRoute(pet.id))},
                         colors = ButtonDefaults.buttonColors(Color(0xFFEB5569)),
                         shape = RoundedCornerShape(6.dp)
                     ) {

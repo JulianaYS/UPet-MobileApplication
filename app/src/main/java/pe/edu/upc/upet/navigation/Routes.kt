@@ -1,33 +1,60 @@
 package pe.edu.upc.upet.navigation
 
-data object Routes {
-    const val registerPet = "registerPet"
-    const val Home = "home"
-    const val PetList = "petList"
-    const val VetList = "vetList"
-    const val UserRegister = "signUpScreen"
-    const val UserLogin = "signInScreen"
-    const val PasswordRecovery = "sendEmailScreen"
-    const val ConfirmCode = "ConfirmCodeScreen"
-    const val NewPassword = "NewPasswordScreen"
-    const val PostRegister = "postRegister"
-    const val Profile = "profile"
-    const val AppointmentList = "appointmentList"
-    const val SubscriptionBasicScreen = "subscriptionBasicScreen"
-    const val SubscriptionAdvancedScreen = "subscriptionAdvancedScreen"
-    const val PetOwnerEditProfile = "petOwnerEditProfile"
-    const val PetEdit = "PetEdit"
-    const val VetProfile= "vetProfile"
-    const val BookAppointmentScreen = "bookAppointmentScreen"
-    const val AppointmentDetail = "appointmentDetail"
-    const val PetDetailsAppointment = "petDetailsAppointment"
-    const val PetMedicalInformationScreen = "petMedicalInformationScreen"
-    const val NewMedicalRegisterScreen = "newMedicalRegisterScreen"
-    const val NewVaccineRegister = "newVaccineRegister"
-    const val NewSurgeryRegister = "newSurgeryRegister"
-    const val NewTestResultRegister = "newTestResultRegister"
-    const val NewDiagnosisRegister = "newDiagnosisRegister"
-    const val EditVeterinaryProfile = "editVeterinaryProfile"
-    const val EditVeterinaryPassword = "editVeterinaryPassword"
+import androidx.navigation.NavController
 
+sealed class Routes(val route: String) {
+
+    data object SubscriptionAdvanced : Routes("subscription_advanced")
+    data object SubscriptionBasic : Routes("subscription_basic")
+
+    //Auth views -------------------------------------------------
+
+    data object SignIn : Routes("sign_in")
+    data object SignUp : Routes("sign_up")
+    data object PostRegister : Routes("post_register")
+    data object ConfirmCode : Routes("confirm_code")
+    data object NewPassword : Routes("new_password")
+    data object SendEmail : Routes("send_email")
+
+    // Owner views ---------------------------------------------
+    data object OwnerHome : Routes("owner_home")
+    data object OwnerProfile : Routes("owner_profile")
+    data object OwnerEditProfile : Routes("owner_edit_profile")
+    data object OwnerClinicDetails : Routes("owner_clinic_details/{clinicId}") {
+        fun createRoute(clinicId: Int) = "owner_clinic_details/$clinicId"
+    }
+    data object OwnerClinicList : Routes("owner_clinic_list")
+    data object AppointmentDetail : Routes("appointment_detail/{appointmentId}") {
+        fun createRoute(appointmentId: Int) = "appointment_detail/$appointmentId"
+    }
+    data object AppointmentList : Routes("appointment_list")
+    data object BookAppointment : Routes("book_appointment"){
+        fun createRoute(vetId: Int) = "book_appointment/$vetId"
+    }
+    data object PetDetails : Routes("pet_details_Routes/{petId}") {
+        fun createRoute(petId: Int) = "pet_details_Routes/$petId"
+    }
+    data object EditPetDetail : Routes("edit_pet_detail/{petId}") {
+        fun createRoute(petId: Int) = "edit_pet_detail/$petId"
+    }
+    data object PetDetailsAppointment : Routes("pet_details_appointment/{vetId}/{selectedDate}/{selectedTime}") {
+        fun createRoute(vetId: Int, selectedDate: String, selectedTime: String) = "pet_details_appointment/$vetId/$selectedDate/$selectedTime"
+    }
+    data object PetList : Routes("pet_list")
+    data object RegisterPet : Routes("register_pet")
+
+    // Vet views
+    data object VetHome : Routes("vet_home")
+    data object VetProfile : Routes("vet_profile")
+    data object VetEditProfile : Routes("vet_edit_profile")
+    data object VetAppointmentDetail : Routes("vet_appointment_detail/{appointmentId}") {
+        fun createRoute(appointmentId: Int) = "vet_appointment_detail/$appointmentId"
+    }
+    data object VetAppointments : Routes("vet_appointments")
+    data object VetEditPassword : Routes("vet_edit_password")
+    data object VetPatientDetail : Routes("vet_patient_detail/{patientId}") {
+        fun createRoute(patientId: Int) = "vet_patient_detail/$patientId"
+    }
+    data object VetPatients : Routes("vet_patients")
+    
 }
