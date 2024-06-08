@@ -1,7 +1,5 @@
 package pe.edu.upc.upet.navigation
 
-import androidx.navigation.NavController
-
 sealed class Routes(val route: String) {
 
     data object SubscriptionAdvanced : Routes("subscription_advanced")
@@ -22,6 +20,9 @@ sealed class Routes(val route: String) {
     data object OwnerEditProfile : Routes("owner_edit_profile")
     data object OwnerClinicDetails : Routes("owner_clinic_details/{clinicId}") {
         fun createRoute(clinicId: Int) = "owner_clinic_details/$clinicId"
+    }
+    data object OwnerVetProfile : Routes("vet_profile/{vetId}") {
+        fun createRoute(vetId: Int) = "vet_profile/$vetId"
     }
     data object OwnerClinicList : Routes("owner_clinic_list")
     data object AppointmentDetail : Routes("appointment_detail/{appointmentId}") {

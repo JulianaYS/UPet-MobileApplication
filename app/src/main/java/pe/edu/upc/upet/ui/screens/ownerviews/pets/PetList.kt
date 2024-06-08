@@ -3,30 +3,22 @@ import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
-import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.PetSwipeToDelete
 import pe.edu.upc.upet.ui.shared.TopBar
-import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.utils.TokenManager
 
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun PetList(navController: NavHostController) {
 
     val petRepository = remember { PetRepository() }
@@ -41,10 +33,8 @@ fun PetList(navController: NavHostController) {
                 petsState.value = pets
             },
             onError = {
-
             }
     )
-
 
     Scaffold(
         topBar = {

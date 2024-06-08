@@ -47,6 +47,7 @@ import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.VetClinicCard
+import pe.edu.upc.upet.ui.screens.ownerviews.getVet
 import pe.edu.upc.upet.ui.shared.ChangeProfileImageDialog
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.TopBar

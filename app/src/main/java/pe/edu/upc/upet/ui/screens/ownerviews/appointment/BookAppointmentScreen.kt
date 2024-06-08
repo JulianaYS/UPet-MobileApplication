@@ -12,12 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,9 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
-import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.TopBar
-import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 import java.time.LocalDate
@@ -37,10 +33,9 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookAppointmentScreen(navController: NavController, clinicId: Int) {
+fun BookAppointmentScreen(navController: NavController, vetId: Int) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedTime by remember { mutableStateOf(LocalTime.now()) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
@@ -97,8 +92,8 @@ fun BookAppointmentScreen(navController: NavController, clinicId: Int) {
                         Spacer(modifier = Modifier.height(25.dp))
 
                         CustomButton(text = "Next", onClick = {
-                            navController.navigate("${Routes.PetDetailsAppointment}/$clinicId/${selectedDate}/${selectedTime}")
-                            navController.navigate(Routes.PetDetailsAppointment.createRoute(clinicId, selectedDate.toString(), selectedTime.toString()))
+                            navController.navigate("${Routes.PetDetailsAppointment}/$vetId/${selectedDate}/${selectedTime}")
+                            navController.navigate(Routes.PetDetailsAppointment.createRoute(vetId, selectedDate.toString(), selectedTime.toString()))
                         })
                         Spacer(modifier = Modifier.height(20.dp))
                     }

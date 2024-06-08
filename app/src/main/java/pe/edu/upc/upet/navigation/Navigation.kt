@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -50,6 +49,7 @@ import pe.edu.upc.upet.ui.screens.shared.auth.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.ownerviews.OwnerClinicList
 import pe.edu.upc.upet.ui.screens.vetviews.VetProfile
 import pe.edu.upc.upet.ui.screens.ownerviews.OwnerClinicDetails
+import pe.edu.upc.upet.ui.screens.ownerviews.OwnerVetProfile
 import pe.edu.upc.upet.ui.screens.ownerviews.profile.OwnerProfile
 import pe.edu.upc.upet.ui.screens.shared.subscription.SubscriptionAdvancedScreen
 import pe.edu.upc.upet.ui.screens.vetviews.VetAppointmentDetail
@@ -235,6 +235,13 @@ fun Navigation() {
             composable(Routes.RegisterPet.route) {
                 shouldShowBottomBar.value = true
                 RegisterPet(navController)
+            }
+            composable(Routes.OwnerVetProfile.route){backStackEntry ->
+                shouldShowBottomBar.value = true
+                val vetId = backStackEntry.arguments?.getString("vetId")?.toInt()
+                vetId?.let{id->
+                    OwnerVetProfile(id, navController)
+                }
             }
 
             // Vet routes ---------------------------------------------------------------------------------

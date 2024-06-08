@@ -42,7 +42,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
@@ -78,9 +77,6 @@ fun PetDetail(navController: NavHostController, petId: Int) {
     }
     val petInfoList = petResponseToPetInfoList(petValue)
 
-
-
-
     Scaffold(modifier = Modifier.padding(16.dp)) { paddingValues ->
         Column(
             modifier = Modifier
@@ -111,7 +107,7 @@ fun PetDetail(navController: NavHostController, petId: Int) {
                 }
             }
             println("Gender: ${petValue.gender}")
-            PetImage(petValue.image_url)
+            ImageRectangle(petValue.image_url)
 
             Box(
                 modifier = Modifier
@@ -183,7 +179,7 @@ fun PetDetail(navController: NavHostController, petId: Int) {
 }
 
 @Composable
-fun PetImage(imageUrl: String) {
+fun ImageRectangle(imageUrl: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -276,13 +272,11 @@ fun MedicalHistoryCard(title: String, date: String, description: String,icon: Im
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // Content Column
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
                 ) {
-                    // Title and Date Row
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -298,7 +292,6 @@ fun MedicalHistoryCard(title: String, date: String, description: String,icon: Im
                         )
                     }
                     Spacer(modifier = Modifier.height(4.dp))
-                    // Description
                     Text(
                         text = description,
                         fontSize = 14.sp,

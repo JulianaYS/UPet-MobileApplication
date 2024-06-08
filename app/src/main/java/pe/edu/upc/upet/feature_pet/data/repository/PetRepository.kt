@@ -1,10 +1,12 @@
 package pe.edu.upc.upet.feature_pet.data.repository
 
 import android.util.Log
+import pe.edu.upc.upet.feature_pet.data.mapper.toDomainModel
 import pe.edu.upc.upet.feature_pet.data.remote.PetRequest
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.remote.PetService
 import pe.edu.upc.upet.feature_pet.data.remote.PetServiceFactory
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -115,6 +117,23 @@ class PetRepository(private val petService: PetService = PetServiceFactory.getPe
 
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 onError(t.message ?: "Error")
+            }
+        })
+    }
+
+    fun getPetById(petId: Int, callback: (Pet?) -> Unit) {
+        petService.getPetById(petId).enqueue(object : Callback<PetResponse> {
+            override fun onResponse(call: Call<PetResponse>, response: Response<PetResponse>) {
+                if (response.isSuccessful) {
+                    val pet = response.body()?.toDomainModel()
+                    callback(pet)
+                } else {
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<PetResponse>, t: Throwable) {
+                callback(null)
             }
         })
     }

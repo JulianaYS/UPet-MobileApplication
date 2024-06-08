@@ -1,13 +1,14 @@
 package pe.edu.upc.upet.feature_pet.domain
 
+import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
 
 data class Pet(
     val id: Int,
     val name: String,
-    val age: Int,
+    val age: String,
     val breed: String,
     val image_url: String,
-    val weight: Int,
+    val weight: Float,
     val specie: String,
-    val gender: String
+    val gender: GenderEnum
 )
