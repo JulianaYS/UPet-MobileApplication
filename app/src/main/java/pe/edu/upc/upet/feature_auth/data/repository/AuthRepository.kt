@@ -95,6 +95,8 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         })
     }
 
+
+
     fun logOut() {
         TokenManager.clearToken()
     }

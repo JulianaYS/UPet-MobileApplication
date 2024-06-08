@@ -16,13 +16,15 @@ object TokenManager {
         return MyApplication.getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    fun saveToken(token: String): Boolean {
+    fun saveToken(token: String) {
         val sharedPreferences = getSharedPreferences()
         val editor = sharedPreferences.edit()
         editor.putString(KEY_ACCESS_TOKEN, token)
         Log.d("TokenManager", "Token saved: $token")
-        return editor.commit()
+        editor.apply()
     }
+
+
 
     fun getToken(): String? {
         val sharedPreferences = getSharedPreferences()
