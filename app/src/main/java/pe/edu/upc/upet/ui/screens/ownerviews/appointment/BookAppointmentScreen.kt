@@ -92,7 +92,6 @@ fun BookAppointmentScreen(navController: NavController, vetId: Int) {
                         Spacer(modifier = Modifier.height(25.dp))
 
                         CustomButton(text = "Next", onClick = {
-                            navController.navigate("${Routes.PetDetailsAppointment}/$vetId/${selectedDate}/${selectedTime}")
                             navController.navigate(Routes.PetDetailsAppointment.createRoute(vetId, selectedDate.toString(), selectedTime.toString()))
                         })
                         Spacer(modifier = Modifier.height(20.dp))
