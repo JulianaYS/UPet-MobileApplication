@@ -66,13 +66,15 @@ fun VetEditProfile(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    CustomTextField(
-                        value = description,
-                        onValueChange = { description = it },
-                        label = "Description",
-                        leadingIcon = Icons.Default.Person,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    description?.let {
+                        CustomTextField(
+                            value = it,
+                            onValueChange = { description = it },
+                            label = "Description",
+                            leadingIcon = Icons.Default.Person,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 

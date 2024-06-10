@@ -142,7 +142,7 @@ fun ProfileContent(navController: NavHostController, vet: Vet) {
     val clinic = remember { mutableStateOf<VeterinaryClinic?>(null) }
     var progress = 5f
 
-    if(vet.experience == 0 && vet.description.isEmpty()) {
+    if(vet.experience == 0 && vet.description?.isEmpty() != false) {
         Text(
             text = "Add description and experience to get more clients",
             style = TextStyle(
@@ -152,10 +152,6 @@ fun ProfileContent(navController: NavHostController, vet: Vet) {
                 fontWeight = FontWeight.Normal
             ),)
         progress = 0f
-    } else if(vet.experience == 0 || vet.description.isNotEmpty()) {
-        progress = 0.5f
-    } else if(vet.experience != 0 || vet.description.isEmpty()) {
-        progress = 0.5f
     }else {
         Card(
             colors = CardDefaults.cardColors(
@@ -188,10 +184,12 @@ fun ProfileContent(navController: NavHostController, vet: Vet) {
                     text = "Bio: ",
                     style = TextStyle(fontWeight = FontWeight.Bold, color = Pink)
                 )
-                Text(
-                    text = vet.description,
-                    style = TextStyle(color = Color.Gray)
-                )
+                vet.description?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Gray)
+                    )
+                }
             }
         }
     }

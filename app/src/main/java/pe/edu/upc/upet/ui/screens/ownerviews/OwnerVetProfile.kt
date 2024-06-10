@@ -66,6 +66,8 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
 
     }
 
+
+
     LaunchedEffect(vet?.clinicId) {
         vet?.let {
             vetClinicRepository.getVeterinaryClinicById(it.clinicId) { clinic ->
@@ -115,7 +117,7 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
 
                                     TextSemiBold(text = "About", color = Blue1)
 
-                                    Text(text = vett.description )
+                                    Text(text = vett.description?:"")
 
                                     TextSemiBold(text = "Experience", color = Blue1)
 

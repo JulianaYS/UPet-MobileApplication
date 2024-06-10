@@ -9,8 +9,8 @@ data class VetResponse(
     val clinicId: Int,
     @SerializedName("image_url")
     val imageUrl: String,
-    val description: String,
-    val experience: Int,
+    val description: String?,
+    val experience: Int?,
     @SerializedName("user_id")
     val userId: Int
 )

@@ -256,12 +256,12 @@ fun PatientInformation(pet: Pet, appointment: Appointment, navController: NavCon
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = appointment.description,
-            style = TextStyle(
-                color = PinkStrong,
-                fontSize = 16.sp,
+                text = appointment.description,
+                style = TextStyle(
+                    color = PinkStrong,
+                    fontSize = 16.sp,
+                )
             )
-        )
     }
     Spacer(modifier = Modifier.height(8.dp))
 
