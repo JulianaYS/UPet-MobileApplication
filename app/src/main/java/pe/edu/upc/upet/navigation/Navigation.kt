@@ -51,6 +51,7 @@ import pe.edu.upc.upet.ui.screens.vetviews.VetProfile
 import pe.edu.upc.upet.ui.screens.ownerviews.OwnerClinicDetails
 import pe.edu.upc.upet.ui.screens.ownerviews.OwnerVetProfile
 import pe.edu.upc.upet.ui.screens.ownerviews.profile.OwnerProfile
+import pe.edu.upc.upet.ui.screens.ownerviews.reviews.AddReview
 import pe.edu.upc.upet.ui.screens.shared.subscription.SubscriptionAdvancedScreen
 import pe.edu.upc.upet.ui.screens.vetviews.VetAppointmentDetail
 import pe.edu.upc.upet.ui.screens.vetviews.VetAppointments
@@ -58,6 +59,7 @@ import pe.edu.upc.upet.ui.screens.vetviews.VetEditPassword
 import pe.edu.upc.upet.ui.screens.vetviews.VetEditProfile
 import pe.edu.upc.upet.ui.screens.vetviews.VetPatientDetail
 import pe.edu.upc.upet.ui.screens.vetviews.VetPatients
+import pe.edu.upc.upet.ui.screens.ownerviews.reviews.VetReviews
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
 
@@ -169,6 +171,21 @@ fun Navigation() {
             composable(Routes.OwnerEditProfile.route) {
                 shouldShowBottomBar.value = true
                 OwnerEditProfile(navController)
+            }
+            composable(Routes.AddReview.route) {
+                backStackEntry ->
+                shouldShowBottomBar.value = true
+                val vetId = backStackEntry.arguments?.getString("vetId")
+                if (vetId != null) {
+                    AddReview(navController, vetId.toInt())
+                }
+            }
+            composable(Routes.VetReviews.route) { backStackEntry ->
+                shouldShowBottomBar.value = true
+                val vetId = backStackEntry.arguments?.getString("vetId")
+                if (vetId != null) {
+                    VetReviews(navController, vetId.toInt())
+                }
             }
             composable(Routes.OwnerClinicDetails.route) { backStackEntry ->
                 shouldShowBottomBar.value = true

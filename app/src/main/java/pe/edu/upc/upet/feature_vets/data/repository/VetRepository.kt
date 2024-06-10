@@ -2,7 +2,12 @@ package pe.edu.upc.upet.feature_vets.data.repository
 
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
+import pe.edu.upc.upet.feature_reviews.data.remote.ReviewResponse
+import pe.edu.upc.upet.feature_reviews.data.remote.VetResponseWithReviews
+import pe.edu.upc.upet.feature_reviews.domain.Review
 import pe.edu.upc.upet.feature_vets.data.mapper.toDomainModel
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponse
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponseList
@@ -59,6 +64,33 @@ class VetRepository (
                 callback(null)
             }
         })
+    }
+
+    fun getVetReviews(vetId: Int, onSuccess : (List<ReviewResponse>) -> Unit, onError: () -> Unit){
+        vetService.getVetReviews(vetId).enqueue(object : Callback<VetResponseWithReviews>{
+            override fun onResponse(
+                call: Call<VetResponseWithReviews>,
+                response: Response<VetResponseWithReviews>
+            ) {
+                if (response.isSuccessful){
+                    Log.e("VetRepository", "Response: ${response.body()}")
+                    val reviews = response.body()?.reviews
+                    if(reviews != null){
+                        onSuccess(reviews)
+                    }
+                    else{
+                        onError()
+                    }
+                }else{
+                    onError()
+                }
+            }
+
+            override fun onFailure(call: Call<VetResponseWithReviews>, t: Throwable) {
+                onError()
+            }
+        })
+
     }
 
     fun createVet(userId: Int, vetData: VetRequest, callback: (Boolean) -> Unit){

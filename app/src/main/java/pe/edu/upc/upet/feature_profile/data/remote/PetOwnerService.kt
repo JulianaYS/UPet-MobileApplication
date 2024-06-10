@@ -20,8 +20,8 @@ interface PetOwnerService {
     @GET("petowners/users/{user_id}")
     fun getByUserId(@Path("user_id") userId: Int): Call<PetOwnerResponse>
 
-    @GET("petowners/{id}")
-    fun getById(@Path("id") id: Int): Call<PetOwnerResponse>
+    @GET("petowners/{petOwner_id}")
+    fun getById(@Path("petOwner_id") id: Int): Call<PetOwnerResponse>
 
     @POST("petowners/{user_id}")
     fun createPetOwner(

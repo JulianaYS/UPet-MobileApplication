@@ -1,6 +1,7 @@
 package pe.edu.upc.upet.ui.screens.ownerviews
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -134,7 +135,13 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                                             ),
                                             modifier = Modifier.weight(1f)
                                         )
-                                        Text(text = "See all", color = MaterialTheme.colorScheme.primary)
+                                        Text(
+                                            text = "See all",
+                                            color = MaterialTheme.colorScheme.primary,
+                                            modifier =
+                                                Modifier.clickable {
+                                                    navController.navigate(Routes.VetReviews.createRoute(vetId))
+                                            })
                                     }
 
                                     ReviewCard()

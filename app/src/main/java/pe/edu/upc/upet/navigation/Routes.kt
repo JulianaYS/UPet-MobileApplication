@@ -17,6 +17,12 @@ sealed class Routes(val route: String) {
     // Owner views ---------------------------------------------
     data object OwnerHome : Routes("owner_home")
     data object OwnerProfile : Routes("owner_profile")
+    data object VetReviews: Routes("vet_reviews/{vetId}") {
+        fun createRoute(vetId: Int) = "vet_reviews/$vetId"
+    }
+    data object AddReview: Routes("add_review/{vetId}") {
+        fun createRoute(vetId: Int) = "add_review/$vetId"
+    }
     data object OwnerEditProfile : Routes("owner_edit_profile")
     data object OwnerClinicDetails : Routes("owner_clinic_details/{clinicId}") {
         fun createRoute(clinicId: Int) = "owner_clinic_details/$clinicId"

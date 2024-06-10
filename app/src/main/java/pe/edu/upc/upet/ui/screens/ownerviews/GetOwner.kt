@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.screens.ownerviews
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -30,7 +31,6 @@ fun getOwner(): PetOwner? {
             owner.value = fetchedOwner
         }
     }
-
     return owner.value
 }
 
