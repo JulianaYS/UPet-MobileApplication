@@ -1,6 +1,5 @@
 package pe.edu.upc.upet.ui.screens.ownerviews.pets
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,8 +31,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,34 +46,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
-import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
-import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
 fun PetDetail(navController: NavHostController, petId: Int) {
-    val pet = remember { mutableStateOf<PetResponse?>(null) }
+    var pet by remember { mutableStateOf<Pet?>(null) }
 
-    val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
+    PetRepository().getPetById(petId){
+        pet = it
+    }
 
-    PetRepository().getPetsByOwnerId(ownerId, onSuccess = {
-        pet.value = it.find { pet -> pet.id == petId }
-        Log.d("g", "PetProfile: $it") }, onError = {Log.d("orrorregister", "") })
-
-
-    val petValue = pet.value ?: PetResponse(0, "", 0, "", "", 0.0f, "",  "", GenderEnum.Male)
-
-
+    val petValue = pet ?: return
     data class PetInfo(val title: String, val icon: ImageVector, val content: String)
-    fun petResponseToPetInfoList(petResponse: PetResponse): List<PetInfo> {
+    fun petResponseToPetInfoList(petResponse: Pet): List<PetInfo> {
         return listOf(
             PetInfo("Breed", Icons.Outlined.Pets, petResponse.breed),
-            PetInfo("Species", Icons.Outlined.WbSunny, petResponse.species),
+            PetInfo("Species", Icons.Outlined.WbSunny, petResponse.specie),
             PetInfo("Weight", Icons.Outlined.Balance, petResponse.weight.toString()),
-            PetInfo("Birthdate", Icons.Outlined.Timer, petResponse.birthdate),
+            PetInfo("Birthdate", Icons.Outlined.Timer, petResponse.age),
         )
     }
     val petInfoList = petResponseToPetInfoList(petValue)

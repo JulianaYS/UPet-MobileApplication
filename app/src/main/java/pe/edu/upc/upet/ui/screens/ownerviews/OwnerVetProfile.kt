@@ -47,6 +47,7 @@ import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.pets.ImageRectangle
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.IconAndTextHeader
+import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
@@ -74,7 +75,7 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
     }
 
     vet?.let { vett ->
-        Scaffold { paddingValues ->
+        Scaffold(topBar = { TopBar(navController = navController, title = "Vet Profile" )}) { paddingValues ->
             LazyColumn {
                 item {
                     Column(modifier = Modifier
@@ -85,10 +86,7 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     )
                     {
-
-                        IconAndTextHeader(onBackClick = { navController.popBackStack()  }, text = "Veterinary")
-
-                        ImageRectangle(imageUrl = vett.imageUrl)
+                          ImageRectangle(imageUrl = vett.imageUrl)
 
                         Box(
                             modifier = Modifier
