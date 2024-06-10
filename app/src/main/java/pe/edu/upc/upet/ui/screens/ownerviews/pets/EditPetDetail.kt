@@ -19,6 +19,7 @@ import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
 import pe.edu.upc.upet.feature_pet.data.remote.PetRequest
 import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.CustomTextField
 import pe.edu.upc.upet.ui.shared.ImageEdit
@@ -31,24 +32,21 @@ import pe.edu.upc.upet.utils.TokenManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditPetDetail(navController: NavController, petId: Int) {
-    val pet = remember { mutableStateOf<PetResponse?>(null) }
+    var pet by remember { mutableStateOf<Pet?>(null) }
 
     val newImageUri = remember { mutableStateOf<Uri?>(null) }
-    val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first ?: 0
-
     LaunchedEffect(petId) {
-        PetRepository().getPetsByOwnerId(ownerId, onSuccess = {
-            pet.value = it.find { pet -> pet.id == petId }
-            Log.d("g", "PetProfile: $it")
-        }, onError = { Log.d("orrorregister", "") })
+        PetRepository().getPetById(petId){
+            pet = it
+        }
     }
 
-    val petValue = pet.value ?: PetResponse(0, "", 0, "", "", 0.0f, "", "", GenderEnum.Male)
+    val petValue = pet?: return
 
     // Separate mutable states for each field
     var name by remember { mutableStateOf(petValue.name) }
     var breed by remember { mutableStateOf(petValue.breed) }
-    var species by remember { mutableStateOf(petValue.species) }
+    var species by remember { mutableStateOf(petValue.specie) }
     var weight by remember { mutableStateOf(petValue.weight.toString()) }
     var birthdate by remember { mutableStateOf(petValue.birthdate) }
     val showSuccessDialog = remember { mutableStateOf(false) }
@@ -58,7 +56,7 @@ fun EditPetDetail(navController: NavController, petId: Int) {
     LaunchedEffect(petValue) {
         name = petValue.name
         breed = petValue.breed
-        species = petValue.species
+        species = petValue.specie
         weight = petValue.weight.toString()
         birthdate = petValue.birthdate
     }
@@ -151,11 +149,13 @@ fun EditPetDetail(navController: NavController, petId: Int) {
                                 gender = petValue.gender.toString()
                             )
 
-                            PetRepository().updatePet(petId, updatedPet, {
-                                showSuccessDialog.value = true
-                            }, {
-                                Log.d("EditPetProfile", "Error updating pet")
-                            })
+                            PetRepository().updatePet(petId, updatedPet){
+                                if(it){
+                                    showSuccessDialog.value = true
+                                }else{
+                                    Log.d("EditPetDetail", "Error updating pet")
+                                }
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Pink),
                         modifier = Modifier.fillMaxWidth()

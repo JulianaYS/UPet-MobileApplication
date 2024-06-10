@@ -67,7 +67,7 @@ fun PetDetail(navController: NavHostController, petId: Int) {
             PetInfo("Breed", Icons.Outlined.Pets, petResponse.breed),
             PetInfo("Species", Icons.Outlined.WbSunny, petResponse.specie),
             PetInfo("Weight", Icons.Outlined.Balance, petResponse.weight.toString()),
-            PetInfo("Birthdate", Icons.Outlined.Timer, petResponse.age),
+            PetInfo("Birthdate", Icons.Outlined.Timer, petResponse.birthdate),
         )
     }
     val petInfoList = petResponseToPetInfoList(petValue)

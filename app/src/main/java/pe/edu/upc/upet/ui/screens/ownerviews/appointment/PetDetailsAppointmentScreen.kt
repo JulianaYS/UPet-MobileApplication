@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -19,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pe.edu.upc.upet.feature_appointment.data.remote.AppointmentRequest
 import pe.edu.upc.upet.feature_appointment.data.repository.AppointmentRepository
-import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.DropdownMenuBox
@@ -33,7 +35,7 @@ import pe.edu.upc.upet.utils.TokenManager
 @Composable
 fun PetDetailsAppointmentScreen(navController: NavController, vetId: Int, selectedDate: String, selectedTime: String) {
     val petRepository = remember { PetRepository() }
-    var petOptions: List<PetResponse> by remember { mutableStateOf(emptyList()) }
+    var petOptions: List<Pet> by remember { mutableStateOf(emptyList()) }
     val showSuccessDialog = remember { mutableStateOf(false) }
     val ownerId = TokenManager.getUserIdAndRoleFromToken()?.first
     val selectedPet = remember { mutableStateOf("") }
@@ -41,14 +43,9 @@ fun PetDetailsAppointmentScreen(navController: NavController, vetId: Int, select
 
     LaunchedEffect(key1 = petRepository) {
         ownerId?.let { id ->
-            petRepository.getPetsByOwnerId(id, { pets ->
-                petOptions = pets
-                if (pets.isNotEmpty()) {
-                    selectedPet.value = pets[0].name
-                }
-            }, { error ->
-                Log.d("Error", error)
-            })
+            petRepository.getPetsByOwnerId(id){
+                petOptions = it
+            }
         }
     }
 
@@ -71,7 +68,7 @@ fun PetDetailsAppointmentScreen(navController: NavController, vetId: Int, select
         Column (
             verticalArrangement = Arrangement.Top
         ){
-            IconAndTextHeader(onBackClick = { navController.popBackStack() }, text = "Pet details")
+            IconAndTextHeader(onBackClick = { navController.popBackStack() }, text = "Pet details", icon = Icons.AutoMirrored.Filled.ArrowBack)
             TextSubtitle(text = "Select my pet")
             DropdownMenuBox(options = petOptions.map { it.name }, selectedOption = selectedPet, paddingStart = 0, paddingEnd = 0, fontSize = 16)
             TextSubtitle(text = "Pet's problem")
@@ -87,19 +84,16 @@ fun PetDetailsAppointmentScreen(navController: NavController, vetId: Int, select
     }
 }
 
-private fun createAppointment(vetClinicId: Int, selectedDate: String, selectedTime: String, problem: String, petOptions: List<PetResponse>, selectedPetName: String, showSuccessDialog: MutableState<Boolean>) {
+private fun createAppointment(vetClinicId: Int, selectedDate: String, selectedTime: String, problem: String, petOptions: List<Pet>, selectedPetName: String, showSuccessDialog: MutableState<Boolean>) {
     val appointment = AppointmentRequest(
-        datetime = "${selectedDate}T${selectedTime}",
-        diagnosis = "",
-        treatment = "",
+        dateDay = selectedDate,
         description = problem,
         petId = petOptions.find { it.name == selectedPetName }?.id ?: 0,
-        veterinarianId = vetClinicId
+        veterinarianId = vetClinicId,
+        startTime = selectedTime
     )
-    AppointmentRepository().createAppointment(vetClinicId, appointment, onSuccess = {
-        showSuccessDialog.value = true
-        Log.d("Success", it.toString())
-    }, onError = {
-        Log.d("Error", it)
-    })
+    AppointmentRepository().createAppointment(appointment){
+        if (it) showSuccessDialog.value = true
+        else Log.d("PetDetailsAppointmentScreen", "Error creating appointment")
+    }
 }

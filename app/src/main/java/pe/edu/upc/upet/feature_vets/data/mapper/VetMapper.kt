@@ -9,7 +9,7 @@ fun VetResponse.toDomainModel(): Vet {
         name = this.name,
         clinicId = this.clinicId,
         imageUrl = this.imageUrl,
-        description = this.description?:"",
+        description = this.description,
         experience = this.experience,
         userId = this.userId
     )

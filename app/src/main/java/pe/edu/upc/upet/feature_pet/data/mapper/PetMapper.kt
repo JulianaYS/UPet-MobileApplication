@@ -7,7 +7,7 @@ fun PetResponse.toDomainModel(): Pet {
     return Pet(
         id = this.id,
         name = this.name,
-        age = this.birthdate,
+        birthdate = this.birthdate,
         breed = this.breed,
         image_url = this.image_url,
         weight = this.weight,
