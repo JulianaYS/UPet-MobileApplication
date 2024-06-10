@@ -19,11 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
-import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.ui.theme.Blue1
 
 @Composable
-fun SimplePetCard(pet: PetResponse, onPetSelected: (Int) -> Unit) {
+fun SimplePetCard(pet: Pet, onPetSelected: (Int) -> Unit) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(

@@ -192,19 +192,19 @@ fun Navigation() {
                 shouldShowBottomBar.value = true
                 AppointmentList(navController)
             }
-            composable(Routes.BookAppointment.route) { backStackEntry ->
+            composable(Routes.BookAppointment.route) {
                 shouldShowBottomBar.value = true
-                val vetId = backStackEntry.arguments?.getString("vetId")
+                val vetId = it.arguments?.getString("vetId")
                 if (vetId != null) {
                     BookAppointmentScreen(navController, vetId.toInt())
                 }
             }
 
-            composable(Routes.PetDetailsAppointment.route) { backStackEntry ->
+            composable(Routes.PetDetailsAppointment.route) {
                 shouldShowBottomBar.value = true
-                val vetId = backStackEntry.arguments?.getString("vetId")
-                val selectedDate = backStackEntry.arguments?.getString("selectedDate")
-                val selectedTime = backStackEntry.arguments?.getString("selectedTime")
+                val vetId = it.arguments?.getString("vetId")
+                val selectedDate = it.arguments?.getString("selectedDate")
+                val selectedTime = it.arguments?.getString("selectedTime")
                 if (vetId != null && selectedDate != null && selectedTime != null) {
                     PetDetailsAppointmentScreen(
                         navController,

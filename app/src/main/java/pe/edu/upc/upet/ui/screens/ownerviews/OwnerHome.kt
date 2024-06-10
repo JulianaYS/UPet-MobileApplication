@@ -1,12 +1,16 @@
 package pe.edu.upc.upet.ui.screens.ownerviews
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,8 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
-import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.navigation.Routes
@@ -40,6 +44,7 @@ import pe.edu.upc.upet.ui.shared.SimplePetCard
 import pe.edu.upc.upet.ui.theme.PinkStrong
 import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OwnerHome(navController: NavController){
     Log.d("OwnerHome", "OwnerHome")
@@ -56,6 +61,7 @@ fun OwnerHome(navController: NavController){
 fun UserSection() {
 
     val owner = getOwner() ?: return
+    Log.d("UserSection", "Owner: $owner")
 
     Row(
         modifier = Modifier
@@ -93,37 +99,21 @@ fun UserSection() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PetsSection(navController: NavController) {
 
     val petRepository = remember { PetRepository() }
-    var pets: List<PetResponse> by remember { mutableStateOf(emptyList()) }
+    var pets: List<Pet> by remember { mutableStateOf(emptyList()) }
 
     val ownerId = getUserIdAndRoleFromToken()?.first
 
     if (ownerId != null) {
-        petRepository.getPetsByOwnerId(ownerId,
-            onSuccess = { petsList ->
-                Log.d("PetsSection", "Pets list received: $petsList")
-
-                pets = petsList.map { petResponse ->
-                    PetResponse(
-                        id = petResponse.id,
-                        name = petResponse.name,
-                        petOwnerId = petResponse.petOwnerId,
-                        breed = petResponse.breed,
-                        species = petResponse.species,
-                        weight = petResponse.weight,
-                        birthdate = petResponse.birthdate,
-                        image_url = petResponse.image_url,
-                        gender = petResponse.gender
-                    )
-                }
-            },
-            onError = {
-            }
-        )
+        petRepository.getPetsByOwnerId(ownerId){
+            pets = it
+        }
     }
+
 
 
     Column {
@@ -181,6 +171,7 @@ fun RecommendedVetsSection(navController: NavController) {
         Column {
             vetClinics.forEach { vetClinic ->
                 VetClinicCard(navController,vetClinic)
+                Spacer(modifier = Modifier.height(22.dp))
             }
         }
     }

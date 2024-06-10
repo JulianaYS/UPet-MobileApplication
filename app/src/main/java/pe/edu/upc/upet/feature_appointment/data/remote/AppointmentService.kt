@@ -7,10 +7,18 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface AppointmentService {
-    @POST("appointments/pet/{pet_id}")
-    fun createAppointment(@Path("pet_id") pet_Id: Int, @Body appointmentRequest: AppointmentRequest): Call<AppointmentResponse>
+    @GET("appointments")
+    fun getAppointments(): Call<List<AppointmentResponse>>
+
+    @GET("appointments/{id}")
+    fun getAppointmentById(@Path("id") id: Int): Call<AppointmentResponse>
+
+    @POST("appointments")
+    fun createAppointment(@Body appointmentRequest: AppointmentRequest): Call<AppointmentResponse>
 
     @GET("appointments/pet/{pet_id}")
-    fun getByPetId(@Path("pet_id") pet_Id: Int): Call<List<AppointmentResponse>>
+    fun getAppointmentsByPetId(@Path("pet_id") petId: Int): Call<List<AppointmentResponse>>
 
+    @GET("appointments/veterinarian/{veterinarian_id}")
+    fun getAppointmentsByVeterinarianId(@Path("veterinarian_id") veterinarianId: Int): Call<List<AppointmentResponse>>
 }

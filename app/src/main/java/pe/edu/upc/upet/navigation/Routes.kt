@@ -29,7 +29,7 @@ sealed class Routes(val route: String) {
         fun createRoute(appointmentId: Int) = "appointment_detail/$appointmentId"
     }
     data object AppointmentList : Routes("appointment_list")
-    data object BookAppointment : Routes("book_appointment"){
+    data object BookAppointment : Routes("book_appointment/{vetId}"){
         fun createRoute(vetId: Int) = "book_appointment/$vetId"
     }
     data object PetDetails : Routes("pet_details_Routes/{petId}") {

@@ -43,14 +43,14 @@ import pe.edu.upc.upet.utils.TokenManager
 @Composable
 fun OwnerProfile(navController: NavHostController) {
 
-    var newImageUri by remember { mutableStateOf<Uri?>(null) }
+    val newImageUri = remember { mutableStateOf<Uri?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     val petOwner = getOwner() ?: return
 
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        newImageUri = uri
+        newImageUri.value = uri
     }
 
     Scaffold(
@@ -68,46 +68,42 @@ fun OwnerProfile(navController: NavHostController) {
         ) {
             ImageEdit(
                 imageUrl = petOwner.imageUrl,
-                newImageUri = newImageUri,
+                newImageUri = newImageUri.value,
                 onImageClick = { imageLauncher.launch("image/*") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            newImageUri?.let {
+
                 ActionButton(
                     text = "Save Image",
                     icon = Icons.Default.Image,
                     color = Pink,
                     onClick = {
-                        newImageUri?.let { uri ->
-                            uploadImage(uri) { url, error ->
-                                if (error != null) {
-                                    Log.e("Profile", "Failed to upload image", error)
-                                } else {
-                                    val newImageUrl = url ?: ""
-                                    AuthRepository().updateUser(
-                                        UpdateUserRequest(
-                                            image_url = newImageUrl,
-                                            role = getRole()
-                                        )
-                                    ) { success ->
-                                        if (success) {
-                                            Log.d("Profile", "Image updated successfully")
-                                            showDialog = true
-                                            newImageUri = null
-                                            petOwner.imageUrl = newImageUrl
-                                        } else {
-                                            Log.e("Profile", "Failed to update image")
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                          uploadImage(newImageUri.value!!) { url ->
+                              Log.d("Profile", "Image URL: $url")
+                              if(url != "") {
+                                  AuthRepository().updateUser(
+                                      UpdateUserRequest(
+                                          image_url = url,
+                                          role = getRole()
+                                      )
+                                  ) {
+                                      if (it) {
+                                          Log.d("Profile", "Image updated successfully")
+                                          showDialog = true
+                                          newImageUri.value = null
+                                      } else {
+                                          Log.e("Profile", "Failed to update image")
+                                      }
+                                  }
+                              }
+                          }
+
                     }
                 )
 
-            }
+
 
             if (showDialog) {
                 SuccessDialog(

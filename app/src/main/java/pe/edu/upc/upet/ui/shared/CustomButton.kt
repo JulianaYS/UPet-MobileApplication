@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CustomButton(text: String, onClick: () -> Unit) {
+fun CustomButton(text: String, onClick: () -> Unit, ) {
     Button(
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier.padding(16.dp)
             .fillMaxWidth()
             .background(Color(0xFFFF6262), shape = RoundedCornerShape(10.dp)),
         onClick = onClick

@@ -9,4 +9,3 @@ data class PetRequest(
     val image_url: String,
     val gender: String
 )
-

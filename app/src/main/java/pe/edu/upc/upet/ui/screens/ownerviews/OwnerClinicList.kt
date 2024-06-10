@@ -3,7 +3,9 @@ package pe.edu.upc.upet.ui.screens.ownerviews
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,7 +61,9 @@ fun OwnerClinicList(navController: NavController) {
                 searchQuery = it
             })
             vetClinics.filter { it.name.contains(searchQuery, ignoreCase = true) }.forEach { vetClinic ->
+                Spacer(modifier = Modifier.height(18.dp))
                VetClinicCard(navController, vetClinic)
+
            }
         }
     }

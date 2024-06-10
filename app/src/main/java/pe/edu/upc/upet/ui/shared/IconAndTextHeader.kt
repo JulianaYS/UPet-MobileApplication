@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
-fun IconAndTextHeader(onBackClick: () -> Unit, text : String) {
+fun IconAndTextHeader(onBackClick: () -> Unit, icon: ImageVector, text : String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +44,7 @@ fun IconAndTextHeader(onBackClick: () -> Unit, text : String) {
                 .size(35.dp, 35.dp)
         ) {
             Icon(
-                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                imageVector = icon,
                 "Back",
                 modifier =  Modifier.fillMaxSize(1f),
                 tint = Blue1

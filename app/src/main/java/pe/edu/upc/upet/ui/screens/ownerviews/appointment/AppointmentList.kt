@@ -1,175 +1,248 @@
 package pe.edu.upc.upet.ui.screens.ownerviews.appointment
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.FactCheck
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
-import pe.edu.upc.upet.ui.shared.IconAndTextHeader
+import pe.edu.upc.upet.feature_appointment.data.repository.AppointmentRepository
+import pe.edu.upc.upet.feature_appointment.domain.Appointment
+import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
+import pe.edu.upc.upet.feature_pet.domain.Pet
+import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
+import pe.edu.upc.upet.feature_vets.domain.Vet
+import pe.edu.upc.upet.navigation.Routes
+import pe.edu.upc.upet.ui.screens.ownerviews.getOwner
+import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.Blue1
-import pe.edu.upc.upet.ui.theme.BorderPadding
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppointmentList(navController: NavController) {
+    var appointments by remember { mutableStateOf(listOf<Appointment>()) }
+    var filteredAppointments by remember { mutableStateOf(listOf<Appointment>()) }
+    var showUpcoming by remember { mutableStateOf(true) }
+
+    val owner = getOwner() ?: return
+
+    LaunchedEffect(owner.id) {
+        PetRepository().getPetsByOwnerId(owner.id) { pets ->
+            pets.forEach { pet ->
+                AppointmentRepository().getAppointmentsByPetId(pet.id) { petAppointments ->
+                    appointments = appointments + petAppointments
+                    filteredAppointments = filterAppointments(appointments, showUpcoming)
+                }
+            }
+        }
+    }
 
     Scaffold(
-        modifier = Modifier.padding(16.dp)) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
-
-            LazyColumn {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .fillMaxSize()
-                            .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        IconAndTextHeader(onBackClick = {  }, text = "My appointments")
-                        AppointmentCard("Dr. Anna Johanson", navController)
-                        AppointmentCard("Dr. Anna Johanson", navController)
-                        AppointmentCard("Dr. Anna Johanson", navController)
-                        AppointmentCard("Dr. Anna Johanson", navController)
-                        AppointmentCard("Dr. Anna Johanson", navController)
-                    }
+        topBar = { TopBar(navController = navController, title = "My Appointments") },
+        modifier = Modifier.padding(16.dp)
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            AppointmentFilterButtons(
+                onShowUpcomingChange = { upcoming ->
+                    showUpcoming = upcoming
+                    filteredAppointments = filterAppointments(appointments, showUpcoming)
                 }
-            }
+            )
+            AppointmentListContent(filteredAppointments, navController)
         }
-
     }
+}
 
+@RequiresApi(Build.VERSION_CODES.O)
+private fun filterAppointments(appointments: List<Appointment>, showUpcoming: Boolean): List<Appointment> {
+    val today = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
+    return appointments.filter { appointment ->
+        val appointmentDate = LocalDate.parse(appointment.day, formatter)
+        (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) == showUpcoming
+    }
 }
 
 @Composable
-fun AppointmentCardInfo(name: String){
-    Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp)
-    ) {
-        ImageCircle(imageUrl = "https://www.graphicwallet.com/wp-content/uploads/2021/01/PetCare-Logo_2.jpg")
+fun AppointmentFilterButtons(
+    onShowUpcomingChange: (Boolean) -> Unit
+) {
+    var isUpcomingSelected by remember { mutableStateOf(true) }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+    Row(modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Button(
+            onClick = {
+                onShowUpcomingChange(true)
+                isUpcomingSelected = true
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isUpcomingSelected) Pink else Color.White,
+                contentColor = if (isUpcomingSelected) Color.White else Pink,
+            )
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(2.dp),
-                verticalArrangement = Arrangement.spacedBy(3.dp),
-            ) {
-                Text(
-                    text = name,
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontFamily = poppinsFamily,
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    color = Color.Black
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Veterinary")
-                    Text(text = " | ")
-                    Box(
-                        modifier = Modifier
-                            .background(Color(0x37FFD700), RoundedCornerShape(4.dp))
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        Text(
-                            text = "Upcoming",
-                            color = Color(0xFFE59500),
-                            style = TextStyle(fontSize = 16.sp)
-                        )
-                    }
-                }
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Aug 17, 2023")
-                Text(text = " | ")
-                Text(text = "11:00 AM")
-            }
+            Text("Upcoming")
+        }
+        Button(
+            onClick = {
+                onShowUpcomingChange(false)
+                isUpcomingSelected = false
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isUpcomingSelected) Color.White else Pink,
+                contentColor = if (isUpcomingSelected) Pink else Color.White, )
+        ) {
+            Text("Past")
         }
     }
 }
 
-
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppointmentCard(name:String, navController: NavController){
+fun AppointmentListContent(
+    appointments: List<Appointment>,
+    navController: NavController
+) {
+    LazyColumn {
+        items(appointments.size) { index ->
+            AppointmentCard(appointments[index], navController)
+        }
+    }
+}
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun AppointmentCard(appointment: Appointment, navController: NavController) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {  },
+            .clickable { navController.navigate(Routes.AppointmentDetail.createRoute(appointment.id)) },
     ) {
-        Column {
-            AppointmentCardInfo(name = name)
-            DividerAndButtons()
-        }
+        AppointmentCardInfo(appointment, navController)
+        //DividerAndButtons()
     }
     Spacer(modifier = Modifier.height(20.dp))
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun AppointmentCardInfo(appointment: Appointment, navController: NavController) {
+    var vet by remember { mutableStateOf<Vet?>(null) }
+    var pet by remember { mutableStateOf<Pet?>(null) }
 
+    LaunchedEffect(appointment.veterinarianId) {
+        VetRepository().getVetById(appointment.veterinarianId) {
+            vet = it
+        }
+    }
+
+    LaunchedEffect(appointment.petId) {
+        PetRepository().getPetById(appointment.petId) {
+            pet = it
+        }
+    }
+
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val appointmentDate = LocalDate.parse(appointment.day, formatter)
+    val today = LocalDate.now()
+
+    val statusText = if (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) {
+        "Upcoming"
+    } else {
+        "Past"
+    }
+
+    vet?: return
+    pet?: return
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().padding(6.dp)
+    ) {
+        ImageCircle(imageUrl = vet!!.imageUrl)
+        AppointmentCardDetails(vet!!.name, pet!!.name, statusText, appointment.startTime, appointment.endTime, appointment.day)
+    }
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun AppointmentCardDetails(name: String, petName: String, statusText: String, startTime: String, endTime: String, day: String) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(start = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Text(
+                text = name,
+                style = TextStyle(
+                    color = Color.Black,
+                    fontSize = 18.sp,
+                    fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Box(
+                modifier = Modifier
+                    .background(Color(0x37FFb0bb), RoundedCornerShape(4.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = "Pet: $petName",
+                    color = Pink,
+                    style = TextStyle(fontSize = 16.sp)
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .background(Color(0x37FFD700), RoundedCornerShape(4.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = statusText,
+                    color = Color(0xFFE59500),
+                    style = TextStyle(fontSize = 16.sp)
+                )
+            }
+        }
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            val formattedDay = LocalDate.parse(day, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                .format(DateTimeFormatter.ofPattern("d MMMM", java.util.Locale("es", "ES")))
+            val formattedTime = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+                .format(DateTimeFormatter.ofPattern("h:mm a"))
+            Text(text = "$formattedDay | $formattedTime", color = Color.Gray)
+        }
+    }
+}
 
 @Composable
 fun DividerAndButtons() {
-    HorizontalDivider(
-        thickness = 1.dp, color = Color(0xFFFF6262), modifier = Modifier.padding(horizontal = 16.dp)
-    )
+    HorizontalDivider(thickness = 1.dp, color = Color(0xFFFF6262), modifier = Modifier.padding(horizontal = 16.dp))
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
+        modifier = Modifier.fillMaxWidth().padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         NewCustomButton(text = "Cancel Booking", modifier = Modifier.weight(1f))
@@ -179,10 +252,8 @@ fun DividerAndButtons() {
             color = Color.White,
             color2 = Blue1
         )
-        
     }
 }
-
 
 @Composable
 fun NewCustomButton(
@@ -194,16 +265,20 @@ fun NewCustomButton(
     var isPressed by remember { mutableStateOf(false) }
 
     Button(
-        onClick = { isPressed=!isPressed },
+        onClick = { isPressed = !isPressed },
         modifier = modifier
             .padding(horizontal = 4.dp)
             .background(
                 if (isPressed) color else color2,
                 shape = RoundedCornerShape(10.dp)
             ),
-        border = if(color2 == Color.White) {if(isPressed) null else BorderStroke(1.dp, color)} else {if(isPressed) BorderStroke(1.dp, color2) else null},
+        border = if (color2 == Color.White) {
+            if (isPressed) null else BorderStroke(1.dp, color)
+        } else {
+            if (isPressed) BorderStroke(1.dp, color2) else null
+        },
         shape = RoundedCornerShape(10.dp),
-        colors = ButtonColors(
+        colors = ButtonDefaults.buttonColors(
             containerColor = if (isPressed) color else color2,
             contentColor = if (isPressed) color2 else color,
             disabledContainerColor = Color.Gray,
@@ -217,67 +292,13 @@ fun NewCustomButton(
     }
 }
 
-
 @Composable
-fun ImageCircle(imageUrl: String){
-    GlideImage(imageModel = { imageUrl },
+fun ImageCircle(imageUrl: String) {
+    GlideImage(
+        imageModel = { imageUrl },
         modifier = Modifier
             .padding(10.dp)
             .size(100.dp)
             .clip(RoundedCornerShape(50))
     )
 }
-
-
-@Composable
-fun AppointmentConfirmationDialog(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = null,
-        text = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-
-                Icon(
-                    Icons.AutoMirrored.Filled.FactCheck,
-                    "Back",
-                    modifier =  Modifier.size(64.dp),
-                    tint = Color(0xFF4CAF50)
-                )
-                Text(
-                    text = "Your Appointment Has Been Confirmed",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = Color(0xFF4CAF50)
-                    ),
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "Your appointment with Dr. Anna Thorn on Wednesday, August 17, 2023 at 11:00 AM",
-                    style = TextStyle(fontSize = 16.sp, color = Color.Gray),
-                    textAlign = TextAlign.Center
-                )
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                modifier = Modifier.background(Color(0xFF4CAF50))
-
-            ) {
-                Text(text = "View Appointments", color = Color.White)
-            }
-        },
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier
-            .padding(horizontal = 24.dp)
-            .background(Color.White)
-    )
-}
-

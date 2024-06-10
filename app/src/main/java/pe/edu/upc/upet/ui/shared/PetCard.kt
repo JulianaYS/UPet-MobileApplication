@@ -1,6 +1,8 @@
 package pe.edu.upc.upet.ui.shared
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,13 +23,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
-import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
+import pe.edu.upc.upet.feature_pet.data.mapper.toDomainModel
+import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.navigation.Routes
+import java.time.LocalDate
+import java.time.Period
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PetCard( navController: NavHostController, pet: PetResponse) {
+fun PetCard(navController: NavController, pet: Pet) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -71,7 +77,7 @@ fun PetCard( navController: NavHostController, pet: PetResponse) {
                         color = Color.Gray
                     )
                     Text(
-                        text = "Age: ${pet.birthdate}",
+                        text = "Age: ${getAge(pet.birthdate)}",
                         color = Color.Gray
                     )
                 }
@@ -100,4 +106,17 @@ fun PetCard( navController: NavHostController, pet: PetResponse) {
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getAge(birthdate: String) :String?{
+    val birth = LocalDate.parse(birthdate)
+    val now = LocalDate.now()
+    val dif = Period.between(now, birth).years
+    val age: String = if(dif == 0){
+        Period.between(birth, now).months.toString() + " months"
+    } else {
+        "$dif years"
+    }
+    return age
 }

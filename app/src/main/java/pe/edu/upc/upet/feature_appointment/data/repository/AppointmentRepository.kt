@@ -1,10 +1,11 @@
 package pe.edu.upc.upet.feature_appointment.data.repository
 
-import android.util.Log
+import pe.edu.upc.upet.feature_appointment.data.mapper.toDomainModel
 import pe.edu.upc.upet.feature_appointment.data.remote.AppointmentRequest
 import pe.edu.upc.upet.feature_appointment.data.remote.AppointmentResponse
 import pe.edu.upc.upet.feature_appointment.data.remote.AppointmentService
 import pe.edu.upc.upet.feature_appointment.data.remote.AppointmentServiceFactory
+import pe.edu.upc.upet.feature_appointment.domain.Appointment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,33 +13,105 @@ import retrofit2.Response
 class AppointmentRepository(
     private val appointmentService: AppointmentService = AppointmentServiceFactory.getAppointmentService()
 ) {
-    fun createAppointment(petId: Int, appointment: AppointmentRequest, onSuccess: (AppointmentResponse) -> Unit, onError: (String) -> Unit){
-        Log.d("AppointmentRepository", "Attempting to create appointment: $appointment for pet: $petId")
-        appointmentService.createAppointment(petId, appointment).enqueue(object : Callback<AppointmentResponse> {
+    fun createAppointment(appointment: AppointmentRequest, callback: (Boolean) -> Unit){
+         appointmentService.createAppointment(appointment).enqueue(object : Callback<AppointmentResponse> {
             override fun onResponse(call: Call<AppointmentResponse>, response: Response<AppointmentResponse>) {
                 if (response.isSuccessful) {
-                    val appointmentResponse = response.body()?.let { appointmentResponse ->
-                        AppointmentResponse(
-                            id = appointmentResponse.id,
-                            datetime = appointmentResponse.datetime,
-                            diagnosis = appointmentResponse.diagnosis,
-                            treatment = appointmentResponse.treatment,
-                            description = appointmentResponse.description,
-                            petId = appointmentResponse.petId,
-                            veterinarianId = appointmentResponse.veterinarianId
-                        )
-                    }
-                    Log.d("AppointmentRepository", "Appointment created successfully: $appointmentResponse")
-                    onSuccess(appointmentResponse!!)
+                    val appointmentResponse = response.body()?.toDomainModel()
+                    callback(true)
                 } else {
-                    Log.e("AppointmentRepository", "Error creating appointment, response unsuccessful. Response: $response")
-                    onError("Error")
+                    callback(false)
                 }
             }
 
             override fun onFailure(call: Call<AppointmentResponse>, t: Throwable) {
-                Log.e("AppointmentRepository", "Error creating appointment, request failed.", t)
-                onError(t.message ?: "Error")
+                callback(false)
+            }
+        })
+    }
+
+    fun getAppointmentsByPetId(petId: Int, callback: (List<Appointment>) -> Unit) {
+        appointmentService.getAppointmentsByPetId(petId)
+            .enqueue(object : Callback<List<AppointmentResponse>> {
+                override fun onResponse(
+                    call: Call<List<AppointmentResponse>>,
+                    response: Response<List<AppointmentResponse>>
+                ) {
+                    if (response.isSuccessful) {
+                        val appointments =
+                            response.body()?.map { it.toDomainModel() } ?: emptyList()
+                        callback(appointments)
+                    } else {
+                        callback(emptyList())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<AppointmentResponse>>, t: Throwable) {
+                    callback(emptyList())
+                }
+            })
+    }
+
+    fun getAppointmentById(id: Int, callback: (Appointment?) -> Unit) {
+        appointmentService.getAppointmentById(id)
+            .enqueue(object : Callback<AppointmentResponse> {
+                override fun onResponse(
+                    call: Call<AppointmentResponse>,
+                    response: Response<AppointmentResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val appointment = response.body()?.toDomainModel()
+                        callback(appointment)
+                    } else {
+                        callback(null)
+                    }
+                }
+
+                override fun onFailure(call: Call<AppointmentResponse>, t: Throwable) {
+                    callback(null)
+                }
+            })
+    }
+
+    fun getAppointmentsByVeterinarianId(veterinarianId: Int, callback: (List<Appointment>) -> Unit) {
+        appointmentService.getAppointmentsByVeterinarianId(veterinarianId)
+            .enqueue(object : Callback<List<AppointmentResponse>> {
+                override fun onResponse(
+                    call: Call<List<AppointmentResponse>>,
+                    response: Response<List<AppointmentResponse>>
+                ) {
+                    if (response.isSuccessful) {
+                        val appointments =
+                            response.body()?.map { it.toDomainModel() } ?: emptyList()
+                        callback(appointments)
+                    } else {
+                        callback(emptyList())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<AppointmentResponse>>, t: Throwable) {
+                    callback(emptyList())
+                }
+            })
+    }
+
+    fun getAppointments(callback: (List<Appointment>) -> Unit) {
+        appointmentService.getAppointments()
+            .enqueue(object : Callback<List<AppointmentResponse>> {
+            override fun onResponse(
+                call: Call<List<AppointmentResponse>>,
+                response: Response<List<AppointmentResponse>>
+            ) {
+                if (response.isSuccessful) {
+                    val appointments = response.body()?.map { it.toDomainModel() } ?: emptyList()
+                    callback(appointments)
+                } else {
+                    callback(emptyList())
+                }
+            }
+
+            override fun onFailure(call: Call<List<AppointmentResponse>>, t: Throwable) {
+                callback(emptyList())
             }
         })
     }

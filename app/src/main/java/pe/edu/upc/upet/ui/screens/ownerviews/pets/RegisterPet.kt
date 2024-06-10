@@ -79,118 +79,115 @@ fun RegisterPet(navController: NavHostController) {
         val breed = remember { mutableStateOf("") }
         val weight = remember { mutableStateOf("") }
         val imageUrl = remember { mutableStateOf<Uri?>(null) }
-        val uploadedImageUrl = remember { mutableStateOf("") }
         val selectedDate = remember { mutableStateOf("") }
         val selectedGender = remember { mutableIntStateOf(0) }
         val showErrorSnackbar = remember { mutableStateOf(false) }
         val snackbarMessage = remember { mutableStateOf("") }
 
 
-
-        val typeOptions = listOf("Dog", "Cat", "Bird", "Fish", "Reptile", "Rodent", "Rabbit", "Other")
+        val typeOptions =
+            listOf("Dog", "Cat", "Bird", "Fish", "Reptile", "Rodent", "Rabbit", "Other")
         val selectedType = remember { mutableStateOf(typeOptions[0]) }
 
-        val pickImage = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                imageUrl.value = uri
+        val pickImage =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let {
+                    imageUrl.value = uri
+                }
             }
-        }
         Box(modifier = Modifier.fillMaxSize()) {
 
-        LazyColumn {
-            item {
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                        .background(UpetBackGroundPrimary),
-                    verticalArrangement = Arrangement.spacedBy(13.dp)
-                ) {
-                    Row(
+            LazyColumn {
+                item {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFF0B1C3F))
-                            .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
-                        horizontalArrangement = Arrangement.Center
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                            .background(UpetBackGroundPrimary),
+                        verticalArrangement = Arrangement.spacedBy(13.dp)
                     ) {
-                        CustomReturnButton(navController = navController)
-                        Text(
-                            text = "Pet Form",
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 10.dp, start = 20.dp),
-                            style = TextStyle(
-                                color = Color.White,
-                                fontSize = 20.sp,
-                                fontFamily = poppinsFamily,
-                                fontWeight = FontWeight.SemiBold
-                            ),
+                                .background(Color(0xFF0B1C3F))
+                                .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            CustomReturnButton(navController = navController)
+                            Text(
+                                text = "Pet Form",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 10.dp, start = 20.dp),
+                                style = TextStyle(
+                                    color = Color.White,
+                                    fontSize = 20.sp,
+                                    fontFamily = poppinsFamily,
+                                    fontWeight = FontWeight.SemiBold
+                                ),
+                            )
+                        }
+
+
+                        PetImageRegister(
+                            text = "Upload image",
+                            onPickImageClick = { pickImage.launch("image/*") },
+                            imageUrl = imageUrl.value.toString()
                         )
-                    }
 
+                        AuthInputTextField(
+                            input = name,
+                            placeholder = "Enter your pet's name",
+                            label = "Pet Name"
+                        )
 
-                    PetImageRegister(
-                        text = "Upload image",
-                        onPickImageClick = { pickImage.launch("image/*") },
-                        imageUrl = imageUrl.value.toString()
-                    )
+                        InputDate(text = "Date of birth", onDateSelected = { date ->
+                            selectedDate.value = date
+                        })
 
-                    AuthInputTextField(
-                        input = name,
-                        placeholder = "Enter your pet's name",
-                        label = "Pet Name"
-                    )
+                        InputDropdownField(
+                            label = "Type of Animal",
+                            options = typeOptions,
+                            selectedOption = selectedType,
+                        )
+                        AuthInputTextField(
+                            input = breed,
+                            placeholder = "Enter your pet's breed",
+                            label = "Breed"
+                        )
+                        AuthInputTextField(
+                            input = weight,
+                            placeholder = "Enter your pet's weight in Kg",
+                            label = "Weight (Kg)",
+                            type = TextFieldType.Phone
+                        )
+                        GenderOption(selectedGender)
+                        AuthButton(text = "Save", onClick = {
+                            if (name.value.isEmpty()) {
+                                snackbarMessage.value = "You must enter your pet's name."
+                                showErrorSnackbar.value = true
+                            } else if (selectedDate.value.isEmpty()) {
+                                snackbarMessage.value = "You must enter a pet's date of birth."
+                                showErrorSnackbar.value = true
+                            } else if (selectedType.value.isEmpty()) {
+                                snackbarMessage.value = "You must enter your pet's type."
+                                showErrorSnackbar.value = true
+                            } else if (breed.value.isEmpty()) {
+                                snackbarMessage.value = "You must enter your pet's breed."
+                                showErrorSnackbar.value = true
+                            } else if (weight.value.isEmpty()) {
+                                snackbarMessage.value = "You must enter your pet's weight."
+                                showErrorSnackbar.value = true
+                            } else if (imageUrl.value == null) {
+                                snackbarMessage.value = "You must upload an image."
+                                showErrorSnackbar.value = true
+                            } else {
 
-                    InputDate(text = "Date of birth", onDateSelected = { date ->
-                        selectedDate.value = date
-                    })
-
-                    InputDropdownField(
-                        label = "Type of Animal",
-                        options = typeOptions,
-                        selectedOption = selectedType,
-                    )
-                    AuthInputTextField(
-                        input = breed,
-                        placeholder = "Enter your pet's breed",
-                        label = "Breed"
-                    )
-                    AuthInputTextField(
-                        input = weight,
-                        placeholder = "Enter your pet's weight in Kg",
-                        label = "Weight (Kg)",
-                        type = TextFieldType.Phone
-                    )
-                    GenderOption(selectedGender)
-                    AuthButton(text = "Save", onClick = {
-                        if (name.value.isEmpty()) {
-                            snackbarMessage.value = "You must enter your pet's name."
-                            showErrorSnackbar.value = true
-                        } else if (selectedDate.value.isEmpty()) {
-                            snackbarMessage.value = "You must enter a pet's date of birth."
-                            showErrorSnackbar.value = true
-                        } else if (selectedType.value.isEmpty()) {
-                            snackbarMessage.value = "You must enter your pet's type."
-                            showErrorSnackbar.value = true
-                        } else if (breed.value.isEmpty()) {
-                            snackbarMessage.value = "You must enter your pet's breed."
-                            showErrorSnackbar.value = true
-                        } else if(weight.value.isEmpty()){
-                            snackbarMessage.value = "You must enter your pet's weight."
-                            showErrorSnackbar.value = true
-                        } else if(imageUrl.value == null){
-                            snackbarMessage.value = "You must upload an image."
-                            showErrorSnackbar.value = true
-                        } else {
-                            // Upload the image to Cloudinary when "Save" is clicked
-                            imageUrl.value?.let { uri ->
-                                uploadImage(uri) { url, error ->
-                                    if (error != null) {
-                                        snackbarMessage.value =
-                                            "Failed to upload image. ${error.message}"
+                                uploadImage(imageUrl.value!!) { url ->
+                                    if (url == "") {
+                                        snackbarMessage.value = "Failed to upload image. "
                                         showErrorSnackbar.value = true
                                     } else {
-                                        uploadedImageUrl.value = url ?: ""
                                         val currentFormatter =
                                             DateTimeFormatter.ofPattern("d/M/yyyy")
                                         val requiredFormatter =
@@ -207,48 +204,42 @@ fun RegisterPet(navController: NavHostController) {
                                                 species = selectedType.value,
                                                 weight = weight.value.toFloat(),
                                                 birthdate = formattedDate,
-                                                image_url = uploadedImageUrl.value,
+                                                image_url = url,
                                                 gender = if (selectedGender.intValue == 0) GenderEnum.Male.toString() else GenderEnum.Female.toString()
-                                            ),
-                                            onSuccess = { success ->
-                                                if (success.id != 0) {
-                                                    snackbarMessage.value =
-                                                        "Pet registered successfully."
-                                                    showErrorSnackbar.value = false
-                                                    showSuccessDialog.value = true
-                                                } else {
-                                                    snackbarMessage.value =
-                                                        "Failed to register pet."
-                                                    showErrorSnackbar.value = true
-                                                }
-                                            },
-                                            onError = { err ->
-                                                snackbarMessage.value =
-                                                    "Failed to register pet: $err"
+                                            )
+                                        ) { success ->
+                                            if (success) {
+                                                showSuccessDialog.value = true
+                                            } else {
+                                                snackbarMessage.value = "Failed to register pet."
                                                 showErrorSnackbar.value = true
                                             }
-                                        )
+
+                                        }
                                     }
+
                                 }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
+
             }
+            Dialog(message = snackbarMessage.value, showError = showErrorSnackbar)
         }
+
+        if (showSuccessDialog.value) {
+
+            SuccessDialog(
+                onDismissRequest = {
+                    showSuccessDialog.value = false
+                    navController.navigate(Routes.OwnerHome.route)
+                }, titleText = "Pet Registered",
+                messageText = "Your pet has been registered successfully.",
+                buttonText = "OK"
+            )
+
         }
-        Dialog(message = snackbarMessage.value, showError = showErrorSnackbar)
-    }
-
-    if (showSuccessDialog.value) {
-
-        SuccessDialog(onDismissRequest = {
-            showSuccessDialog.value = false
-            navController.navigate(Routes.OwnerHome.route)
-        }, titleText = "Pet Registered",
-            messageText = "Your pet has been registered successfully.",
-            buttonText = "OK")
-
     }
 }
 
