@@ -46,7 +46,6 @@ import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.pets.ImageRectangle
 import pe.edu.upc.upet.ui.shared.CustomButton
-import pe.edu.upc.upet.ui.shared.IconAndTextHeader
 import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
@@ -97,12 +96,10 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                                 .clip(shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                                 .background(Color.White)
                         ){
-                            Column {
-
-                                Column (modifier = Modifier
-                                    .padding(15.dp, 15.dp),
-                                    verticalArrangement = Arrangement.spacedBy(5.dp)
-                                ){
+                            Column (modifier = Modifier
+                                .padding(15.dp, 15.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp)
+                            ){
                                     Text(
                                         text = "Dr. " + vett.name,
                                         fontWeight = FontWeight.SemiBold,
@@ -146,7 +143,7 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                                     CustomButton(text = "See location") {
                                         //navController.navigate()
                                     }
-                                }
+
                             }
                         }
                     }

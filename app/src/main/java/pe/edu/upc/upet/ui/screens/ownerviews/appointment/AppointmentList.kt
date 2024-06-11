@@ -14,10 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -30,6 +28,7 @@ import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.getOwner
+import pe.edu.upc.upet.ui.screens.ownerviews.isOwnerAuthenticated
 import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.Pink
@@ -74,6 +73,7 @@ fun AppointmentList(navController: NavController) {
     }
 }
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 private fun filterAppointments(appointments: List<Appointment>, showUpcoming: Boolean): List<Appointment> {
     val today = LocalDate.now()
@@ -91,8 +91,13 @@ fun AppointmentFilterButtons(
 ) {
     var isUpcomingSelected by remember { mutableStateOf(true) }
 
-    Row(modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Button(
+            modifier = Modifier.weight(1f),
             onClick = {
                 onShowUpcomingChange(true)
                 isUpcomingSelected = true
@@ -104,7 +109,9 @@ fun AppointmentFilterButtons(
         ) {
             Text("Upcoming")
         }
+        Spacer(modifier = Modifier.width(10.dp))
         Button(
+            modifier = Modifier.weight(1f),
             onClick = {
                 onShowUpcomingChange(false)
                 isUpcomingSelected = false
@@ -140,7 +147,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavController) {
             .fillMaxWidth()
             .clickable { navController.navigate(Routes.AppointmentDetail.createRoute(appointment.id)) },
     ) {
-        AppointmentCardInfo(appointment, navController)
+        AppointmentCardInfo(appointment)
         //DividerAndButtons()
     }
     Spacer(modifier = Modifier.height(20.dp))
@@ -148,7 +155,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavController) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppointmentCardInfo(appointment: Appointment, navController: NavController) {
+fun AppointmentCardInfo(appointment: Appointment) {
     var vet by remember { mutableStateOf<Vet?>(null) }
     var pet by remember { mutableStateOf<Pet?>(null) }
 
@@ -163,7 +170,6 @@ fun AppointmentCardInfo(appointment: Appointment, navController: NavController) 
             pet = it
         }
     }
-
 
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val appointmentDate = LocalDate.parse(appointment.day, formatter)
@@ -191,6 +197,7 @@ fun AppointmentCardInfo(appointment: Appointment, navController: NavController) 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppointmentCardDetails(name: String, petName: String, statusText: String, startTime: String, endTime: String, day: String) {
+
     Column(
         modifier = Modifier.fillMaxWidth().padding(start = 10.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -212,7 +219,7 @@ fun AppointmentCardDetails(name: String, petName: String, statusText: String, st
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "Pet: $petName",
+                    text =  if (isOwnerAuthenticated()) {"Pet: $petName"} else {"Vet: $petName"},
                     color = Pink,
                     style = TextStyle(fontSize = 16.sp)
                 )

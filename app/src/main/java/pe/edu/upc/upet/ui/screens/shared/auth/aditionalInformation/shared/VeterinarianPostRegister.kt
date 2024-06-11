@@ -121,14 +121,12 @@ fun ExistingClinicForm(navigateTo : (String) -> Unit,
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewClinicForm(navigateTo : (String) -> Unit, userId: Int) {
-
-
     val clinicName = remember { mutableStateOf("") }
     val clinicLocation = remember { mutableStateOf("") }
     val phoneNumber = remember { mutableStateOf("") }
-    val description = remember { mutableStateOf("") } // new field
-    val officeHoursStart = remember { mutableStateOf("") } // new field
-    val officeHoursEnd = remember { mutableStateOf("") } // new field
+    val description = remember { mutableStateOf("") }
+    val officeHoursStart = remember { mutableStateOf("") }
+    val officeHoursEnd = remember { mutableStateOf("") }
 
     LazyColumn {
         item {
@@ -175,9 +173,9 @@ fun NewClinicForm(navigateTo : (String) -> Unit, userId: Int) {
                         name = clinicName.value,
                         location = clinicLocation.value,
                         phoneNumber = phoneNumber.value,
-                        description = description.value, // pass the new field
-                        officeHoursStart = officeHoursStart.value, // pass the new field
-                        officeHoursEnd = officeHoursEnd.value, // pass the new field
+                        description = description.value,
+                        officeHoursStart = officeHoursStart.value,
+                        officeHoursEnd = officeHoursEnd.value,
                     ),
                     navigateTo = { navigateTo(Routes.OwnerHome.route) }
                 )
