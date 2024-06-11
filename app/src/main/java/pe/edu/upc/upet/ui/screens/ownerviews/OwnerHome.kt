@@ -59,7 +59,6 @@ fun OwnerHome(navController: NavController){
 
 @Composable
 fun UserSection() {
-
     val owner = getOwner() ?: return
     Log.d("UserSection", "Owner: $owner")
 
@@ -102,7 +101,6 @@ fun UserSection() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PetsSection(navController: NavController) {
-
     val petRepository = remember { PetRepository() }
     var pets: List<Pet> by remember { mutableStateOf(emptyList()) }
 
@@ -113,8 +111,6 @@ fun PetsSection(navController: NavController) {
             pets = it
         }
     }
-
-
 
     Column {
         Row(

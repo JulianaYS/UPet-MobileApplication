@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.screens.ownerviews
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -143,7 +144,7 @@ fun ClinicInfo(phoneNumber: String, email: String, operatingHours: String, locat
 fun AboutUsSection(description:String) {
     Column(modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 10.dp),
+        .padding(top = 10.dp, bottom = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         TextSemiBold(text = "About us:")
@@ -191,6 +192,7 @@ fun VeterinaryCard(vet: Vet, navController: NavHostController) {
             .clickable {
                 navController.navigate(Routes.OwnerVetProfile.createRoute(vet.id))
             }
+            .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(10.dp))
     ) {
         Column(
             modifier = Modifier
