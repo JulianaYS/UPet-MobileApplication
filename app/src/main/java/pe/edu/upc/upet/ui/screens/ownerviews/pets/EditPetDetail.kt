@@ -15,21 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
 import pe.edu.upc.upet.feature_pet.data.remote.PetRequest
-import pe.edu.upc.upet.feature_pet.data.remote.PetResponse
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.feature_pet.domain.Pet
-import pe.edu.upc.upet.ui.shared.CustomReturnButton
 import pe.edu.upc.upet.ui.shared.CustomTextField
 import pe.edu.upc.upet.ui.shared.ImageEdit
 import pe.edu.upc.upet.ui.shared.SuccessDialog
 import pe.edu.upc.upet.ui.shared.TopBar
-import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.Pink
-import pe.edu.upc.upet.utils.TokenManager
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditPetDetail(navController: NavController, petId: Int) {
     var pet by remember { mutableStateOf<Pet?>(null) }
@@ -43,7 +37,6 @@ fun EditPetDetail(navController: NavController, petId: Int) {
 
     val petValue = pet?: return
 
-    // Separate mutable states for each field
     var name by remember { mutableStateOf(petValue.name) }
     var breed by remember { mutableStateOf(petValue.breed) }
     var species by remember { mutableStateOf(petValue.specie) }
@@ -51,8 +44,6 @@ fun EditPetDetail(navController: NavController, petId: Int) {
     var birthdate by remember { mutableStateOf(petValue.birthdate) }
     val showSuccessDialog = remember { mutableStateOf(false) }
 
-
-    // Update fields when petValue changes
     LaunchedEffect(petValue) {
         name = petValue.name
         breed = petValue.breed

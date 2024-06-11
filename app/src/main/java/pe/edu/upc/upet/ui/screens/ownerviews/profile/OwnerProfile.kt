@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -59,74 +60,81 @@ fun OwnerProfile(navController: NavHostController) {
         },
         modifier = Modifier.padding(16.dp)
     ) { paddingValues ->
+        LazyColumn {
+            item {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ImageEdit(
+                        imageUrl = petOwner.imageUrl,
+                        newImageUri = newImageUri.value,
+                        onImageClick = { imageLauncher.launch("image/*") }
+                    )
 
-        Column(
-            modifier = Modifier.padding(paddingValues)
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ImageEdit(
-                imageUrl = petOwner.imageUrl,
-                newImageUri = newImageUri.value,
-                onImageClick = { imageLauncher.launch("image/*") }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
 
-                ActionButton(
-                    text = "Save Image",
-                    icon = Icons.Default.Image,
-                    color = Pink,
-                    onClick = {
-                          uploadImage(newImageUri.value!!) { url ->
-                              Log.d("Profile", "Image URL: $url")
-                              if(url != "") {
-                                  AuthRepository().updateUser(
-                                      UpdateUserRequest(
-                                          image_url = url,
-                                          role = getRole()
-                                      )
-                                  ) {
-                                      if (it) {
-                                          Log.d("Profile", "Image updated successfully")
-                                          showDialog = true
-                                          newImageUri.value = null
-                                      } else {
-                                          Log.e("Profile", "Failed to update image")
-                                      }
-                                  }
-                              }
-                          }
+                    ActionButton(
+                        text = "Save Image",
+                        icon = Icons.Default.Image,
+                        color = Pink,
+                        onClick = {
+                            uploadImage(newImageUri.value!!) { url ->
+                                Log.d("Profile", "Image URL: $url")
+                                if(url != "") {
+                                    AuthRepository().updateUser(
+                                        UpdateUserRequest(
+                                            image_url = url,
+                                            role = getRole()
+                                        )
+                                    ) {
+                                        if (it) {
+                                            Log.d("Profile", "Image updated successfully")
+                                            showDialog = true
+                                            newImageUri.value = null
+                                        } else {
+                                            Log.e("Profile", "Failed to update image")
+                                        }
+                                    }
+                                }
+                            }
 
+                        }
+                    )
+
+
+
+                    if (showDialog) {
+                        SuccessDialog(
+                            onDismissRequest = { showDialog = false },
+                            titleText = "Image Updated",
+                            messageText = "Your profile image has been updated successfully.",
+                            buttonText = "OK"
+                        )
                     }
-                )
 
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(16.dp)),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    ) {
+                        PetOwnerInfo(petOwner = petOwner)
+                    }
 
-
-            if (showDialog) {
-                SuccessDialog(
-                    onDismissRequest = { showDialog = false },
-                    titleText = "Image Updated",
-                    messageText = "Your profile image has been updated successfully.",
-                    buttonText = "OK"
-                )
+                    ProfileButtons(navController = navController, petOwner = petOwner)
+                }
             }
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                PetOwnerInfo(petOwner = petOwner)
-            }
-
-            ProfileButtons(navController = navController, petOwner = petOwner)
         }
+
+
 
     }
 }
@@ -137,7 +145,8 @@ fun OwnerProfile(navController: NavHostController) {
 @Composable
 fun ProfileButtons(navController: NavHostController, petOwner: PetOwner? = null) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         val subscriptionRoute = if (petOwner?.subscriptionType == SubscriptionType.BASIC) {
             Routes.SubscriptionBasic.route
