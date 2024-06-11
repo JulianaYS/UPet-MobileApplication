@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -47,9 +48,13 @@ import pe.edu.upc.upet.feature_appointment.data.repository.AppointmentRepository
 import pe.edu.upc.upet.feature_appointment.domain.Appointment
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
 import pe.edu.upc.upet.feature_pet.domain.Pet
+import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
+import pe.edu.upc.upet.feature_profile.domain.PetOwner
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
+import pe.edu.upc.upet.ui.screens.ownerviews.getRole
+import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.shared.getAge
 import pe.edu.upc.upet.ui.theme.Pink
@@ -66,6 +71,7 @@ fun AppointmentDetail(navController: NavController, appointmentId: Int) {
     var appointment by remember { mutableStateOf<Appointment?>(null) }
     var vet by remember { mutableStateOf<Vet?>(null) }
     var pet by remember { mutableStateOf<Pet?>(null) }
+    var ownerPet by remember { mutableStateOf<PetOwner?>(null) }
 
     LaunchedEffect(key1 = appointmentId) {
         AppointmentRepository().getAppointmentById(appointmentId) {
@@ -89,6 +95,14 @@ fun AppointmentDetail(navController: NavController, appointmentId: Int) {
     }
 
     pet ?: return
+
+    LaunchedEffect(key1 = pet?.petOwnerId) {
+        PetOwnerRepository().getPetOwnerById(pet!!.petOwnerId) {
+            ownerPet = it
+        }
+    }
+
+    ownerPet ?: return
 
     Scaffold(
         topBar = {
@@ -135,23 +149,45 @@ fun AppointmentDetail(navController: NavController, appointmentId: Int) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            TextSubtitle("Veterinary Information")
+            if(getRole() == "Vet"){
+                TextSubtitle("Owner Information")
 
-            VetInformation(vet!!, navController)
+                OwnerInformation(ownerPet!!, navController)
+
+                CustomButton(text = "Add report") {
+                    navController.navigate(Routes.AddReport.createRoute(appointment!!.id))
+                }
+
+            }else{
+
+                TextSubtitle("Veterinary Information")
+
+                VetInformation(vet!!, navController)
+
+            }
+
 
         }
+
+
     }
 }
 
 @Composable
-fun VetInformation(vet: Vet, navController: NavController) {
+fun InformationCard(
+    imageUrl: String,
+    name: String,
+    subtitle: String,
+    id: Int,
+    navController: NavController
+) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth().clickable(onClick = {
-                navController.navigate(Routes.OwnerVetProfile.createRoute(vet.id))
-            })
-            ,
+            .fillMaxWidth()
+            .clickable(onClick = {
+                navController.navigate(Routes.OwnerVetProfile.createRoute(id))
+            }),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xffFFFFFf),
@@ -165,21 +201,23 @@ fun VetInformation(vet: Vet, navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             GlideImage(
-                imageModel = { vet.imageUrl },
-                modifier = Modifier.size(60.dp).border(
-                    width = 2.dp,
-                    color = Pink,
-                    shape = RoundedCornerShape(100)
-                ).padding(5.dp).clip(RoundedCornerShape(100)),
-                imageOptions = ImageOptions(contentScale = ContentScale.Fit),
-
+                imageModel = { imageUrl },
+                modifier = Modifier
+                    .size(60.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Pink,
+                        shape = RoundedCornerShape(100)
+                    )
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(100)),
+                imageOptions = ImageOptions(contentScale = ContentScale.Crop),
             )
 
             Column {
                 Text(
-                    text = "Dr. ${vet.name}",
+                    text = name,
                     style = TextStyle(
                         color = Color.Black,
                         fontSize = 18.sp,
@@ -189,19 +227,26 @@ fun VetInformation(vet: Vet, navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Specialty: Veterinary",
+                    text = subtitle,
                     style = TextStyle(
                         color = PinkStrong,
                         fontSize = 16.sp,
                     )
                 )
             }
-
-
         }
     }
 }
 
+@Composable
+fun OwnerInformation(ownerPet: PetOwner, navController: NavController) {
+    InformationCard(ownerPet.imageUrl, ownerPet.name, ownerPet.numberPhone, ownerPet.id, navController)
+}
+
+@Composable
+fun VetInformation(vet: Vet, navController: NavController) {
+    InformationCard(vet.imageUrl, "Dr. ${vet.name}", "Specialty: Veterinary", vet.id, navController)
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -256,19 +301,20 @@ fun PatientInformation(pet: Pet, appointment: Appointment, navController: NavCon
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-                text = appointment.description,
-                style = TextStyle(
-                    color = PinkStrong,
-                    fontSize = 16.sp,
-                )
+            text = appointment.description,
+            style = TextStyle(
+                color = PinkStrong,
+                fontSize = 16.sp,
             )
+        )
     }
     Spacer(modifier = Modifier.height(8.dp))
 
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth().clickable(onClick = {
+            .fillMaxWidth()
+            .clickable(onClick = {
                 navController.navigate(Routes.PetDetails.createRoute(pet.id))
             })
         ,
@@ -288,11 +334,15 @@ fun PatientInformation(pet: Pet, appointment: Appointment, navController: NavCon
 
             GlideImage(
                 imageModel = { pet.image_url },
-                modifier = Modifier.size(60.dp).border(
-                    width = 2.dp,
-                    color = Pink,
-                    shape = RoundedCornerShape(100)
-                ).padding(5.dp).clip(RoundedCornerShape(100)),
+                modifier = Modifier
+                    .size(60.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Pink,
+                        shape = RoundedCornerShape(100)
+                    )
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(100)),
                 imageOptions = ImageOptions(contentScale = ContentScale.Crop),
 
                 )

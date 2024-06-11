@@ -40,10 +40,8 @@ import pe.edu.upc.upet.ui.shared.uploadImage
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OwnerProfile(navController: NavHostController) {
-
     val newImageUri = remember { mutableStateOf<Uri?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     val petOwner = getOwner() ?: return
@@ -76,8 +74,7 @@ fun OwnerProfile(navController: NavHostController) {
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
-
-
+                    
                     ActionButton(
                         text = "Save Image",
                         icon = Icons.Default.Image,
@@ -102,12 +99,9 @@ fun OwnerProfile(navController: NavHostController) {
                                     }
                                 }
                             }
-
                         }
                     )
-
-
-
+                    
                     if (showDialog) {
                         SuccessDialog(
                             onDismissRequest = { showDialog = false },
@@ -131,16 +125,9 @@ fun OwnerProfile(navController: NavHostController) {
                     ProfileButtons(navController = navController, petOwner = petOwner)
                 }
             }
-
         }
-
-
-
     }
 }
-
-
-
 
 @Composable
 fun ProfileButtons(navController: NavHostController, petOwner: PetOwner? = null) {

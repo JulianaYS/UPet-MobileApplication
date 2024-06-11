@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
@@ -52,6 +54,7 @@ import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.TopBar
 
 @Composable
 fun PetDetail(navController: NavHostController, petId: Int) {
