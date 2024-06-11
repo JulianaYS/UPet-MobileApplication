@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.screens.ownerviews
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,12 +41,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.feature_reviews.data.remote.ReviewResponse
+import pe.edu.upc.upet.feature_reviews.domain.Review
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.pets.ImageRectangle
+import pe.edu.upc.upet.ui.screens.ownerviews.reviews.ReviewCard
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.Blue1
@@ -59,6 +63,9 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
     val vetClinicRepository = remember { VeterinaryClinicRepository() }
     var vetClinic by remember { mutableStateOf<VeterinaryClinic?>(null) }
 
+    val reviewList = remember { mutableStateOf<List<ReviewResponse>>(emptyList()) }
+    val reviewRepository = remember { VetRepository() }
+
     LaunchedEffect(vetId) {
         vetRepository.getVetById(vetId){vett->
             vet = vett
@@ -66,14 +73,23 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
 
     }
 
-
-
     LaunchedEffect(vet?.clinicId) {
         vet?.let {
             vetClinicRepository.getVeterinaryClinicById(it.clinicId) { clinic ->
                 vetClinic = clinic
             }
         }
+    }
+
+    LaunchedEffect(vetId) {
+        reviewRepository.getVetReviews(vetId,
+            onSuccess = { reviews ->
+                reviewList.value = reviews
+            },
+            onError = {
+                Log.e("OwnerVetProfile", "Error al obtener las reviews")
+            }
+        )
     }
 
     vet?.let { vett ->
@@ -141,15 +157,17 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                                             })
                                     }
 
-                                    ReviewCard()
+                                    if (reviewList.value.isNotEmpty()) {
+                                        val latestReview = reviewList.value.maxByOrNull { it.review_time }
+                                        latestReview?.let { ReviewCard(it) }
+                                    }
+                                    //ReviewCard()
                                     Spacer(modifier = Modifier.height(15.dp))
                                     CustomButton(text = "Book Appointment") {
                                         navController.navigate(Routes.BookAppointment.createRoute(vetId))
                                     }
 
-                                    CustomButton(text = "See location") {
-                                        //navController.navigate()
-                                    }
+                                    //CustomButton(text = "See location") { navController.navigate() }
 
                             }
                         }
@@ -162,51 +180,6 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
 @Composable
 fun ProfileImage(url: String,size: Int,width: Int ){
     GlideImage(modifier = Modifier.size(width = width.dp, height = size.dp),imageModel = { url })
-}
-
-@Composable
-fun ReviewCard(){
-    Card(modifier = Modifier
-        .shadow(elevation = 8.dp, shape = RoundedCornerShape(10.dp)),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White)
-    ) {
-        Column (modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(10.dp)
-        ){
-            Row (modifier = Modifier.padding(horizontal = 7.dp,vertical = 7.dp),
-                verticalAlignment = Alignment.CenterVertically){
-                Box(modifier = Modifier.clip(shape = RoundedCornerShape(20.dp)) )
-                {
-                    ProfileImage(url = "https://media-cdn.tripadvisor.com/media/photo-s/12/0b/28/0e/para-compartir.jpg", 42,40)
-                }
-                Text(
-                    text = "Jane Cooper",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontSize = 15.sp,
-                        fontFamily = poppinsFamily,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier
-                        .padding(start = 5.dp)
-                        .weight(1f)
-                )
-                Column {
-                    Row (modifier = Modifier.padding(start= 50.dp)){
-                        Icon(imageVector = Icons.Default.Star, contentDescription = "Estrella", tint = Color(0xFFFFB800))
-                        Text(text = "5")
-                    }
-                    Text(text = "2 min ago")
-                }
-
-            }
-            Text(text = "Ullamco tempor adpisicsing et voluptate duis sit asd esse aliquea esse ex",color = Color.Gray)
-        }
-    }
-
 }
 
 @Composable

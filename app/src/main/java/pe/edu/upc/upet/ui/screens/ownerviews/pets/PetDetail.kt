@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -75,82 +76,97 @@ fun PetDetail(navController: NavHostController, petId: Int) {
     }
     val petInfoList = petResponseToPetInfoList(petValue)
 
-    Scaffold(modifier = Modifier.padding(16.dp), topBar = {TopBar(navController, petValue.name)}) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxWidth()
-                .fillMaxSize()
-                .padding(10.dp, 10.dp).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(13.dp)
-        ) {
-
-            println("Gender: ${petValue.gender}")
-            ImageRectangle(petValue.image_url)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                    .background(Color.White)
-            ){
-                Column (modifier = Modifier.padding(15.dp, 15.dp)){
-                    Row (modifier = Modifier.fillMaxWidth()){
+    Scaffold(modifier = Modifier.padding(16.dp)) { paddingValues ->
+        LazyColumn {
+            item {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .padding(10.dp, 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(13.dp)
+                ) {
+                    Row (modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween){
+                        CustomReturnButton(navController = navController)
                         Text(
-                            text = "General Information",
+                            text = petValue.name,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 24.sp,
-                            color = Color.Black,
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                         )
+
                         IconButton(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            onClick = { }) {
+                            onClick = {  }) {
                             Icon(
-                                Icons.Filled.TagFaces,
-                                "TagFaces",
-                                tint = Color.Black
+                                imageVector = if(petValue.gender == GenderEnum.Male) Icons.Filled.Male else Icons.Filled.Female,
+                                contentDescription = petValue.gender.toString()
                             )
                         }
                     }
+                    println("Gender: ${petValue.gender}")
+                    ImageRectangle(petValue.image_url)
 
-                    LazyRow {
-                        items(petInfoList) { petInfo ->
-                            PetInformationCard(petInfo.title, petInfo.icon, petInfo.content)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .clip(shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                            .background(Color.White)
+                    ){
+                        Column (modifier = Modifier.padding(15.dp, 15.dp)){
+                            Row (modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ){
+                                Text(
+                                    text = "General Information",
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 24.sp,
+                                    color = Color.Black,
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                )
+                                IconButton(
+                                    modifier = Modifier.align(Alignment.CenterVertically),
+                                    onClick = { }) {
+                                    Icon(
+                                        Icons.Filled.TagFaces,
+                                        "TagFaces",
+                                        tint = Color.Black
+                                    )
+                                }
+                            }
+
+                            LazyRow {
+                                items(petInfoList) { petInfo ->
+                                    PetInformationCard(petInfo.title, petInfo.icon, petInfo.content)
+                                }
+                            }
+
+                            Text(
+                                text = "More details",
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 24.sp,
+                                color = Color.Black,
+                                modifier = Modifier
+                                    .padding(top =10.dp, bottom = 10.dp)
+                            )
+
+                            CustomButton(text = "Add Medical Information") {
+                                //navController.navigate(Routes.NewMedicalRegisterScreen)
+                            }
+                            CustomButton(text = "Edit Profile") {
+                                navController.navigate(Routes.EditPetDetail.createRoute(petValue.id))
+                            }
+                            CustomButton(text = "Medical History") {
+                            //   navController.navigate(Routes.PetMedicalInformationScreen)
+                            }
+                            //}
                         }
                     }
-
-                    Text(
-                        text = "More details",
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 24.sp,
-                        color = Color.Black,
-                        modifier = Modifier
-                            .padding(top =10.dp, bottom = 10.dp)
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .fillMaxSize()
-                            .padding(10.dp, 10.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        CustomButton(text = "Add Medical Information") {
-                            //navController.navigate(Routes.NewMedicalRegisterScreen)
-                        }
-
-                        CustomButton(text = "Edit Profile") {
-                            navController.navigate(Routes.EditPetDetail.createRoute(petValue.id))
-                        }
-
-                        CustomButton(text = "Medical History") {
-                         //   navController.navigate(Routes.PetMedicalInformationScreen)
-                        }
-                    }
-
                 }
             }
         }

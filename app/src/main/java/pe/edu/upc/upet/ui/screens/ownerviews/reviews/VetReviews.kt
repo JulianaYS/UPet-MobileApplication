@@ -49,7 +49,7 @@ fun VetReviews(navController: NavController, vetId: Int) {
         mutableStateOf<List<ReviewResponse>>(emptyList())
     }
 
-vetRepository.getVetReviews(vetId,
+    vetRepository.getVetReviews(vetId,
         onSuccess = { reviews ->
             reviewList.value = reviews
         },
@@ -82,7 +82,6 @@ vetRepository.getVetReviews(vetId,
                 items(reviewList.value) { review ->
                     ReviewCard(review)
                 }
-
             }
     }
 
@@ -91,14 +90,14 @@ vetRepository.getVetReviews(vetId,
 @Composable
 fun ReviewCard(review: ReviewResponse){
     Card(modifier = Modifier
-        .padding(10.dp),
+        .padding(10.dp).shadow(elevation = 8.dp, shape = RoundedCornerShape(10.dp)),
         colors = CardDefaults.cardColors(
             containerColor = Color.White)
     ) {
         Column (modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(5.dp)
+            .padding(10.dp)
         ){
             Row (modifier = Modifier.padding(horizontal = 7.dp,vertical = 7.dp),
                 verticalAlignment = Alignment.CenterVertically){
@@ -127,9 +126,7 @@ fun ReviewCard(review: ReviewResponse){
                 }
 
             }
-            Text(text = review.description,color = Color.Gray,modifier = Modifier.width(300.dp),
-                )
+            Text(text = review.description,color = Color.Gray,modifier = Modifier.width(300.dp))
         }
     }
-
 }

@@ -183,7 +183,7 @@ fun VeterinaryCard(vet: Vet, navController: NavHostController) {
         ),
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
-            .padding(8.dp)
+            .padding(12.dp)
             .fillMaxWidth()
             .width(100.dp)
             .clickable {

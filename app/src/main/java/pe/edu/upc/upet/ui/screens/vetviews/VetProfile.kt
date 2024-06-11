@@ -1,30 +1,30 @@
 package pe.edu.upc.upet.ui.screens.vetviews
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,26 +35,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.feature_auth.data.remote.UpdateUserRequest
 import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.VetClinicCard
+import pe.edu.upc.upet.ui.screens.ownerviews.getRole
 import pe.edu.upc.upet.ui.screens.ownerviews.getVet
+import pe.edu.upc.upet.ui.screens.ownerviews.profile.ActionButton
 import pe.edu.upc.upet.ui.shared.ChangeProfileImageDialog
-import pe.edu.upc.upet.ui.shared.CustomButton
+import pe.edu.upc.upet.ui.shared.ImageEdit
 import pe.edu.upc.upet.ui.shared.TopBar
-import pe.edu.upc.upet.ui.theme.Blue1
-import pe.edu.upc.upet.ui.theme.BorderPadding
+import pe.edu.upc.upet.ui.shared.uploadImage
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.UpetBackGroundPrimary
 import pe.edu.upc.upet.ui.theme.poppinsFamily
@@ -62,43 +62,52 @@ import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
 fun VetProfile(navController: NavHostController) {
-
     val vet = getVet() ?: return
+
     Scaffold(
         topBar = {
             TopBar(navController = navController, title = "My Profile")
         },
         modifier = Modifier.padding(16.dp)
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .background(UpetBackGroundPrimary)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(13.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                ProfileHeader(navController, vet)
-                ProfileContent(navController, vet)
-                ProfileActions(navController, vet.id)
+        LazyColumn {
+            item {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .background(UpetBackGroundPrimary),
+                    verticalArrangement = Arrangement.spacedBy(13.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    ProfileHeader(vet)
+                    ProfileContent(navController, vet)
+                    ProfileActions(navController, vet.id)
+                }
             }
         }
     }
 }
 
 @Composable
-fun ProfileHeader(navController: NavHostController, vet: Vet) {
+fun ProfileHeader(vet: Vet) {
+    val newImageUri = remember { mutableStateOf<Uri?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    GlideImage(
-        modifier = Modifier
-            .size(120.dp)
-            .clip(RoundedCornerShape(50.dp)),
-        imageModel = { vet.imageUrl }
+    val imageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        newImageUri.value = uri
+    }
+
+    ImageEdit(
+        imageUrl = vet.imageUrl,
+        newImageUri = newImageUri.value,
+        onImageClick = { imageLauncher.launch("image/*") }
     )
     Column(
         modifier = Modifier.padding(top = 9.dp, bottom = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = vet.name,
@@ -121,6 +130,33 @@ fun ProfileHeader(navController: NavHostController, vet: Vet) {
                 ),
             )
         }
+        Spacer(modifier = Modifier.height(10.dp))
+        ActionButton(
+            text = "Save Image",
+            icon = Icons.Default.Image,
+            color = Pink,
+            onClick = {
+                uploadImage(newImageUri.value!!) { url ->
+                    Log.d("Profile", "Image URL: $url")
+                    if(url != "") {
+                        AuthRepository().updateUser(
+                            UpdateUserRequest(
+                                image_url = url,
+                                role = getRole()
+                            )
+                        ) {
+                            if (it) {
+                                Log.d("Profile", "Image updated successfully")
+                                showDialog = true
+                                newImageUri.value = null
+                            } else {
+                                Log.e("Profile", "Failed to update image")
+                            }
+                        }
+                    }
+                }
+            }
+        )
     }
 }
 
@@ -158,13 +194,13 @@ fun ProfileContent(navController: NavHostController, vet: Vet) {
     }else {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFE0E0E0), // Light gray background
+                containerColor = Color(0xFFE0E0E0),
             ),
-            shape = RoundedCornerShape(16.dp), // Rounded corners
-            elevation = CardDefaults.cardElevation(8.dp), // Elevation
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp) // Margin around the card
+                .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier.padding(
@@ -220,18 +256,24 @@ fun ProfileActions(navController: NavHostController, vetId: Int) {
         }
     }
 
-    CustomButton(text = "Edit Profile") {
-        navController.navigate(Routes.VetEditProfile.route)
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        ActionButton(
+            onClick = { navController.navigate(Routes.VetEditProfile.route) },
+            text = "Edit Profile",
+            icon = Icons.Default.Edit,
+            color = Pink
+        )
+        ActionButton(
+            onClick = {
+                TokenManager.clearToken()
+                navController.navigate(Routes.SignIn.route)
+            },
+            text = "Logout",
+            icon = Icons.AutoMirrored.Filled.Logout,
+            color = Pink
+        )
     }
-    CustomButton(text = "Logout") {
-        navController.navigate(Routes.SignIn.route)
-        AuthRepository().logOut()
-    }
-    CustomButton(text = "Change Profile Image") {
-        showDialog = true
-    }
-
-    HorizontalDivider(
-        thickness = 1.dp,
-    )
 }
