@@ -10,6 +10,7 @@ import pe.edu.upc.upet.feature_profile.domain.PetOwner
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.utils.TokenManager
+import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 
 
 @Composable
@@ -43,8 +44,8 @@ fun getVet(): Vet? {
     return vet.value
 }
 
-fun getRole(): String {
-    val (_, role, _) = TokenManager.getUserIdAndRoleFromToken() ?: error("Error")
+fun getRole(): String? {
+    val role = getUserIdAndRoleFromToken()?.second
     return role
 }
 

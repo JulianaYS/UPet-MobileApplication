@@ -86,7 +86,7 @@ fun OwnerProfile(navController: NavHostController) {
                                   AuthRepository().updateUser(
                                       UpdateUserRequest(
                                           image_url = url,
-                                          role = getRole()
+                                          role = getRole()?:"",
                                       )
                                   ) {
                                       if (it) {

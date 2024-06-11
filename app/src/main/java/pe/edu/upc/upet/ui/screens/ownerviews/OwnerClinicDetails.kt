@@ -93,9 +93,6 @@ fun OwnerClinicDetails(navController: NavHostController, vetClinicId: Int) {
                         }
                     }
 
-                    CustomButton(text = "Book Appointment") {
-                        navController.navigate(Routes.BookAppointment.createRoute(vetClinicId))
-                    }
 
                 }
             }

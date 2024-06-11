@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
@@ -51,6 +53,7 @@ import pe.edu.upc.upet.feature_pet.domain.Pet
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.TopBar
 
 @Composable
 fun PetDetail(navController: NavHostController, petId: Int) {
@@ -72,35 +75,16 @@ fun PetDetail(navController: NavHostController, petId: Int) {
     }
     val petInfoList = petResponseToPetInfoList(petValue)
 
-    Scaffold(modifier = Modifier.padding(16.dp)) { paddingValues ->
+    Scaffold(modifier = Modifier.padding(16.dp), topBar = {TopBar(navController, petValue.name)}) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxWidth()
                 .fillMaxSize()
-                .padding(10.dp, 10.dp),
+                .padding(10.dp, 10.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(13.dp)
         ) {
-            Row (modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween){
-                CustomReturnButton(navController = navController)
-                Text(
-                    text = petValue.name,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 24.sp,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                )
 
-                IconButton(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    onClick = {  }) {
-                    Icon(
-                        imageVector = if(petValue.gender == GenderEnum.Male) Icons.Filled.Male else Icons.Filled.Female,
-                        contentDescription = petValue.gender.toString()
-                    )
-                }
-            }
             println("Gender: ${petValue.gender}")
             ImageRectangle(petValue.image_url)
 
@@ -159,7 +143,7 @@ fun PetDetail(navController: NavHostController, petId: Int) {
                         }
 
                         CustomButton(text = "Edit Profile") {
-                            navController.navigate(Routes.OwnerEditProfile.route)
+                            navController.navigate(Routes.EditPetDetail.createRoute(petValue.id))
                         }
 
                         CustomButton(text = "Medical History") {
