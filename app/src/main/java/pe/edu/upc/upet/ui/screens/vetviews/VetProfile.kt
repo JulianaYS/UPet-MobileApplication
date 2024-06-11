@@ -142,7 +142,7 @@ fun ProfileHeader(vet: Vet) {
                         AuthRepository().updateUser(
                             UpdateUserRequest(
                                 image_url = url,
-                                role = getRole()
+                                role = getRole()?:""
                             )
                         ) {
                             if (it) {
