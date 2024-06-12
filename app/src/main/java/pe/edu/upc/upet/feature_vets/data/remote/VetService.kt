@@ -1,13 +1,12 @@
 package pe.edu.upc.upet.feature_vets.data.remote
 
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
-import pe.edu.upc.upet.feature_reviews.data.remote.ReviewResponse
 import pe.edu.upc.upet.feature_reviews.data.remote.VetResponseWithReviews
-import pe.edu.upc.upet.feature_vetClinics.data.remote.VetRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface VetService {
@@ -15,7 +14,8 @@ interface VetService {
     @POST("veterinarians/{user_id}")
     fun createVet(
         @Path("user_id") userId: Int,
-        @Body vetRequest: VetRequest): Call<SignInResponse>
+        @Body vetRequest: VetRequest
+    ): Call<SignInResponse>
 
     @GET("veterinarians")
     fun getVets(): Call<VetResponseList>
@@ -32,7 +32,7 @@ interface VetService {
     @GET("veterinarians/reviews/{vet_id}")
     fun getVetReviews(@Path("vet_id") vetId: Int): Call<VetResponseWithReviews>
 
-    @POST("veterinarians/{vet_id}")
+    @PUT("veterinarians/{vet_id}")
     fun updateVet(
         @Path("vet_id") vetId: Int,
         @Body vetRequest: VetUpdateRequest): Call<VetResponse>

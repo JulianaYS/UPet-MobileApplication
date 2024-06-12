@@ -2,20 +2,17 @@ package pe.edu.upc.upet.feature_vets.data.repository
 
 
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
 import pe.edu.upc.upet.feature_reviews.data.remote.ReviewResponse
 import pe.edu.upc.upet.feature_reviews.data.remote.VetResponseWithReviews
-import pe.edu.upc.upet.feature_reviews.domain.Review
 import pe.edu.upc.upet.feature_vets.data.mapper.toDomainModel
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponse
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponseList
 import pe.edu.upc.upet.feature_vets.data.remote.VetService
 import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.feature_vets.domain.VetList
-import pe.edu.upc.upet.feature_vetClinics.data.remote.VetRequest
-import pe.edu.upc.upet.feature_vetClinics.data.remote.VetServiceFactory
+import pe.edu.upc.upet.feature_vets.data.remote.VetRequest
+import pe.edu.upc.upet.feature_vets.data.remote.VetServiceFactory
 import pe.edu.upc.upet.feature_vets.data.remote.VetUpdateRequest
 import pe.edu.upc.upet.utils.TokenManager
 import retrofit2.Call
@@ -168,12 +165,13 @@ class VetRepository (
                 if (response.isSuccessful){
                     callback(true)
                 }else{
-                    Log.e("UpdateVet", "Unsuccessful response: ${response.code()}")
+                    Log.e("UpdateVet", "Unsuccessful response: ${response.message()}")
                     callback(false)
                 }
             }
 
             override fun onFailure(call: Call<VetResponse>, t: Throwable) {
+                Log.e("UpdateVet", "Failed to update vet", t)
                 callback(false)
             }
         })

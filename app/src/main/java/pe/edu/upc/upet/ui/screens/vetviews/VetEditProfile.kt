@@ -67,15 +67,13 @@ fun VetEditProfile(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    description.let {
-                        CustomTextField(
-                            value = it,
-                            onValueChange = { description = it },
-                            label = "Description",
-                            leadingIcon = Icons.Default.Person,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                    CustomTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = "Description",
+                        leadingIcon = Icons.Default.Person,
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -95,9 +93,9 @@ fun VetEditProfile(navController: NavHostController) {
                              VetRepository().updateVet(
                                  vet.id,
                                  VetUpdateRequest(
-                                     name = vet.name,
-                                     description = vet.description,
-                                     experience = vet.experience
+                                     name = name,
+                                     description = description,
+                                     experience = experience.toInt()
                                  ),
                              ) {
                                  if (it) {
