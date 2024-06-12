@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import pe.edu.upc.upet.feature_vetClinics.data.remote.VetRequest
+import pe.edu.upc.upet.feature_vets.data.remote.VetRequest
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VeterinaryClinicRequest
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
