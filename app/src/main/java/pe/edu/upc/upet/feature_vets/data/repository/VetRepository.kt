@@ -16,6 +16,7 @@ import pe.edu.upc.upet.feature_vets.domain.Vet
 import pe.edu.upc.upet.feature_vets.domain.VetList
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VetRequest
 import pe.edu.upc.upet.feature_vetClinics.data.remote.VetServiceFactory
+import pe.edu.upc.upet.feature_vets.data.remote.VetUpdateRequest
 import pe.edu.upc.upet.utils.TokenManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -154,6 +155,26 @@ class VetRepository (
 
             override fun onFailure(call: Call<List<VetResponse>>, t: Throwable) {
                 Log.e("VetRepository", "Failed to get vets", t)
+            }
+        })
+    }
+
+    fun updateVet(vetId: Int, vetData: VetUpdateRequest, callback: (Boolean) -> Unit){
+        vetService.updateVet(vetId, vetData).enqueue(object : Callback<VetResponse>{
+            override fun onResponse(
+                call: Call<VetResponse>,
+                response: Response<VetResponse>
+            ) {
+                if (response.isSuccessful){
+                    callback(true)
+                }else{
+                    Log.e("UpdateVet", "Unsuccessful response: ${response.code()}")
+                    callback(false)
+                }
+            }
+
+            override fun onFailure(call: Call<VetResponse>, t: Throwable) {
+                callback(false)
             }
         })
     }

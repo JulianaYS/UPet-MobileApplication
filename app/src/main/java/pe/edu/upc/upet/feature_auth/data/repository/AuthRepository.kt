@@ -71,11 +71,9 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         })
     }
 
-    fun updateUser(updateUserRequest: UpdateUserRequest, callback: (Boolean) -> Unit) {
-        val userTypeString = TokenManager.getUserIdAndRoleFromToken()?.second ?: ""
-        val userTypeInt = UserType.valueOf(userTypeString).ordinal
+    fun updateUser(roleId: Int, updateUserRequest: UpdateUserRequest, callback: (Boolean) -> Unit) {
 
-        val updateUserCall = authService.updateUser(userTypeInt, updateUserRequest)
+        val updateUserCall = authService.updateUser(roleId, updateUserRequest)
         updateUserCall.enqueue(object : Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {

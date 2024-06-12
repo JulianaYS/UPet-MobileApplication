@@ -23,36 +23,36 @@ import pe.edu.upc.upet.ui.theme.Pink
 @Composable
 fun ImageEdit(imageUrl: String, newImageUri: Uri?, onImageClick: () -> Unit) {
     Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(150.dp)
+            .clip(RoundedCornerShape(75.dp))
+            .clickable(onClick = onImageClick)
+    ) {
+        if (newImageUri != null) {
+            GlideImage(
+                imageModel = { newImageUri },
+                imageOptions = ImageOptions(contentScale = ContentScale.Crop)
+            )
+        } else {
+            GlideImage(
+                imageModel = { imageUrl },
+                imageOptions = ImageOptions(contentScale = ContentScale.Crop)
+            )
+        }
+
+        Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(150.dp)
-                .clip(RoundedCornerShape(75.dp))
-                .clickable(onClick = onImageClick)
+                .size(40.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White)
         ) {
-            if (newImageUri != null) {
-                GlideImage(
-                    imageModel = { newImageUri },
-                    imageOptions = ImageOptions(contentScale = ContentScale.Crop)
-                )
-            } else {
-                GlideImage(
-                    imageModel = { imageUrl },
-                    imageOptions = ImageOptions(contentScale = ContentScale.Crop)
-                )
-            }
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(Color.White)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Icon",
-                    tint = Pink
-                )
-            }
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit Icon",
+                tint = Pink
+            )
         }
+    }
 }
