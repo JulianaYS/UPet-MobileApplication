@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import pe.edu.upc.upet.feature_vets.data.remote.VetUpdateRequest
+import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.ui.screens.ownerviews.getVet
 import pe.edu.upc.upet.ui.shared.CustomTextField
 import pe.edu.upc.upet.ui.shared.SuccessDialog
@@ -27,7 +29,6 @@ fun VetEditProfile(navController: NavHostController) {
     var experience by remember { mutableStateOf(vet.experience.toString()) }
 
     val showSuccessDialog = remember { mutableStateOf(false) }
-    val isSuccess = remember { mutableStateOf(false) }
 
     if (showSuccessDialog.value) {
         SuccessDialog(onDismissRequest = {
@@ -66,7 +67,7 @@ fun VetEditProfile(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    description?.let {
+                    description.let {
                         CustomTextField(
                             value = it,
                             onValueChange = { description = it },
@@ -90,19 +91,19 @@ fun VetEditProfile(navController: NavHostController) {
 
                     Button(
                         onClick = {
-                            /*
+
                              VetRepository().updateVet(
                                  vet.id,
-                                 EditVetRequest(
+                                 VetUpdateRequest(
                                      name = vet.name,
                                      description = vet.description,
-                                     experience = vet.experience,
+                                     experience = vet.experience
                                  ),
                              ) {
                                  if (it) {
                                      showSuccessDialog.value = true
                                  }
-                             }*/
+                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Pink),
                         modifier = Modifier.fillMaxWidth()

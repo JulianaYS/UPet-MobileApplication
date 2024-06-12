@@ -77,7 +77,7 @@ fun VetClinicCard(navController: NavController, veterinaryClinic: VeterinaryClin
             containerColor = Color.White,
         ),
         modifier = Modifier
-            .fillMaxWidth().padding(horizontal = 16.dp)
+            .fillMaxWidth()
             .clickable {
                 navController.navigate(Routes.OwnerClinicDetails.createRoute(veterinaryClinic.id))
             }

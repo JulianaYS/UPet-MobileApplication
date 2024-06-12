@@ -32,4 +32,8 @@ interface VetService {
     @GET("veterinarians/reviews/{vet_id}")
     fun getVetReviews(@Path("vet_id") vetId: Int): Call<VetResponseWithReviews>
 
+    @POST("veterinarians/{vet_id}")
+    fun updateVet(
+        @Path("vet_id") vetId: Int,
+        @Body vetRequest: VetUpdateRequest): Call<VetResponse>
 }

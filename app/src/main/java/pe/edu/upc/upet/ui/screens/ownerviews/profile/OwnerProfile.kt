@@ -1,18 +1,15 @@
 package pe.edu.upc.upet.ui.screens.ownerviews.profile
 
 import android.net.Uri
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -26,191 +23,142 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import pe.edu.upc.upet.feature_auth.data.remote.UpdateUserRequest
-import pe.edu.upc.upet.feature_auth.data.repository.AuthRepository
 import pe.edu.upc.upet.feature_profile.data.remote.SubscriptionType
 import pe.edu.upc.upet.feature_profile.domain.PetOwner
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.getOwner
-import pe.edu.upc.upet.ui.screens.ownerviews.getRole
-import pe.edu.upc.upet.ui.shared.ImageEdit
+import pe.edu.upc.upet.ui.shared.CustomButton
+import pe.edu.upc.upet.ui.shared.ImagePicker
 import pe.edu.upc.upet.ui.shared.SuccessDialog
 import pe.edu.upc.upet.ui.shared.TopBar
-import pe.edu.upc.upet.ui.shared.uploadImage
-import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
 fun OwnerProfile(navController: NavHostController) {
-    val newImageUri = remember { mutableStateOf<Uri?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
-    val petOwner = getOwner() ?: return
-
-    val imageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        newImageUri.value = uri
-    }
+    val petOwner = getOwner()?: return
+    val userEmail = TokenManager.getEmail()?: return
 
     Scaffold(
-        topBar = {
-            TopBar(navController = navController, title = "My Profile")
-        },
+        topBar = { TopBar(navController = navController, title = "My Profile") },
         modifier = Modifier.padding(16.dp)
     ) { paddingValues ->
-        LazyColumn {
-            item {
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    ImageEdit(
-                        imageUrl = petOwner.imageUrl,
-                        newImageUri = newImageUri.value,
-                        onImageClick = { imageLauncher.launch("image/*") }
-                    )
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth().padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(30.dp)
+        ) {
 
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    ActionButton(
-                        text = "Save Image",
-                        icon = Icons.Default.Image,
-                        color = Pink,
-                        onClick = {
-                            uploadImage(newImageUri.value!!) { url ->
-                                Log.d("Profile", "Image URL: $url")
-                                if(url != "") {
-                                    AuthRepository().updateUser(
-                                        UpdateUserRequest(
-                                            image_url = url,
-                                            role = getRole()?:""
-                                        )
-                                    ) {
-                                        if (it) {
-                                            Log.d("Profile", "Image updated successfully")
-                                            showDialog = true
-                                            newImageUri.value = null
-                                        } else {
-                                            Log.e("Profile", "Failed to update image")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    )
-                    
-                    if (showDialog) {
-                        SuccessDialog(
-                            onDismissRequest = { showDialog = false },
-                            titleText = "Image Updated",
-                            messageText = "Your profile image has been updated successfully.",
-                            buttonText = "OK"
-                        )
-                    }
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(16.dp)),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                    ) {
-                        PetOwnerInfo(petOwner = petOwner)
-                    }
-
-                    ProfileButtons(navController = navController, petOwner = petOwner)
+            ProfileHeader(petOwner.id, petOwner.imageUrl)
+            UserInfo(petOwner.name, userEmail,
+                listOf(
+                    InfoRowData(Icons.Default.Person4, "Phone", petOwner.numberPhone),
+                    InfoRowData(Icons.Default.Home, "Address", petOwner.location)
+                )
+            )
+            val subscriptionRoute = if (petOwner.subscriptionType == SubscriptionType.BASIC) {
+                Routes.SubscriptionBasic.route
+            } else {
+                Routes.SubscriptionAdvanced.route
+            }
+            ProfileButtons(
+                manageSubscription = { navController.navigate(subscriptionRoute) },
+                editProfile = { navController.navigate(Routes.OwnerEditProfile.route) },
+                logout = {
+                    TokenManager.clearToken()
+                    navController.navigate(Routes.SignIn.route)
                 }
+            )
+        }
+    }
+}
+
+@Composable
+fun ProfileHeader(id: Int, image: String) {
+    val imageUrl = remember { mutableStateOf(image) }
+    val newImageUri = remember { mutableStateOf<Uri?>(null) }
+    val showDialog = remember { mutableStateOf(false) }
+
+    ImagePicker(id,newImageUri,imageUrl,showDialog) {
+    }
+
+    if (showDialog.value) {
+        SuccessDialog(
+            onDismissRequest = { showDialog.value = false },
+            titleText = "Image Updated",
+            messageText = "Your profile image has been updated successfully.",
+            buttonText = "OK"
+        )
+    }
+}
+
+@Composable
+fun ProfileButtons(
+    manageSubscription: (() -> Unit)? = null,
+    editProfile: () -> Unit,
+    logout: () -> Unit
+) {
+    data class ProfileButton(val text: String, val icon: ImageVector, val onClick: () -> Unit)
+    val profileButtons = mutableListOf(
+        ProfileButton("Edit Profile", Icons.Default.Edit, editProfile),
+        ProfileButton("Logout", Icons.AutoMirrored.Filled.Logout, logout)
+    )
+
+    manageSubscription?.let {
+        profileButtons.add(0, ProfileButton("Manage Subscription", Icons.Default.Star, it))
+    }
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        profileButtons.forEach { button ->
+            CustomButton(button.text, button.icon, button.onClick)
+        }
+    }
+}
+
+@Composable
+fun UserInfo(
+    name: String,
+    email: String,
+    infoRows: List<InfoRowData>
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = name,
+                color = Color.Black,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = email,
+                color = Color.Gray,
+                fontSize = 16.sp
+            )
+            infoRows.forEach { infoRow ->
+                InfoRow(icon = infoRow.icon, label = infoRow.label, value = infoRow.value)
             }
         }
     }
 }
 
-@Composable
-fun ProfileButtons(navController: NavHostController, petOwner: PetOwner? = null) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        val subscriptionRoute = if (petOwner?.subscriptionType == SubscriptionType.BASIC) {
-            Routes.SubscriptionBasic.route
-        } else {
-            Routes.SubscriptionAdvanced.route
-        }
-
-        ActionButton(
-            onClick = { navController.navigate(subscriptionRoute) },
-            text = "Manage Subscription",
-            icon = Icons.Default.Star,
-            color = Pink,
-        )
-
-        ActionButton(
-            onClick = { navController.navigate(Routes.OwnerEditProfile.route) },
-            text = "Edit Profile",
-            icon = Icons.Default.Edit,
-            color = Pink
-        )
-
-        ActionButton(
-            onClick = {
-                TokenManager.clearToken()
-                navController.navigate(Routes.SignIn.route)
-            },
-            text = "Logout",
-            icon = Icons.AutoMirrored.Filled.Logout,
-            color = Pink
-        )
-    }
-}
-
-@Composable
-fun ActionButton(onClick: () -> Unit, text: String, icon: ImageVector, color: Color) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Icon(imageVector = icon, contentDescription = "$text Icon")
-        Text(text, modifier = Modifier.padding(start = 8.dp))
-    }
-}
-
-@Composable
-fun PetOwnerInfo(petOwner: PetOwner?) {
-    val userEmail = remember { TokenManager.getEmail() }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = petOwner?.name ?: "",
-            color = Color.Black,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            fontSize = 28.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Text(
-            text = userEmail ?: "",
-            color = Color.Gray,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            fontSize = 16.sp
-        )
-        InfoRow(icon = Icons.Default.Home, label = "Location", value = petOwner?.location)
-        InfoRow(icon = Icons.Default.Person4, label = "Phone", value = petOwner?.numberPhone)
-    }
-}
+data class InfoRowData(val icon: ImageVector, val label: String, val value: String?)
 
 @Composable
 fun InfoRow(icon: ImageVector, label: String, value: String?) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .fillMaxWidth().padding(vertical = 8.dp)
             .background(Color(0xFFF0F0F0), shape = RoundedCornerShape(8.dp))
             .padding(12.dp)
     ) {
