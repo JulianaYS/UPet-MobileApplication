@@ -185,8 +185,9 @@ fun Navigation() {
             composable(Routes.VetReviews.route) { backStackEntry ->
                 shouldShowBottomBar.value = true
                 val vetId = backStackEntry.arguments?.getString("vetId")
+                val showFAB = backStackEntry.arguments?.getString("showFAB")?.toBoolean() ?: true
                 if (vetId != null) {
-                    VetReviews(navController, vetId.toInt())
+                    VetReviews(navController, vetId.toInt(), showFAB)
                 }
             }
             composable(Routes.OwnerClinicDetails.route) { backStackEntry ->

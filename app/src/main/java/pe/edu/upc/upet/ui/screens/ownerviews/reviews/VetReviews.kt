@@ -42,7 +42,7 @@ import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
-fun VetReviews(navController: NavController, vetId: Int) {
+fun VetReviews(navController: NavController, vetId: Int, showFAB: Boolean = true) {
 
     val vetRepository = remember { VetRepository() }
     val reviewList = remember {
@@ -65,15 +65,17 @@ fun VetReviews(navController: NavController, vetId: Int) {
         },
         modifier = Modifier.padding(16.dp),
         floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                              navController.navigate(Routes.AddReview.createRoute(vetId))
-                },
-                    contentColor = Color(0xFF000000),
+                if(showFAB){
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate(Routes.AddReview.createRoute(vetId))
+                        },
+                        contentColor = Color(0xFF000000),
                     ) {
-                    Icon(imageVector = Icons.Default.Add,
-                        contentDescription = "Add")
-                 }
+                        Icon(imageVector = Icons.Default.Add,
+                            contentDescription = "Add")
+                    }
+                }
 
         }
     ){

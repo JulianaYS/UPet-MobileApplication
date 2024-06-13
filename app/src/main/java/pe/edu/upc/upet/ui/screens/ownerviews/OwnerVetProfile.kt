@@ -153,7 +153,7 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                                             color = MaterialTheme.colorScheme.primary,
                                             modifier =
                                                 Modifier.clickable {
-                                                    navController.navigate(Routes.VetReviews.createRoute(vetId))
+                                                    navController.navigate(Routes.VetReviews.createRoute(vetId,true))
                                             })
                                     }
 

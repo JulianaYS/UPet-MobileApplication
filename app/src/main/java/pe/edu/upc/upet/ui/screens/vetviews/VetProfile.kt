@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person4
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -113,6 +114,11 @@ fun VetProfile(navController: NavHostController) {
                         navController.navigate(Routes.GeneratePassword.createRoute(vet.clinicId))
                  }
             )
+            Button(onClick = {
+                             navController.navigate(Routes.VetReviews.createRoute(vet.id,false))
+            },modifier=Modifier.fillMaxWidth()) {
+                Text(text = "Reviews")
+            }
         }
     }
 }
