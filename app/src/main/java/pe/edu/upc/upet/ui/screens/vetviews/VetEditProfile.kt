@@ -61,8 +61,7 @@ fun VetEditProfile(navController: NavHostController) {
                         value = name,
                         onValueChange = { name = it },
                         label = "Name",
-                        leadingIcon = Icons.Default.Person,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Person
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -71,8 +70,7 @@ fun VetEditProfile(navController: NavHostController) {
                         value = description,
                         onValueChange = { description = it },
                         label = "Description",
-                        leadingIcon = Icons.Default.Person,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Person
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -81,8 +79,7 @@ fun VetEditProfile(navController: NavHostController) {
                         value = experience,
                         onValueChange = { experience = it },
                         label = "Experience",
-                        leadingIcon = Icons.Default.Person,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Person
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -103,8 +100,7 @@ fun VetEditProfile(navController: NavHostController) {
                                  }
                              }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Pink),
-                        modifier = Modifier.fillMaxWidth()
+                        colors = ButtonDefaults.buttonColors(containerColor = Pink)
                     ) {
                         Text(text = "Save Changes", color = Color.White)
                     }

@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.ui.shared
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,8 +23,8 @@ fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    leadingIcon: ImageVector,
-    modifier: Modifier = Modifier,
+    leadingIcon: ImageVector? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
 ) {
@@ -33,8 +34,9 @@ fun CustomTextField(
         onValueChange = onValueChange,
         singleLine = true,
         label = { Text(label) },
-        leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = "$label Icon") },
-        modifier = modifier.padding(),
+        leadingIcon = leadingIcon?.let {
+            { Icon(imageVector = it, contentDescription = "$label Icon") }
+        },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
             focusedContainerColor = Color.White,
@@ -45,6 +47,8 @@ fun CustomTextField(
             focusedLabelColor = Color.Gray,
             unfocusedLabelColor = Color.Gray
         ),
+        modifier = Modifier.fillMaxWidth(),
+        trailingIcon = trailingIcon,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         visualTransformation = VisualTransformation.None

@@ -83,8 +83,7 @@ fun EditPetDetail(navController: NavController, petId: Int) {
                         value = name,
                         onValueChange = { name = it },
                         label = "Name",
-                        leadingIcon = Icons.Default.TagFaces,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.TagFaces
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -93,8 +92,7 @@ fun EditPetDetail(navController: NavController, petId: Int) {
                         value = breed,
                         onValueChange = { breed = it },
                         label = "Breed",
-                        leadingIcon = Icons.Default.Pets,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Pets
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -103,8 +101,7 @@ fun EditPetDetail(navController: NavController, petId: Int) {
                         value = species,
                         onValueChange = { species = it },
                         label = "Species",
-                        leadingIcon = Icons.Default.WbSunny,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.WbSunny
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -113,8 +110,7 @@ fun EditPetDetail(navController: NavController, petId: Int) {
                         value = weight,
                         onValueChange = { weight = it },
                         label = "Weight",
-                        leadingIcon = Icons.Default.Balance,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Balance
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -123,8 +119,7 @@ fun EditPetDetail(navController: NavController, petId: Int) {
                         value = birthdate,
                         onValueChange = { birthdate = it },
                         label = "Birthdate",
-                        leadingIcon = Icons.Default.Schedule,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Schedule
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 

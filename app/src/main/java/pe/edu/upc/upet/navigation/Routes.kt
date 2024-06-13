@@ -66,5 +66,8 @@ sealed class Routes(val route: String) {
     data object AddReport : Routes("add_report/{appointmentId}") {
         fun createRoute(appointmentId: Int) = "add_report/$appointmentId"
     }
+    data object GeneratePassword: Routes("generate_password/{clinicId}") {
+        fun createRoute(clinicId: Int) = "generate_password/$clinicId"
+    }
     
 }

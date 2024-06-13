@@ -19,7 +19,6 @@ interface VeterinaryClinicService {
     @GET("veterinary_clinics/{clinic_id}")
     fun getById(@Path("clinic_id") clinicId: Int): Call<VeterinaryClinicResponse>
 
-
     @GET("veterinary_clinics/generate_password/{clinic_id}")
     fun generatePassword(
         @Path("clinic_id") clinicId: Int

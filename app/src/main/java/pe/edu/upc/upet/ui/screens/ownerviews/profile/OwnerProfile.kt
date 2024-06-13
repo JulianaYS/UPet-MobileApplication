@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -97,6 +98,7 @@ fun ProfileHeader(id: Int, image: String) {
 @Composable
 fun ProfileButtons(
     manageSubscription: (() -> Unit)? = null,
+    generatePassword: (() -> Unit)? = null,
     editProfile: () -> Unit,
     logout: () -> Unit
 ) {
@@ -108,6 +110,10 @@ fun ProfileButtons(
 
     manageSubscription?.let {
         profileButtons.add(0, ProfileButton("Manage Subscription", Icons.Default.Star, it))
+    }
+
+    generatePassword?.let {
+        profileButtons.add(0, ProfileButton("Generate Password", Icons.Default.Key, it))
     }
 
     Column(

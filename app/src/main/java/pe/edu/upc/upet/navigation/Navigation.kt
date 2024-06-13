@@ -60,6 +60,7 @@ import pe.edu.upc.upet.ui.screens.vetviews.VetEditProfile
 import pe.edu.upc.upet.ui.screens.vetviews.VetPatientDetail
 import pe.edu.upc.upet.ui.screens.vetviews.VetPatients
 import pe.edu.upc.upet.ui.screens.ownerviews.reviews.VetReviews
+import pe.edu.upc.upet.ui.screens.vetviews.GeneratePassword
 import pe.edu.upc.upet.ui.screens.vetviews.VeterinaryForms
 import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.utils.TokenManager
@@ -308,6 +309,14 @@ fun Navigation() {
                 val appointmentId = it.arguments?.getString("appointmentId")
                 if (appointmentId != null) {
                     VeterinaryForms(navController, appointmentId.toInt())
+                }
+            }
+
+            composable(Routes.GeneratePassword.route){
+                shouldShowBottomBar.value = true
+                val clinicId = it.arguments?.getString("clinicId")
+                if (clinicId != null) {
+                    GeneratePassword(navController, clinicId.toInt())
                 }
             }
         }

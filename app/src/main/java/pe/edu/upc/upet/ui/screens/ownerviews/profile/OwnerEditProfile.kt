@@ -86,8 +86,7 @@ fun OwnerEditProfile(navController: NavHostController) {
                         value = name,
                         onValueChange = { name = it },
                         label = "Name",
-                        leadingIcon = Icons.Default.Person,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Person
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -96,8 +95,7 @@ fun OwnerEditProfile(navController: NavHostController) {
                         value = numberPhone,
                         onValueChange = { numberPhone = it },
                         label = "Phone Number",
-                        leadingIcon = Icons.Default.Call,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Call
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -106,8 +104,7 @@ fun OwnerEditProfile(navController: NavHostController) {
                         value = location,
                         onValueChange = { location = it },
                         label = "Location",
-                        leadingIcon = Icons.Default.Place,
-                        modifier = Modifier.fillMaxWidth()
+                        leadingIcon = Icons.Default.Place
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
