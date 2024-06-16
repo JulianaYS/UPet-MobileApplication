@@ -7,8 +7,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material.icons.filled.Person
@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upc.upet.ui.screens.ownerviews.notification.CreateNotification
 import pe.edu.upc.upet.ui.screens.ownerviews.appointment.AppointmentDetail
 import pe.edu.upc.upet.ui.screens.ownerviews.appointment.AppointmentList
 import pe.edu.upc.upet.ui.screens.ownerviews.appointment.BookAppointmentScreen
@@ -77,15 +78,14 @@ val ownerBottomNavItems = listOf(
 
 val vetBottomNavItems = listOf(
     BottomNavItem("Home", Routes.VetHome.route, Icons.Default.Home),
-    BottomNavItem("Patients", Routes.VetPatients.route, Icons.Default.Group),
     BottomNavItem("Appointments", Routes.VetAppointments.route, Icons.Default.Event),
+    BottomNavItem("Reviews", Routes.VetPatients.route, Icons.Default.Comment),
     BottomNavItem("Profile", Routes.VetProfile.route, Icons.Default.Person),
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation() {
-
     val navController = rememberNavController()
     val backgroundColor = Color(0xFF0B1C3F)
     val shouldShowBottomBar = remember { mutableStateOf(true) }
@@ -219,7 +219,6 @@ fun Navigation() {
                     BookAppointmentScreen(navController, vetId.toInt())
                 }
             }
-
             composable(Routes.PetDetailsAppointment.route) {
                 shouldShowBottomBar.value = true
                 val vetId = it.arguments?.getString("vetId")
@@ -233,7 +232,6 @@ fun Navigation() {
                     )
                 }
             }
-
             composable(Routes.PetDetails.route) { backStackEntry ->
                 shouldShowBottomBar.value = true
                 val petId = backStackEntry.arguments?.getString("petId")
@@ -262,6 +260,10 @@ fun Navigation() {
                 vetId?.let{id->
                     OwnerVetProfile(id, navController)
                 }
+            }
+            composable(Routes.CreateNotification.route){
+                shouldShowBottomBar.value = true
+                CreateNotification(navController)
             }
 
             // Vet routes ---------------------------------------------------------------------------------
