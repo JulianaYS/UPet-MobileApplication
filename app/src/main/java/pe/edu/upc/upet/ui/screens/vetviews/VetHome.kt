@@ -3,10 +3,10 @@ package pe.edu.upc.upet.ui.screens.vetviews
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_appointment.domain.Appointment
+import pe.edu.upc.upet.navigation.Routes
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -64,7 +65,7 @@ fun VetHome(navController: NavHostController) {
     ) {paddingValues ->
 
         Column(modifier = Modifier.padding(paddingValues)) {
-            UserSectionVet()
+            UserSectionVet(navController)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Upcoming Appointments",
@@ -74,7 +75,7 @@ fun VetHome(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
             Column {
                 LazyColumn {
-                    items(filteredAppointments.size) { it ->
+                    items(filteredAppointments.size) {
                         AppointmentCardVet(filteredAppointments[it], navController)
                     }
                 }
@@ -96,7 +97,7 @@ private fun filterAppointments(appointments: List<Appointment>, showUpcoming: Bo
 }
 
 @Composable
-fun UserSectionVet() {
+fun UserSectionVet(navController: NavHostController) {
     val vet = getVet() ?: return
     Log.d("UserSection", "Vet: $vet")
 
@@ -108,9 +109,12 @@ fun UserSectionVet() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            GlideImage(modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(50.dp)),
+            GlideImage(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(50.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(50.dp))
+                    .clickable { navController.navigate(Routes.VetProfile.route)},
                 imageModel = { vet.imageUrl },
             )
             Column(modifier = Modifier.padding(start = 20.dp)) {
@@ -134,7 +138,7 @@ fun UserSectionVet() {
         )
     }
 }
-
+/*
 @Composable
 fun PatientCard(patient: Patient) {
     Card(
@@ -169,6 +173,4 @@ val dummyPatients = listOf(
 )
 
 data class Patient(val name: String, val species: String, val age: Int)
-
-
-
+*/

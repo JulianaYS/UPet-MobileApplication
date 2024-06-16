@@ -3,6 +3,7 @@ package pe.edu.upc.upet.ui.screens.ownerviews
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +43,7 @@ import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicReposi
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.SimplePetCard
+import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.PinkStrong
 import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 
@@ -48,17 +51,15 @@ import pe.edu.upc.upet.utils.TokenManager.getUserIdAndRoleFromToken
 @Composable
 fun OwnerHome(navController: NavController){
     Log.d("OwnerHome", "OwnerHome")
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item { UserSection() }
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(BorderPadding)) {
+        item { UserSection(navController) }
         item { PetsSection(navController) }
         item { RecommendedVetsSection(navController) }
     }
 }
 
-
-
 @Composable
-fun UserSection() {
+fun UserSection(navController: NavController) {
     val owner = getOwner() ?: return
     Log.d("UserSection", "Owner: $owner")
 
@@ -72,7 +73,9 @@ fun UserSection() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             GlideImage(modifier = Modifier
                 .size(100.dp)
-                .clip(RoundedCornerShape(50.dp)),
+                .clip(RoundedCornerShape(50.dp))
+                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(50.dp))
+                .clickable { navController.navigate(Routes.OwnerProfile.route)},
                 imageModel = { owner.imageUrl },
             )
             Column(modifier = Modifier.padding(start = 20.dp)) {
@@ -89,11 +92,15 @@ fun UserSection() {
                 )
             }
         }
-        Icon(
-            imageVector = Icons.Default.Notifications,
-            contentDescription = "Notifications",
-            tint = Color.White
-        )
+        IconButton(onClick = {
+            navController.navigate(Routes.CreateNotification.route) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Notifications,
+                contentDescription = "Notifications",
+                tint = Color.White
+            )
+        }
     }
 }
 
@@ -140,7 +147,6 @@ fun PetsSection(navController: NavController) {
                 }
             }
         }
-
     }
 }
 

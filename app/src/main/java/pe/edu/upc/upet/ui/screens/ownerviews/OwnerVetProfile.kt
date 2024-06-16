@@ -2,6 +2,7 @@ package pe.edu.upc.upet.ui.screens.ownerviews
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,11 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,10 +26,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.glide.GlideImage
 import pe.edu.upc.upet.feature_reviews.data.remote.ReviewResponse
-import pe.edu.upc.upet.feature_reviews.domain.Review
 import pe.edu.upc.upet.feature_vetClinics.data.repository.VeterinaryClinicRepository
 import pe.edu.upc.upet.feature_vetClinics.domain.VeterinaryClinic
 import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
@@ -54,7 +47,6 @@ import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.Blue1
 import pe.edu.upc.upet.ui.theme.poppinsFamily
-
 
 @Composable
 fun OwnerVetProfile(vetId: Int, navController: NavController){
@@ -70,7 +62,6 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
         vetRepository.getVetById(vetId){vett->
             vet = vett
         }
-
     }
 
     LaunchedEffect(vet?.clinicId) {
@@ -161,14 +152,12 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
                                         val latestReview = reviewList.value.maxByOrNull { it.review_time }
                                         latestReview?.let { ReviewCard(it) }
                                     }
-                                    //ReviewCard()
+
                                     Spacer(modifier = Modifier.height(15.dp))
                                     CustomButton(text = "Book Appointment") {
                                         navController.navigate(Routes.BookAppointment.createRoute(vetId))
                                     }
-
                                     //CustomButton(text = "See location") { navController.navigate() }
-
                             }
                         }
                     }
@@ -179,7 +168,11 @@ fun OwnerVetProfile(vetId: Int, navController: NavController){
 }
 @Composable
 fun ProfileImage(url: String,size: Int,width: Int ){
-    GlideImage(modifier = Modifier.size(width = width.dp, height = size.dp),imageModel = { url })
+    GlideImage(modifier = Modifier
+        .size(width = width.dp, height = size.dp)
+        .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(20.dp)),
+        imageModel = { url }
+    )
 }
 
 @Composable

@@ -49,6 +49,7 @@ sealed class Routes(val route: String) {
     }
     data object PetList : Routes("pet_list")
     data object RegisterPet : Routes("register_pet")
+    data object CreateNotification : Routes("create_notification")
 
     // Vet views
     data object VetHome : Routes("vet_home")
