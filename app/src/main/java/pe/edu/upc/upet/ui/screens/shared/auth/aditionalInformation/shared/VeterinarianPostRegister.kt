@@ -1,6 +1,9 @@
 package pe.edu.upc.upet.ui.screens.shared.auth.aditionalInformation.shared
 
 import android.app.TimePickerDialog
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -10,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -127,6 +131,9 @@ fun NewClinicForm(navigateTo : (String) -> Unit, userId: Int) {
     val description = remember { mutableStateOf("") }
     val officeHoursStart = remember { mutableStateOf("") }
     val officeHoursEnd = remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
+    val dialogMessage = remember { mutableStateOf("") }
 
     LazyColumn {
         item {
@@ -138,7 +145,7 @@ fun NewClinicForm(navigateTo : (String) -> Unit, userId: Int) {
             Spacer(modifier = Modifier.height(22.dp))
             AuthInputTextField(
                 input = clinicLocation,
-                placeholder = "r. Lima 104, Santiago de Surco, Lima",
+                placeholder = "Av. Primavera 1262, Lima 15023",
                 label = "Location",
             )
 
@@ -167,23 +174,65 @@ fun NewClinicForm(navigateTo : (String) -> Unit, userId: Int) {
             Spacer(modifier = Modifier.height(22.dp))
 
             AuthButton(text ="Send", onClick = {
-                createNewClinic(
-                    userId,
-                    VeterinaryClinicRequest(
-                        name = clinicName.value,
-                        location = clinicLocation.value,
-                        phoneNumber = phoneNumber.value,
-                        description = description.value,
-                        officeHoursStart = officeHoursStart.value,
-                        officeHoursEnd = officeHoursEnd.value,
-                    ),
-                    navigateTo = { navigateTo(Routes.OwnerHome.route) }
-                )
+
+                val coordinates = getCoordinatesFromAddressClinic(context, clinicLocation.value)
+                dialogMessage.value = "Coordinates: $coordinates"
+                showDialog.value = true
+
             })
         }
     }
+    if (showDialog.value){
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text(text = "Confirm Coordinates") },
+            text = { Text(text = dialogMessage.value) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog.value = false
+                        createNewClinic(
+                            userId,
+                            VeterinaryClinicRequest(
+                                name = clinicName.value,
+                                location = dialogMessage.value.split(":")[1].trim(),
+                                phoneNumber = phoneNumber.value,
+                                description = description.value,
+                                officeHoursStart = officeHoursStart.value,
+                                officeHoursEnd = officeHoursEnd.value,
+                            ),
+                            navigateTo = { navigateTo(Routes.VetHome.route) }
+                        )
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDialog.value = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
-
+// This function is used to get the coordinates from an address using the Geocoder class
+// It receives a context and an address as parameters
+// It returns a concatenated string with the coordinates of the address
+// That string is sent to the createNewPetOwner function
+fun getCoordinatesFromAddressClinic(context: Context, mAddress: String): String {
+    val coder = Geocoder(context)
+    lateinit var address: List<Address>
+    return try {
+        address = coder.getFromLocationName(mAddress, 1)!!
+        val location = address[0]
+        "${location.latitude},${location.longitude}"
+    } catch (e: Exception) {
+        "Fail to find Lat,Lng"
+    }
+}
 
 fun createVeterinary(
     userId: Int,

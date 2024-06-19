@@ -1,12 +1,19 @@
 package pe.edu.upc.upet.ui.screens.shared.auth.aditionalInformation.shared
 
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import pe.edu.upc.upet.feature_profile.data.remote.PetOwnerRequest
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
@@ -27,12 +34,14 @@ fun PetOwnerPostRegister(navigateTo: (String) -> Unit={}, userId : Int){
 
 }
 @Composable
-fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId : Int){
-    Column(
+fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId: Int){
+    val numberPhone = remember { mutableStateOf("") }
+    val location = remember { mutableStateOf("") }
+    val showDialog = remember { mutableStateOf(false) }
+    val dialogMessage = remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-    ){
-        val numberPhone = remember { mutableStateOf("") }
-        val location = remember { mutableStateOf("") }
+    Column{
         AuthInputTextField(
             input = numberPhone,
             placeholder = "Enter your phone number",
@@ -42,22 +51,67 @@ fun PetOwnerPostRegisterForm(navigateTo: (String) -> Unit, userId : Int){
         Spacer(modifier = Modifier.height(22.dp))
         AuthInputTextField(
             input = location,
-            placeholder = "r. Lima 104, Santiago de Surco, Lima",
+            placeholder = "Av. Primavera 1262, Lima 15023",
             label = "Location",
             type = TextFieldType.Text
         )
         Spacer(modifier = Modifier.height(22.dp))
-        AuthButton(text ="Send",
-            onClick = {
-                createNewPetOwner(userId, PetOwnerRequest(
-                    numberPhone = numberPhone.value,
-                    location = location.value
-                ), navigateTo= { navigateTo(Routes.OwnerHome.route) }
-                )
 
-        })
+        Spacer(modifier = Modifier.height(22.dp))
+        AuthButton(text = "Send",
+            onClick = {
+
+                val coordinates = getCoordinatesFromAddress(context, location.value)
+                dialogMessage.value = "Coordinates: $coordinates"
+                showDialog.value = true
+            }
+        )
     }
 
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text(text = "Confirm Coordinates") },
+            text = { Text(text = dialogMessage.value) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog.value = false
+                        createNewPetOwner(userId, PetOwnerRequest(
+                            numberPhone = numberPhone.value,
+                            location = dialogMessage.value.split(":")[1].trim() // Extract coordinates from message
+                        ), navigateTo = { navigateTo(Routes.OwnerHome.route) }
+                        )
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDialog.value = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
+
+// This function is used to get the coordinates from an address using the Geocoder class
+// It receives a context and an address as parameters
+// It returns a concatenated string with the coordinates of the address
+// That string is sent to the createNewPetOwner function
+fun getCoordinatesFromAddress(context: Context, mAddress: String): String {
+    val coder = Geocoder(context)
+    lateinit var address: List<Address>
+    return try {
+        address = coder.getFromLocationName(mAddress, 1)!!
+        val location = address[0]
+        "${location.latitude},${location.longitude}"
+    } catch (e: Exception) {
+        "Fail to find Lat,Lng"
+    }
 }
 
 fun createNewPetOwner(userId: Int,
