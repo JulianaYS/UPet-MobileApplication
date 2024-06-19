@@ -155,7 +155,7 @@ fun AppointmentDetail(navController: NavController, appointmentId: Int) {
                 OwnerInformation(ownerPet!!, navController)
 
                 CustomButton(text = "Add report") {
-                    navController.navigate(Routes.AddReport.createRoute(appointment!!.id))
+                    navController.navigate(Routes.AddReport.createRoute( pet!!.id))
                 }
 
             }else{

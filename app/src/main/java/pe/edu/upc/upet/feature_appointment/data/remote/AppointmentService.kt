@@ -4,6 +4,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface AppointmentService {
@@ -21,4 +22,22 @@ interface AppointmentService {
 
     @GET("appointments/veterinarian/{veterinarian_id}")
     fun getAppointmentsByVeterinarianId(@Path("veterinarian_id") veterinarianId: Int): Call<List<AppointmentResponse>>
+
+    @GET("appointments/owner/{owner_id}")
+    fun getAppointmentsByOwnerId(@Path("owner_id") ownerId: Int): Call<List<AppointmentResponse>>
+
+    @PUT("appointments/{appointment_id}")
+    fun updateAppointment(@Path("appointment_id") appointmentId: Int, @Body appointmentUpdateRequest: AppointmentUpdateRequest): Call<AppointmentResponse>
+
+    @GET("appointments/owner/{owner_id}/upcoming")
+    fun getUpcomingAppointmentsByOwnerId(@Path("owner_id") ownerId: Int): Call<List<AppointmentResponse>>
+
+    @GET("appointments/owner/{owner_id}/past")
+    fun getPastAppointmentsByOwnerId(@Path("owner_id") ownerId: Int): Call<List<AppointmentResponse>>
+
+    @GET("appointments/veterinarian/{veterinarian_id}/upcoming")
+    fun getUpcomingAppointmentsByVeterinarianId(@Path("veterinarian_id") veterinarianId: Int): Call<List<AppointmentResponse>>
+
+    @GET("appointments/veterinarian/{veterinarian_id}/past")
+    fun getPastAppointmentsByVeterinarianId(@Path("veterinarian_id") veterinarianId: Int): Call<List<AppointmentResponse>>
 }

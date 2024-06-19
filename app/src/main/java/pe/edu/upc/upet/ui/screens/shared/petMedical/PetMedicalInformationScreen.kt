@@ -1,194 +1,157 @@
 package pe.edu.upc.upet.ui.screens.shared.petMedical
 
-import androidx.compose.foundation.background
-import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.outlined.MedicalServices
-import androidx.compose.material3.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.DiseaseResponse
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.MedicalHistoryResponse
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.MedicalResultResponse
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.SurgeryResponse
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.VaccineResponse
+import pe.edu.upc.upet.ui.shared.TopBar
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.*
+import pe.edu.upc.upet.feature_medycalHistory.data.repository.MedicalHistoryRepository
+import pe.edu.upc.upet.ui.theme.Pink
 
 @Composable
-fun PetMedicalInformationScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        AppBar(navController = navController)
-        PetImageBanner()
-        PetInformationSection()
-        MedicalHistorySection()
-    }
-}
+fun PetMedicalInformationScreen(navController: NavController, petId: Int) {
+    val medicalHistoryRepository = MedicalHistoryRepository()
+    var medicalHistory by remember { mutableStateOf<MedicalHistoryResponse?>(null) }
+    var medicalResults by remember { mutableStateOf<List<MedicalResultResponse>?>(null) }
+    var vaccines by remember { mutableStateOf<List<VaccineResponse>?>(null) }
+    var diseases by remember { mutableStateOf<List<DiseaseResponse>?>(null) }
+    var surgeries by remember { mutableStateOf<List<SurgeryResponse>?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
 
-@Composable
-fun AppBar(navController: NavController) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(56.dp)
-        .background(Color(0xFF0A2540)),
-
-        ) {
-        Row{
-            IconButton(onClick = {navController.popBackStack()}) {
-                Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.White)
+    LaunchedEffect(petId) {
+        medicalHistoryRepository.getMedicalHistoryByPetId(petId) { history ->
+            medicalHistory = history
+            history?.let {
+                medicalHistoryRepository.getAllMedicalResultsByMedicalHistoryId(it.id) { results ->
+                    medicalResults = results
+                }
+                medicalHistoryRepository.getAllVaccinesByMedicalHistoryId(it.id) { vaccinesList ->
+                    vaccines = vaccinesList
+                }
+                medicalHistoryRepository.getAllDiseasesByMedicalHistoryId(it.id) { diseasesList ->
+                    diseases = diseasesList
+                }
+                medicalHistoryRepository.getAllSurgeriesByMedicalHistoryId(it.id) { surgeriesList ->
+                    surgeries = surgeriesList
+                }
             }
-            Text(
-                text = "Boby",
-                color = Color.White,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(start = 125.dp, top = 12.dp)
-            )
-
+            isLoading = false
         }
     }
-}
 
-@Composable
-fun PetImageBanner() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .background(Color(0xFF0A2540)),
-        contentAlignment = Alignment.Center
-    ) {
+    var selectedOption by remember { mutableStateOf(MedicalInfoOption.Diseases) }
 
-        ProfileImage("https://mf.b37mrtl.ru/actualidad/public_images/2022.06/article/62aa0f81e9ff71530076e38b.jpg")
-    }
-}
-
-@Composable
-fun PetInformationSection() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-
-    ) {
-        Text(
-            text = "General Information",
-            fontSize = 24.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyRow {items(3){
-             //PetInformationCard("Specie", heartIcon,"Canis")
-        }
-        }
-    }
-}
-
-
-
-@Composable
-fun MedicalHistorySection() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Medical History",
-            fontSize = 20.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn {
-            items(5) {
-                val heartIcon = Icons.Outlined.MedicalServices
-                MedicalHistoryCard("Diagnosis", "14/04/2024", "The animal presents high corporal temperature 1 hour ago. Also manifests stomach...",heartIcon)
-            }
-        }
-    }
-}
-
-@Composable
-fun MedicalHistoryCard(title: String, date: String, description: String,icon: ImageVector) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 4.dp)
-    )
-    {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF0A2540),
-                contentColor = Color.White
-            ),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            ) {
-                // Icon
+    Scaffold(
+        topBar = { TopBar(navController, "Medical Information") },
+        content = { paddingValues ->
+            if (isLoading) {
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
-                        .background(Color(0xFFFF6D6D), shape = RoundedCornerShape(8.dp))
-                        .padding(8.dp),
+                        .fillMaxSize()
+                        .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector =icon,
-                        contentDescription = "Medical services",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
-                    )
+                    CircularProgressIndicator()
                 }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                // Content Column
+            } else {
                 Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .padding(paddingValues)
                 ) {
-                    // Title and Date Row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = title,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text = date,
-                            fontSize = 14.sp,
-                        )
+                    medicalHistory?.let { history ->
+                        MedicalHistorySection(history)
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    // Description
-                    Text(
-                        text = description,
-                        fontSize = 14.sp,
-                        color = Color.White
-                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OptionSelector(selectedOption) { option ->
+                        selectedOption = option
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    when (selectedOption) {
+                        MedicalInfoOption.MedicalResults -> MedicalResultsSection(medicalResults)
+                        MedicalInfoOption.Vaccines -> VaccinesSection(vaccines)
+                        MedicalInfoOption.Diseases -> DiseasesSection(diseases)
+                        MedicalInfoOption.Surgeries -> SurgeriesSection(surgeries)
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun MedicalHistorySection(history: MedicalHistoryResponse) {
+    Column {
+        Text("Medical History", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Date: ${history.date}", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Description: ${history.description}", style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+fun MedicalResultsSection(results: List<MedicalResultResponse>?) {
+    results?.let {
+        if (it.isEmpty()) {
+            EmptyState("No medical results available")
+        } else {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text("Medical Results", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyColumn {
+                    items(it) { result ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Pink
+                            ), modifier = Modifier.padding(8.dp).fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    "Date: ${result.resultDate}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Type: ${result.resultType}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Description: ${result.description}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -196,7 +159,175 @@ fun MedicalHistoryCard(title: String, date: String, description: String,icon: Im
 }
 
 @Composable
-fun ProfileImage(url: String ){
-    GlideImage(modifier = Modifier.size(width = 350.dp, height = 170.dp),imageModel = { url })
+fun VaccinesSection(vaccines: List<VaccineResponse>?) {
+    vaccines?.let {
+        if (it.isEmpty()) {
+            EmptyState("No vaccines available")
+        } else {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text("Vaccines", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyColumn {
+                    items(it) { vaccine ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Pink
+                            ), modifier = Modifier.padding(8.dp).fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    "Name: ${vaccine.name}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Date: ${vaccine.vaccineDate}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Type: ${vaccine.vaccineType}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Dose: ${vaccine.dose}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Location: ${vaccine.location}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
+@Composable
+fun DiseasesSection(diseases: List<DiseaseResponse>?) {
+    diseases?.let {
+        if (it.isEmpty()) {
+            EmptyState("No diseases available")
+        } else {
+            Column(modifier = Modifier.fillMaxWidth()) {
+            Text("Diseases", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyColumn {
+                    items(it) { disease ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Pink
+                            ), modifier = Modifier.padding(8.dp).fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    "Name: ${disease.name}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Diagnosis Date: ${disease.diagnosisDate}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Severity: ${disease.severity}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SurgeriesSection(surgeries: List<SurgeryResponse>?) {
+    surgeries?.let {
+        if (it.isEmpty()) {
+            EmptyState("No surgeries available")
+        } else {
+            Column(modifier = Modifier.fillMaxWidth()) {
+            Text("Surgeries", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyColumn {
+                    items(it) { surgery ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Pink
+                            ), modifier = Modifier.padding(8.dp).fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    "Date: ${surgery.surgeryDate}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Description: ${surgery.description}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun OptionSelector(selectedOption: MedicalInfoOption, onOptionSelected: (MedicalInfoOption) -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        MedicalInfoOption.entries.forEach { option ->
+            TextButton(
+                onClick = { onOptionSelected(option) },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp),
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = if (option == selectedOption) Color.White else Color.Transparent,
+                )
+            ) {
+                Text(option.title, style = MaterialTheme.typography.labelLarge)
+            }
+        }
+    }
+}
+
+@Composable
+fun EmptyState(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(message, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
+    }
+}
+
+enum class MedicalInfoOption(val title: String) {
+    MedicalResults("Medical Results"),
+    Vaccines("Vaccines"),
+    Diseases("Diseases"),
+    Surgeries("Surgeries")
+}

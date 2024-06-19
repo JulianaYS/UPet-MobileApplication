@@ -1,6 +1,8 @@
+
 package pe.edu.upc.upet.ui.screens.ownerviews.appointment
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,11 +25,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import pe.edu.upc.upet.feature_vets.data.remote.AvailableTimesRequest
+import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.TopBar
 import pe.edu.upc.upet.ui.theme.BorderPadding
 import pe.edu.upc.upet.ui.theme.poppinsFamily
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
@@ -37,10 +42,39 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun BookAppointmentScreen(navController: NavController, vetId: Int) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
-    var selectedTime by remember { mutableStateOf(LocalTime.now()) }
+    var selectedTime by remember {
+        mutableStateOf(
+            LocalTime.of(
+                LocalTime.now().hour,
+                (LocalTime.now().minute / 30) * 30
+            )
+        )
+    }
     var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
+    var availableTimes by remember { mutableStateOf<Map<LocalDate, List<String>>>(emptyMap()) }
+    val vetRepository = VetRepository()
 
-    Scaffold( topBar = {
+    LaunchedEffect(key1 = Unit) {
+        val startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY)
+        val endOfWeek = LocalDate.now().with(DayOfWeek.SUNDAY)
+
+        (0..6).forEach { i ->
+            val date = startOfWeek.plusDays(i.toLong())
+            vetRepository.getAvailableTimes(vetId, AvailableTimesRequest(date.toString())) { times ->
+                Log.d("AvailableTimes 2024-06-18", date.toString())
+                Log.d("AvailableTimes", times.toString())
+                availableTimes = availableTimes.toMutableMap().apply {
+                    if (times != null) {
+                        this[date] = times
+                    } else {
+                        this[date] = emptyList()
+                    }
+                }
+            }
+        }
+    }
+
+    Scaffold(topBar = {
         TopBar(navController = navController, title = "Book Appointment")
     }, modifier = Modifier.padding(16.dp)) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -84,6 +118,7 @@ fun BookAppointmentScreen(navController: NavController, vetId: Int) {
                         TextSubtitle("Select Available Hour")
 
                         TimePickerView(
+                            availableTimes = availableTimes[selectedDate]?.map { LocalTime.parse(it, DateTimeFormatter.ofPattern("HH:mm:ss")).toString() },
                             selectedTime = selectedTime,
                             onTimeSelected = { time ->
                                 selectedTime = time
@@ -101,7 +136,6 @@ fun BookAppointmentScreen(navController: NavController, vetId: Int) {
             }
         }
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -131,6 +165,7 @@ fun MonthPicker(currentYearMonth: YearMonth, onYearMonthChange: (YearMonth) -> U
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarView(currentYearMonth: YearMonth, selectedDate: LocalDate, onDateSelected: (LocalDate) -> Unit) {
@@ -199,61 +234,62 @@ fun CalendarView(currentYearMonth: YearMonth, selectedDate: LocalDate, onDateSel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TimePickerView(selectedTime: LocalTime?, onTimeSelected: (LocalTime) -> Unit) {
-    val times = remember {
-        (8..18).flatMap { hour ->
-            listOf(
-                LocalTime.of(hour, 0),
-                LocalTime.of(hour, 30)
-            )
+fun TimePickerView(availableTimes: List<String>?, selectedTime: LocalTime?, onTimeSelected: (LocalTime) -> Unit) {
+    if (availableTimes.isNullOrEmpty()) {
+        Text("No available times")
+    } else {
+        Log.d("availableTimes", availableTimes.toString())
+        val times = remember {
+            availableTimes.map {
+                LocalTime.parse(it, DateTimeFormatter.ofPattern("HH:mm")) // Change the pattern here
+            }
         }
-    }
 
-    val rows = times.chunked(4)
+        val rows = times.chunked(4)
 
-    Column {
-        rows.forEach { rowTimes ->
-            Row(modifier = Modifier.fillMaxWidth()) {
-                rowTimes.forEach { time ->
-                    val isSelected = selectedTime == time
-                    val backgroundColor = if (isSelected) Color(0xFFFF8F86) else Color.White
-                    val textColor = if (isSelected) Color.White else Color.Gray
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(75.dp)
-                            .padding(4.dp)
-                            .background(backgroundColor, RoundedCornerShape(15.dp))
-                            .clickable {
-                                onTimeSelected(time)
-                            }
-                            .wrapContentSize(Alignment.Center),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = time.format(DateTimeFormatter.ofPattern("hh:mm")),
-                            color = textColor,
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
+        Column {
+            rows.forEach { rowTimes ->
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    rowTimes.forEach { time ->
+                        val isSelected = selectedTime == time
+                        val backgroundColor = if (isSelected) Color(0xFFFF8F86) else Color.White
+                        val textColor = if (isSelected) Color.White else Color.Gray
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(75.dp)
+                                .padding(4.dp)
+                                .background(backgroundColor, RoundedCornerShape(15.dp))
+                                .clickable {
+                                    onTimeSelected(time)
+                                }
+                                .wrapContentSize(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = time.format(DateTimeFormatter.ofPattern("hh:mm")),
+                                color = textColor,
+                                textAlign = TextAlign.Center,
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
-                        )
-                        Text(
-                            text = time.format(DateTimeFormatter.ofPattern("a")),
-                            color = textColor,
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold),
-
-                        )
+                            Text(
+                                text = time.format(DateTimeFormatter.ofPattern("a")),
+                                color = textColor,
+                                textAlign = TextAlign.Center,
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold),
+                            )
+                        }
                     }
-                }
-                repeat(4 - rowTimes.size) {
-                    Spacer(modifier = Modifier
-                        .weight(1f)
-                        .height(75.dp))
+                    repeat(4 - rowTimes.size) {
+                        Spacer(modifier = Modifier
+                            .weight(1f)
+                            .height(75.dp))
+                    }
                 }
             }
         }
@@ -261,7 +297,7 @@ fun TimePickerView(selectedTime: LocalTime?, onTimeSelected: (LocalTime) -> Unit
 }
 
 @Composable
-fun TextSubtitle(text: String){
+fun TextSubtitle(text: String) {
     Text(
         modifier = Modifier.padding(bottom = 15.dp),
         text = text,

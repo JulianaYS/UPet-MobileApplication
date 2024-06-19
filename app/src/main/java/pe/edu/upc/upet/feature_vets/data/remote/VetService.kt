@@ -1,5 +1,6 @@
 package pe.edu.upc.upet.feature_vets.data.remote
 
+import okhttp3.RequestBody
 import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
 import pe.edu.upc.upet.feature_reviews.data.remote.VetResponseWithReviews
 import retrofit2.Call
@@ -8,6 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface VetService {
 
@@ -36,4 +38,11 @@ interface VetService {
     fun updateVet(
         @Path("vet_id") vetId: Int,
         @Body vetRequest: VetUpdateRequest): Call<VetResponse>
+
+    @POST("veterinarians/{vet_id}/available_times")
+    fun getAvailableTimes(
+        @Query("clinic_id") clinicId: Int,
+        @Body timeRequest: AvailableTimesRequest
+    ): Call<AvailableTimesResponse>
+
 }

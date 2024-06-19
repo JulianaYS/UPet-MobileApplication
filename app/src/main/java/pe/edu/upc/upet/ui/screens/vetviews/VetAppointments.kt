@@ -1,6 +1,7 @@
 package pe.edu.upc.upet.ui.screens.vetviews
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,18 +31,25 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun VetAppointments(navController: NavController) {
-    var appointments by remember { mutableStateOf(listOf<Appointment>()) }
-    var filteredAppointments by remember { mutableStateOf(listOf<Appointment>()) }
-    var showUpcoming by remember { mutableStateOf(true) }
+    var upcomingAppointments by remember { mutableStateOf(listOf<Appointment>()) }
+    var pastAppointments by remember { mutableStateOf(listOf<Appointment>()) }
+    var showUpcoming by remember { mutableStateOf(true) } // This is already set to true
 
     val vet = getVet() ?: return
 
     LaunchedEffect(vet.id) {
-        AppointmentRepository().getAppointmentsByVeterinarianId(vet.id) { vetAppointments ->
-            appointments = vetAppointments
-            filteredAppointments = filterAppointments(appointments, showUpcoming)
+        AppointmentRepository().getUpcomingAppointmentsByVeterinarianId(1) { upcomingVetAppointments ->
+            Log.d("UpcomingVetAppointments", upcomingVetAppointments.toString())
+            upcomingAppointments = upcomingVetAppointments
+        }
+        AppointmentRepository().getPastAppointmentsByVeterinarianId(1) { pastVetAppointments ->
+            Log.d("PastVetAppointments", pastVetAppointments.toString())
+
+            pastAppointments = pastVetAppointments
         }
     }
+
+    val appointments = if (showUpcoming) upcomingAppointments else pastAppointments
 
     Scaffold(
         topBar = { TopBar(navController = navController, title = "My Appointments") },
@@ -51,24 +59,13 @@ fun VetAppointments(navController: NavController) {
             AppointmentFilterButtons(
                 onShowUpcomingChange = { upcoming ->
                     showUpcoming = upcoming
-                    filteredAppointments = filterAppointments(appointments, showUpcoming)
                 }
             )
-            AppointmentListContentVet(filteredAppointments, navController)
+            AppointmentListContentVet(appointments, navController)
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun filterAppointments(appointments: List<Appointment>, showUpcoming: Boolean): List<Appointment> {
-    val today = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    return appointments.filter { appointment ->
-        val appointmentDate = LocalDate.parse(appointment.day, formatter)
-        (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) == showUpcoming
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -116,16 +113,6 @@ fun AppointmentCardInfoVet(appointment: Appointment) {
         }
     }
 
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val appointmentDate = LocalDate.parse(appointment.day, formatter)
-    val today = LocalDate.now()
-
-    val statusText = if (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) {
-        "Upcoming"
-    } else {
-        "Past"
-    }
-
     vet?: return
     pet?: return
 
@@ -134,6 +121,6 @@ fun AppointmentCardInfoVet(appointment: Appointment) {
         modifier = Modifier.fillMaxWidth().padding(6.dp)
     ) {
         ImageCircle(imageUrl = pet!!.image_url)
-        AppointmentCardDetails(pet!!.name, vet!!.name, statusText, appointment.startTime, appointment.endTime, appointment.day)
+        AppointmentCardDetails(pet!!.name, vet!!.name, appointment.status, appointment.startTime, appointment.endTime, appointment.day)
     }
 }

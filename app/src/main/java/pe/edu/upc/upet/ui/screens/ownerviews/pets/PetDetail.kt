@@ -156,13 +156,13 @@ fun PetDetail(navController: NavHostController, petId: Int) {
                             )
 
                             CustomButton(text = "Add Medical Information") {
-                                //navController.navigate(Routes.NewMedicalRegisterScreen)
+                                navController.navigate(Routes.AddReport.createRoute( petValue.id))
                             }
                             CustomButton(text = "Edit Profile") {
                                 navController.navigate(Routes.EditPetDetail.createRoute(petValue.id))
                             }
                             CustomButton(text = "Medical History") {
-                            //   navController.navigate(Routes.PetMedicalInformationScreen)
+                               navController.navigate(Routes.petMedicalHistory.createRoute(petValue.id))
                             }
                             //}
                         }

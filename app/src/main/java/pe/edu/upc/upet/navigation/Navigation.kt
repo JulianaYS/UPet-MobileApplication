@@ -46,7 +46,6 @@ import pe.edu.upc.upet.ui.screens.ownerviews.pets.PetDetail
 import pe.edu.upc.upet.ui.screens.ownerviews.pets.RegisterPet
 import pe.edu.upc.upet.ui.screens.shared.auth.recovery.ConfirmCodeScreen
 import pe.edu.upc.upet.ui.screens.shared.auth.recovery.NewPasswordScreen
-import pe.edu.upc.upet.ui.screens.shared.auth.recovery.SendEmailScreen
 import pe.edu.upc.upet.ui.screens.ownerviews.OwnerClinicList
 import pe.edu.upc.upet.ui.screens.vetviews.VetProfile
 import pe.edu.upc.upet.ui.screens.ownerviews.OwnerClinicDetails
@@ -61,6 +60,8 @@ import pe.edu.upc.upet.ui.screens.vetviews.VetEditProfile
 import pe.edu.upc.upet.ui.screens.vetviews.VetPatientDetail
 import pe.edu.upc.upet.ui.screens.vetviews.VetPatients
 import pe.edu.upc.upet.ui.screens.ownerviews.reviews.VetReviews
+import pe.edu.upc.upet.ui.screens.shared.auth.recovery.SendEmailScreen
+import pe.edu.upc.upet.ui.screens.shared.petMedical.PetMedicalInformationScreen
 import pe.edu.upc.upet.ui.screens.vetviews.GeneratePassword
 import pe.edu.upc.upet.ui.screens.vetviews.VeterinaryForms
 import pe.edu.upc.upet.ui.theme.Pink
@@ -266,6 +267,15 @@ fun Navigation() {
                 CreateNotification(navController)
             }
 
+            composable(Routes.petMedicalHistory.route){
+                shouldShowBottomBar.value = true
+                val petId = it.arguments?.getString("petId")
+                if (petId != null) {
+                    Log.d("Navigation", Routes.petMedicalHistory.route)
+                    PetMedicalInformationScreen(navController, petId.toInt())
+                }
+            }
+
             // Vet routes ---------------------------------------------------------------------------------
             composable(Routes.VetHome.route) {
                 role.value = TokenManager.getUserIdAndRoleFromToken()?.second ?: ""
@@ -309,9 +319,10 @@ fun Navigation() {
             }
             composable(Routes.AddReport.route){
                 shouldShowBottomBar.value = true
-                val appointmentId = it.arguments?.getString("appointmentId")
-                if (appointmentId != null) {
-                    VeterinaryForms(navController, appointmentId.toInt())
+                Log.d("Navigation", Routes.AddReport.route)
+                val petId = it.arguments?.getString("petId")
+                if (petId != null) {
+                    VeterinaryForms(navController, petId.toInt())
                 }
             }
 

@@ -47,16 +47,13 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun VetHome(navController: NavHostController) {
-    var appointments by remember { mutableStateOf(listOf<Appointment>()) }
     var filteredAppointments by remember { mutableStateOf(listOf<Appointment>()) }
-    val showUpcoming by remember { mutableStateOf(true) }
 
     val vet = getVet() ?: return
 
     LaunchedEffect(vet.id) {
-        AppointmentRepository().getAppointmentsByVeterinarianId(vet.id) { vetAppointments ->
-            appointments = vetAppointments.take(4)
-            filteredAppointments = filterAppointments(appointments, showUpcoming)
+        AppointmentRepository().getUpcomingAppointmentsByVeterinarianId(vet.id) { vetAppointments ->
+            filteredAppointments = vetAppointments.take(4)
         }
     }
 
@@ -84,17 +81,6 @@ fun VetHome(navController: NavHostController) {
     }
 }
 
-
-@RequiresApi(Build.VERSION_CODES.O)
-private fun filterAppointments(appointments: List<Appointment>, showUpcoming: Boolean): List<Appointment> {
-    val today = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    return appointments.filter { appointment ->
-        val appointmentDate = LocalDate.parse(appointment.day, formatter)
-        (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) == showUpcoming
-    }
-}
 
 @Composable
 fun UserSectionVet(navController: NavHostController) {
@@ -138,39 +124,3 @@ fun UserSectionVet(navController: NavHostController) {
         )
     }
 }
-/*
-@Composable
-fun PatientCard(patient: Patient) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = patient.name,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Species: ${patient.species}",
-                fontSize = 14.sp
-            )
-            Text(
-                text = "Age: ${patient.age} years",
-                fontSize = 14.sp
-            )
-        }
-    }
-}
-
-val dummyPatients = listOf(
-    Patient("Buddy", "Dog", 5),
-    Patient("Whiskers", "Cat", 3)
-)
-
-data class Patient(val name: String, val species: String, val age: Int)
-*/

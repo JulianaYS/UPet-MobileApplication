@@ -9,12 +9,13 @@ data class AppointmentResponse(
     val diagnosis: String,
     val treatment: String,
     val description: String,
+    @SerializedName("start_time")
+    val startTime: String,
+    @SerializedName("end_time")
+    val endTime: String,
     @SerializedName("pet_id")
     val petId: Int,
     @SerializedName("veterinarian_id")
     val veterinarianId: Int,
-    @SerializedName("start_time")
-    val startTime: String,
-    @SerializedName("end_time")
-    val endTime: String
+    val status: String
 )

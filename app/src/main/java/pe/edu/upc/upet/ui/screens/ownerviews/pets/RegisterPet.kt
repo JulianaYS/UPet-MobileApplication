@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
+import pe.edu.upc.upet.feature_medycalHistory.data.remote.MedicalHistoryRequest
+import pe.edu.upc.upet.feature_medycalHistory.data.repository.MedicalHistoryRepository
 import pe.edu.upc.upet.feature_pet.data.remote.GenderEnum
 import pe.edu.upc.upet.feature_pet.data.remote.PetRequest
 import pe.edu.upc.upet.feature_pet.data.repository.PetRepository
@@ -209,6 +211,14 @@ fun RegisterPet(navController: NavHostController) {
                                             )
                                         ) { success ->
                                             if (success) {
+
+                                                val medicalHistory = MedicalHistoryRequest(
+                                                    petId = 1,
+                                                    date = formattedDate,
+                                                    description = "Pet medical history for ${name.value} - ${breed.value} - ${selectedType.value}."
+                                                )
+                                                MedicalHistoryRepository().createMedicalHistory(medicalHistory) {
+                                                }
                                                 showSuccessDialog.value = true
                                             } else {
                                                 snackbarMessage.value = "Failed to register pet."

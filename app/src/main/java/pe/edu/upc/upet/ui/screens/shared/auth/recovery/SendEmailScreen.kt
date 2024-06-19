@@ -15,8 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.upet.navigation.Routes
+import pe.edu.upc.upet.ui.shared.AuthInputTextField
 import pe.edu.upc.upet.ui.shared.CustomButton
 import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.CustomTextField
 import pe.edu.upc.upet.ui.shared.InputTextField
 
 @Composable
@@ -42,12 +44,7 @@ fun SendEmailScreen(navController: NavController) {
                 text = "Please enter your email to reset the password",
                 fontSize = 14.sp,
             )
-            Text(
-                text = "Your Email",
-                fontWeight = FontWeight.Normal,
-                fontSize = 12.sp
-            )
-            InputTextField(input = email, placeholder = "Enter your email")
+            AuthInputTextField(input = email, placeholder = "Enter your email", label = "Email")
             CustomButton(text = "Send Email", onClick = {
                 navController.navigate(Routes.ConfirmCode.route)
             })

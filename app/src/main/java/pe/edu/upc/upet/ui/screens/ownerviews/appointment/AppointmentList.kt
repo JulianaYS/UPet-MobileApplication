@@ -40,22 +40,25 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppointmentList(navController: NavController) {
-    var appointments by remember { mutableStateOf(listOf<Appointment>()) }
-    var filteredAppointments by remember { mutableStateOf(listOf<Appointment>()) }
+    var upcomingAppointments by remember { mutableStateOf(listOf<Appointment>()) }
+    var pastAppointments by remember { mutableStateOf(listOf<Appointment>()) }
     var showUpcoming by remember { mutableStateOf(true) }
 
     val owner = getOwner() ?: return
 
     LaunchedEffect(owner.id) {
-        PetRepository().getPetsByOwnerId(owner.id) { pets ->
-            pets.forEach { pet ->
-                AppointmentRepository().getAppointmentsByPetId(pet.id) { petAppointments ->
-                    appointments = appointments + petAppointments
-                    filteredAppointments = filterAppointments(appointments, showUpcoming)
-                }
-            }
+        AppointmentRepository().getUpcomingAppointmentsByOwnerId(owner.id) { appointments ->
+            upcomingAppointments = appointments
         }
     }
+
+    LaunchedEffect(owner.id) {
+        AppointmentRepository().getPastAppointmentsByOwnerId(owner.id) { appointments ->
+            pastAppointments = appointments
+        }
+    }
+
+    val appointments = if (showUpcoming) upcomingAppointments else pastAppointments
 
     Scaffold(
         topBar = { TopBar(navController = navController, title = "My Appointments") },
@@ -65,25 +68,14 @@ fun AppointmentList(navController: NavController) {
             AppointmentFilterButtons(
                 onShowUpcomingChange = { upcoming ->
                     showUpcoming = upcoming
-                    filteredAppointments = filterAppointments(appointments, showUpcoming)
                 }
             )
-            AppointmentListContent(filteredAppointments, navController)
+            AppointmentListContent(appointments, navController)
         }
     }
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun filterAppointments(appointments: List<Appointment>, showUpcoming: Boolean): List<Appointment> {
-    val today = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    return appointments.filter { appointment ->
-        val appointmentDate = LocalDate.parse(appointment.day, formatter)
-        (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) == showUpcoming
-    }
-}
 
 @Composable
 fun AppointmentFilterButtons(
@@ -175,11 +167,7 @@ fun AppointmentCardInfo(appointment: Appointment) {
     val appointmentDate = LocalDate.parse(appointment.day, formatter)
     val today = LocalDate.now()
 
-    val statusText = if (appointmentDate.isAfter(today) || appointmentDate.isEqual(today)) {
-        "Upcoming"
-    } else {
-        "Past"
-    }
+
 
     vet?: return
     pet?: return
@@ -189,7 +177,7 @@ fun AppointmentCardInfo(appointment: Appointment) {
         modifier = Modifier.fillMaxWidth().padding(6.dp)
     ) {
         ImageCircle(imageUrl = vet!!.imageUrl)
-        AppointmentCardDetails(vet!!.name, pet!!.name, statusText, appointment.startTime, appointment.endTime, appointment.day)
+        AppointmentCardDetails(vet!!.name, pet!!.name, appointment.status, appointment.startTime, appointment.endTime, appointment.day)
     }
 
 }

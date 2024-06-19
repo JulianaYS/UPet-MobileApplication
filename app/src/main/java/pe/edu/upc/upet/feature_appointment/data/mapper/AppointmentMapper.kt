@@ -13,6 +13,7 @@ fun AppointmentResponse.toDomainModel(): Appointment {
         petId = this.petId,
         veterinarianId = this.veterinarianId,
         startTime = this.startTime,
-        endTime = this.endTime
+        endTime = this.endTime,
+        status = this.status
     )
 }

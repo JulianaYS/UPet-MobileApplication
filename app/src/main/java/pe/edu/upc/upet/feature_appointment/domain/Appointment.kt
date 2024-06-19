@@ -10,4 +10,6 @@ data class Appointment(
     val veterinarianId: Int,
     val startTime: String,
     val endTime: String,
-)
+    val status: String
+) {
+}

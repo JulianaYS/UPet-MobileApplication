@@ -20,6 +20,10 @@ sealed class Routes(val route: String) {
     data object VetReviews: Routes("vet_reviews/{vetId}/{showFAB}") {
         fun createRoute(vetId: Int,showFAB: Boolean) = "vet_reviews/$vetId/$showFAB"
     }
+
+    data object petMedicalHistory : Routes("pet_medical_history/{petId}") {
+        fun createRoute(petId: Int) = "pet_medical_history/$petId"
+    }
     data object AddReview: Routes("add_review/{vetId}") {
         fun createRoute(vetId: Int) = "add_review/$vetId"
     }
@@ -64,8 +68,8 @@ sealed class Routes(val route: String) {
         fun createRoute(patientId: Int) = "vet_patient_detail/$patientId"
     }
     data object VetPatients : Routes("vet_patients")
-    data object AddReport : Routes("add_report/{appointmentId}") {
-        fun createRoute(appointmentId: Int) = "add_report/$appointmentId"
+    data object AddReport : Routes("add_report/{petId}") {
+        fun createRoute(petId: Int) = "add_report/$petId"
     }
     data object GeneratePassword: Routes("generate_password/{clinicId}") {
         fun createRoute(clinicId: Int) = "generate_password/$clinicId"

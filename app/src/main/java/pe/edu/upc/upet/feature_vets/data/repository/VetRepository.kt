@@ -6,6 +6,8 @@ import pe.edu.upc.upet.feature_auth.data.remote.SignInResponse
 import pe.edu.upc.upet.feature_reviews.data.remote.ReviewResponse
 import pe.edu.upc.upet.feature_reviews.data.remote.VetResponseWithReviews
 import pe.edu.upc.upet.feature_vets.data.mapper.toDomainModel
+import pe.edu.upc.upet.feature_vets.data.remote.AvailableTimesRequest
+import pe.edu.upc.upet.feature_vets.data.remote.AvailableTimesResponse
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponse
 import pe.edu.upc.upet.feature_vets.data.remote.VetResponseList
 import pe.edu.upc.upet.feature_vets.data.remote.VetService
@@ -173,6 +175,27 @@ class VetRepository (
             override fun onFailure(call: Call<VetResponse>, t: Throwable) {
                 Log.e("UpdateVet", "Failed to update vet", t)
                 callback(false)
+            }
+        })
+    }
+
+    fun getAvailableTimes(vetId: Int, timeRequest: AvailableTimesRequest, callback: (List<String>?) -> Unit){
+        vetService.getAvailableTimes(vetId, timeRequest).enqueue(object : Callback<AvailableTimesResponse>{
+            override fun onResponse(
+                call: Call<AvailableTimesResponse>,
+                response: Response<AvailableTimesResponse>
+            ) {
+                if (response.isSuccessful){
+                    callback(response.body()?.availableTimes)
+                }else{
+                    Log.e("GetAvailableTimes", "Unsuccessful response: ${response.message()}")
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<AvailableTimesResponse>, t: Throwable) {
+                Log.e("GetAvailableTimes", "Failed to get available times", t)
+                callback(null)
             }
         })
     }

@@ -28,7 +28,7 @@ interface AuthService {
         @Path("user_id") userId: Int
     ): Call<UserResponse>
 
-    @PUT("/api/v1/users/{role_id}")
+    @PUT("users/{role_id}")
     fun updateUser(
         @Path("role_id") roleId: Int,
         @Body request: UpdateUserRequest
