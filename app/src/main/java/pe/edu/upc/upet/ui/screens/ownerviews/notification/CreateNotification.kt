@@ -24,10 +24,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,9 +62,9 @@ fun CreateNotification(navController: NavHostController) {
     val message = remember { mutableStateOf("") }
     val datee = remember { mutableStateOf("") }
     val time = remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+
 
     Scaffold(modifier = Modifier.padding(16.dp)) { paddingValues ->
         LazyColumn {
@@ -133,7 +132,8 @@ fun CreateNotification(navController: NavHostController) {
                             type.value,
                             message.value,
                             datee.value,
-                            time.value
+                            time.value,
+                            showSuccessDialog
                         )
                     })
 
@@ -198,7 +198,7 @@ fun CreateNotification(navController: NavHostController) {
 }
 
 
-fun notificacionprogramada(context: Context, type: String, message: String, datee: String, time: String){
+fun notificacionprogramada(context: Context, type: String, message: String, datee: String, time: String, showSuccessDialog: MutableState<Boolean>){
     val NOTIFICATION_ID=10
     val intent = Intent(context, ScheduledNotification::class.java)
     intent.putExtra("type", type)
@@ -219,12 +219,15 @@ fun notificacionprogramada(context: Context, type: String, message: String, date
         if (!alarmManager.canScheduleExactAlarms()) {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             context.startActivity(intent)
+
+
         } else {
             alarmManager.setExact(
                 AlarmManager.RTC_WAKEUP,
                 temp,
                 pendingIntent
             )
+            showSuccessDialog.value = true
         }
     } else {
         alarmManager.setExact(
@@ -232,5 +235,6 @@ fun notificacionprogramada(context: Context, type: String, message: String, date
             temp,
             pendingIntent
         )
+        showSuccessDialog.value = true
     }
 }

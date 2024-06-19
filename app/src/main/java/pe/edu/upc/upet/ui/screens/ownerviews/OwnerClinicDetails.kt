@@ -205,7 +205,7 @@ fun VeterinaryCard(vet: Vet, navController: NavHostController) {
                 imageOptions = ImageOptions(contentScale = ContentScale.Crop)
             )
             TextSemiBold(text = vet.name)
-            TextNormal(text = vet.name, color = Color.Black)
+            //TextNormal(text = vet.name, color = Color.Black)
         }
     }
 }

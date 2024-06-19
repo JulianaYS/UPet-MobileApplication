@@ -53,8 +53,8 @@ fun PetDetailsAppointmentScreen(navController: NavController, vetId: Int, select
         SuccessDialog(onDismissRequest = {
             showSuccessDialog.value = false
             navController.navigate(Routes.AppointmentList.route)
-        }, titleText = "Pet Registered",
-            messageText = "Your pet has been registered successfully.",
+        }, titleText = "Appointment Registered",
+            messageText = "Your appointment has been registered successfully.",
             buttonText = "OK")
     }
 

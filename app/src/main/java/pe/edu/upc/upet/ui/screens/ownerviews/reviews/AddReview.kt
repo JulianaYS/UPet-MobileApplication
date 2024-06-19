@@ -1,23 +1,29 @@
 package pe.edu.upc.upet.ui.screens.ownerviews.reviews
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.upet.feature_profile.data.repository.PetOwnerRepository
 import pe.edu.upc.upet.feature_profile.domain.PetOwner
 import pe.edu.upc.upet.feature_reviews.data.remote.ReviewRequest
 import pe.edu.upc.upet.feature_reviews.data.repository.ReviewRepository
-import pe.edu.upc.upet.ui.screens.ownerviews.getOwner
+import pe.edu.upc.upet.ui.shared.AuthButton
+import pe.edu.upc.upet.ui.shared.AuthInputTextField
+import pe.edu.upc.upet.ui.shared.CustomReturnButton
+import pe.edu.upc.upet.ui.shared.TextFieldType
+import pe.edu.upc.upet.ui.theme.BorderPadding
+import pe.edu.upc.upet.ui.theme.poppinsFamily
 import pe.edu.upc.upet.utils.TokenManager
 
 @Composable
@@ -29,62 +35,80 @@ fun AddReview(navController: NavController, vetId: Int) {
         owner = fetchedOwner
     }
 
-    var reviewContent by remember { mutableStateOf("") }
-    var reviewRating by remember { mutableStateOf("") }
+    val reviewContent = remember { mutableStateOf("") }
+    val reviewRating = remember { mutableStateOf("") }
 
     var snackbarMessage by remember { mutableStateOf("") }
 
-    Scaffold { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = reviewContent,
-                onValueChange = { reviewContent = it },
-                label = { Text("Content") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
-            TextField(
-                value = reviewRating,
-                onValueChange = { reviewRating = it },
-                label = { Text("Rating") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
+    Scaffold(modifier = Modifier.padding(16.dp)) { paddingValues ->
+        LazyColumn {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFF0B1C3F))
+                            .padding(top = 10.dp, start = BorderPadding, end = BorderPadding),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CustomReturnButton(navController = navController)
+                        Text(
+                            text = "Add review",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, start = 20.dp),
+                            style = TextStyle(
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontFamily = poppinsFamily,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                        )
+                    }
 
-            Button(
-                onClick = {
-                    val reviewRequest = ReviewRequest(
-                        stars = reviewRating.toInt(),
-                        description = reviewContent,
-                        veterinarianId = vetId,
+                    AuthInputTextField(
+                        input = reviewContent,
+                        placeholder = "Enter your review",
+                        label = "Review",
                     )
-                    ReviewRepository().createReview(owner?.id ?: -1, reviewRequest, onSuccess = {
-                        navController.popBackStack()
-                    }, onError = {
-                        snackbarMessage = "Error al Crear el review"
+                    AuthInputTextField(
+                        input = reviewRating,
+                        placeholder = "Enter your rating",
+                        label = "Rating",
+                        type = TextFieldType.Phone
+                    )
+
+                    AuthButton(text = "Submit Review", onClick = {
+                        val reviewRequest = ReviewRequest(
+                            stars = reviewRating.value.toInt(),
+                            description = reviewContent.value,
+                            veterinarianId = vetId,
+                        )
+                        ReviewRepository().createReview(
+                            owner?.id ?: -1,
+                            reviewRequest,
+                            onSuccess = {
+                                navController.popBackStack()
+                            },
+                            onError = {
+                                snackbarMessage = "Error al Crear el review"
+                            })
+
                     })
 
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Submit Review")
-            }
-
-            if (snackbarMessage.isNotBlank()) {
-                Text(
-                    text = snackbarMessage,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
+                    if (snackbarMessage.isNotBlank()) {
+                        Text(
+                            text = snackbarMessage,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                    }
+                }
             }
         }
     }

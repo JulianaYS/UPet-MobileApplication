@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +39,7 @@ import pe.edu.upc.upet.feature_vets.data.repository.VetRepository
 import pe.edu.upc.upet.navigation.Routes
 import pe.edu.upc.upet.ui.screens.ownerviews.ProfileImage
 import pe.edu.upc.upet.ui.shared.TopBar
+import pe.edu.upc.upet.ui.theme.Pink
 import pe.edu.upc.upet.ui.theme.poppinsFamily
 
 @Composable
@@ -70,6 +72,7 @@ fun VetReviews(navController: NavController, vetId: Int, showFAB: Boolean = true
                             navController.navigate(Routes.AddReview.createRoute(vetId))
                         },
                         contentColor = Color(0xFF000000),
+                        containerColor = Pink,
                     ) {
                         Icon(imageVector = Icons.Default.Add,
                             contentDescription = "Add")
@@ -79,7 +82,9 @@ fun VetReviews(navController: NavController, vetId: Int, showFAB: Boolean = true
         }
     ){
             paddingValues->
-            LazyColumn(modifier = Modifier.padding(paddingValues).background(Color.Transparent)) {
+            LazyColumn(modifier = Modifier
+                .padding(paddingValues)
+                .background(Color.Transparent)) {
                 items(reviewList.value) { review ->
                     ReviewCard(review)
                 }
@@ -91,7 +96,8 @@ fun VetReviews(navController: NavController, vetId: Int, showFAB: Boolean = true
 @Composable
 fun ReviewCard(review: ReviewResponse){
     Card(modifier = Modifier
-        .padding(10.dp).shadow(elevation = 8.dp, shape = RoundedCornerShape(10.dp)),
+        .padding(10.dp)
+        .shadow(elevation = 8.dp, shape = RoundedCornerShape(10.dp)),
         colors = CardDefaults.cardColors(
             containerColor = Color.White)
     ) {
